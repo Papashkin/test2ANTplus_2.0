@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
-import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.presenter.SettingPresenter
 import com.pawegio.kandroid.textWatcher
 import com.pawegio.kandroid.toast
@@ -28,10 +27,6 @@ class SettingsFragment: Fragment(), SettingsInterface {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
         return inflater.inflate(R.layout.fragment_settings, container, false)
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

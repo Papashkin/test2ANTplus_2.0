@@ -54,7 +54,7 @@ class WorkFragment : Fragment(), WorkInterface {
     private var handleCadence: PccReleaseHandle<AntPlusBikeCadencePcc>? = null
     private var handleSpeedDistance: PccReleaseHandle<AntPlusBikeSpeedDistancePcc>? = null
     private var handleEquipment: PccReleaseHandle<AntPlusFitnessEquipmentPcc>? = null
-    private var devices: java.util.ArrayList<MultiDeviceSearchResult>? = null
+    private var devices: ArrayList<MultiDeviceSearchResult>? = null
     private var isHRMInWork = false
     private var isCadenceInWork = false
     private var isSpeedInWork = false
@@ -78,13 +78,13 @@ class WorkFragment : Fragment(), WorkInterface {
         presenter = WorkPresenter(this)
 
         this.arguments?.apply {
-            devices = this.get(DEVICES_LIST) as java.util.ArrayList<MultiDeviceSearchResult>? ?: arrayListOf()
+            devices = this.get(DEVICES_LIST) as ArrayList<MultiDeviceSearchResult>? ?: arrayListOf()
         }
 
 //        bundle = this.arguments ?: Bundle()
 //        devices = if (!bundle.isEmpty) {
-//            val devices: java.util.ArrayList<SelectedDevice> = bundle.get("selected_devices") as java.util.ArrayList<SelectedDevice>? ?: arrayListOf()
-//            devices.map { it -> it.device } as java.util.ArrayList<MultiDeviceSearchResult>
+//            val devices: ArrayList<SelectedDevice> = bundle.get("selected_devices") as ArrayList<SelectedDevice>? ?: arrayListOf()
+//            devices.map { it -> it.device } as ArrayList<MultiDeviceSearchResult>
 //        } else {
 //            arrayListOf()
 //        }

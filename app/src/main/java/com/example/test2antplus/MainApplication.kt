@@ -20,7 +20,5 @@ class MainApplication: Application() {
             .build()
 
         graph.inject(this)
-
-
     }
 }
