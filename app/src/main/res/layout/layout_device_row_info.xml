@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        android:id="@+id/clDeviceView"
+        android:padding="2dp">
+
+    <CheckBox
+            android:id="@+id/checkBoxIsSelected"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+            android:id="@+id/tvDeviceName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:textSize="16sp"
+            android:layout_marginStart="10dp"
+            tool:text="Монитор сердечного ритма"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/checkBoxIsSelected"
+    />
+
+    <TextView
+            android:id="@+id/tvDeviceType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:textSize="12sp"
+            tool:text="Type: HEARTRATE"
+            app:layout_constraintTop_toBottomOf="@id/tvDeviceName"
+            app:layout_constraintStart_toStartOf="@id/tvDeviceName"/>
+
+    <TextView
+            android:id="@+id/tvDeviceNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp"
+            android:textSize="12sp"
+            tool:text="Number: 42571"
+            app:layout_constraintTop_toBottomOf="@id/tvDeviceType"
+            app:layout_constraintStart_toStartOf="@id/tvDeviceName"/>
+
+</android.support.constraint.ConstraintLayout>

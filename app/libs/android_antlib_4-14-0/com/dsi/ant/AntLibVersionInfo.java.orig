@@ -1,0 +1,37 @@
+/*
+ * This software is subject to the license described in the License.txt file
+ * included with this software distribution. You may not use this file except in compliance
+ * with this license.
+ *
+ * Copyright (c) Dynastream Innovations Inc. 2013
+ * All rights reserved.
+ */
+
+package com.dsi.ant;
+
+/**
+ * Provides the version information of this library.
+ * @since 4.4.1
+ */
+public class AntLibVersionInfo {
+
+    /**
+     * The version code of this Android ANT Library.
+     * @since 4.4.1
+     */
+<<<<<<< HEAD
+    public static final int ANTLIB_VERSION_CODE = 41211;    // !! Remember to update the version in the MANIFEST.MF !!
+=======
+    public static final int ANTLIB_VERSION_CODE = 41201;    // !! Remember to update the version in the MANIFEST.MF !!
+>>>>>>> add fast channel initiation to channel extended assignment
+
+    /**
+     * The version string of this Android ANT Library.
+     * @since 4.4.1
+     */
+<<<<<<< HEAD
+    public static final String ANTLIB_VERSION_STRING = "4.12.11";    // !! Remember to update the version in the MANIFEST.MF !!
+=======
+    public static final String ANTLIB_VERSION_STRING = "4.12.1";    // !! Remember to update the version in the MANIFEST.MF !!
+>>>>>>> add fast channel initiation to channel extended assignment
+}
