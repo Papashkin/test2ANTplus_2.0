@@ -1,7 +1,7 @@
 package com.example.test2antplus.data
 
-import android.arch.persistence.room.Database
-import android.arch.persistence.room.RoomDatabase
+import androidx.room.Database
+import androidx.room.RoomDatabase
 import com.example.test2antplus.Profile
 
 @Database (entities = [Profile::class], version = 1)

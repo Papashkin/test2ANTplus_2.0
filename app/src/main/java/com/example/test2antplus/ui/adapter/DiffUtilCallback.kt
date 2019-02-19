@@ -1,6 +1,6 @@
 package com.example.test2antplus.ui.adapter
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import com.example.test2antplus.SelectedDevice
 
 class DiffUtilCallback(

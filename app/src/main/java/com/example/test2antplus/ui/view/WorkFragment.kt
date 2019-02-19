@@ -4,11 +4,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AlertDialog
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
@@ -18,13 +18,11 @@ import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchRe
 import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
-import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.ant.device.BikeCadenceDevice
 import com.example.test2antplus.ant.device.BikeSpeedDistanceDevice
 import com.example.test2antplus.ant.device.FitnessEquipmentDevice
 import com.example.test2antplus.ant.device.HeartRateDevice
 import com.example.test2antplus.presenter.WorkPresenter
-import com.pawegio.kandroid.putParcelableCollection
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_work.*
 import javax.inject.Inject
@@ -62,9 +60,9 @@ class WorkFragment : Fragment(), WorkInterface {
 
     @Inject lateinit var appContext: Context
 
-    fun newInstance(devices: java.util.ArrayList<SelectedDevice>?): WorkFragment = WorkFragment().apply {
-        arguments = Bundle().apply {
-            putParcelableCollection(DEVICES_LIST, devices ?: arrayListOf())
+    fun newInstance(devices: java.util.ArrayList<MultiDeviceSearchResult>): WorkFragment = WorkFragment().apply {
+        this.arguments = Bundle().also {
+            it.putParcelableArrayList(DEVICES_LIST, devices)
         }
     }
 
@@ -78,7 +76,7 @@ class WorkFragment : Fragment(), WorkInterface {
         presenter = WorkPresenter(this)
 
         this.arguments?.apply {
-            devices = this.get(DEVICES_LIST) as ArrayList<MultiDeviceSearchResult>? ?: arrayListOf()
+            devices = this.getParcelableArrayList(DEVICES_LIST)
         }
 
 //        bundle = this.arguments ?: Bundle()
@@ -250,17 +248,9 @@ class WorkFragment : Fragment(), WorkInterface {
     }
 
     override fun closeAccess() {
-        handleHeartRate?.let {
-            it.close()
-        }
-        handleCadence?.let {
-            it.close()
-        }
-        handleSpeedDistance?.let {
-            it.close()
-        }
-        handleEquipment?.let {
-            it.close()
-        }
+        handleHeartRate?.close()
+        handleCadence?.close()
+        handleSpeedDistance?.close()
+        handleEquipment?.close()
     }
 }

@@ -1,8 +1,8 @@
 package com.example.test2antplus.di.modules
 
-import android.arch.persistence.room.Room
+import androidx.room.Room
 import android.content.Context
-import android.support.annotation.NonNull
+import androidx.annotation.NonNull
 import com.example.test2antplus.data.ProfileDao
 import com.example.test2antplus.data.ProfilesDatabase
 import com.example.test2antplus.data.ProfilesRepository

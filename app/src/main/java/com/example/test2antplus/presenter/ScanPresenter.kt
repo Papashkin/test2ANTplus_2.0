@@ -120,6 +120,10 @@ class ScanPresenter(private val view: ScanInterface) {
             it.close()
             view.stopScan()
         }
-        router.navigateTo(Screens.WORK_FRAGMENT, foundedDevices.findLast { it.isSelected } ?: arrayListOf<SelectedDevice>())
+        router.navigateTo(
+            Screens.WORK_FRAGMENT,
+            foundedDevices.filter { it.isSelected }
+                .map { it.device }
+        )
     }
 }
