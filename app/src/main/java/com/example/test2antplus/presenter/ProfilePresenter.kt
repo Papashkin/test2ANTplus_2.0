@@ -10,7 +10,7 @@ import com.example.test2antplus.navigation.Screens
 import com.example.test2antplus.ui.view.ProfileFragment
 import javax.inject.Inject
 
-class ProfilePresenter(private val view: ProfileFragment, private val owner: LifecycleOwner) {
+class ProfilePresenter(private val view: ProfileFragment, owner: LifecycleOwner) {
     @Inject
     lateinit var router: AppRouter
     @Inject
@@ -51,10 +51,6 @@ class ProfilePresenter(private val view: ProfileFragment, private val owner: Lif
     }
 
     fun onCreateProfileClick() {
-        profilesRepository
-            .getAllProfiles()
-            .removeObservers(owner)
-
         router.navigateTo(Screens.SETTING_FRAGMENT) //"settings screen")
     }
 }

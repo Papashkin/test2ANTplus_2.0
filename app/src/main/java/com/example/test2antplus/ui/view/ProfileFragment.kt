@@ -33,10 +33,9 @@ class ProfileFragment : Fragment(), ProfileInterface {
 
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ArrayAdapter<String>
+    private lateinit var owner: LifecycleOwner
 
     private var profiles: ArrayList<String> = arrayListOf()
-
-    private lateinit var owner: LifecycleOwner
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
