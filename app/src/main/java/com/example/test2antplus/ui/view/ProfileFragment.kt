@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProfilePresenter
@@ -36,13 +37,16 @@ class ProfileFragment: Fragment(), ProfileInterface {
 
     private var profiles: ArrayList<String> = arrayListOf()
 
+    private lateinit var owner: LifecycleOwner
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
         return inflater.inflate(R.layout.fragment_profiles, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter = ProfilePresenter(this)
+        owner = LifecycleOwner { lifecycle }
+        presenter = ProfilePresenter(this, owner)
 
         profilesAdapter = ArrayAdapter(appContext, R.layout.layout_profile_info, profiles)
         listProfiles.adapter = profilesAdapter

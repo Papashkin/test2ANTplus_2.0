@@ -1,5 +1,7 @@
 package com.example.test2antplus.presenter
 
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Profile
 import com.example.test2antplus.data.ProfilesRepository
@@ -8,7 +10,7 @@ import com.example.test2antplus.navigation.Screens
 import com.example.test2antplus.ui.view.ProfileFragment
 import javax.inject.Inject
 
-class ProfilePresenter(private val view: ProfileFragment) {
+class ProfilePresenter(private val view: ProfileFragment, private val owner: LifecycleOwner) {
     @Inject
     lateinit var router: AppRouter
     @Inject
@@ -24,11 +26,11 @@ class ProfilePresenter(private val view: ProfileFragment) {
 
         profilesRepository
             .getAllProfiles()
-            .observeForever { list ->
+            .observe(owner, Observer {list ->
                 profiles.clear()
                 profiles.addAll(list)
                 setData()
-            }
+            })
     }
 
     private fun setData() {
@@ -49,6 +51,10 @@ class ProfilePresenter(private val view: ProfileFragment) {
     }
 
     fun onCreateProfileClick() {
+        profilesRepository
+            .getAllProfiles()
+            .removeObservers(owner)
+
         router.navigateTo(Screens.SETTING_FRAGMENT) //"settings screen")
     }
 }
