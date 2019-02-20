@@ -5,6 +5,14 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import javax.inject.Inject
 
+/**
+ * [Profile] - data class with information about user (stored in BD)
+ * @param name - user name;
+ * @param age - user age;
+ * @param gender - Male or Female;
+ * @param weight - user weight;
+ * @param height - user height
+ */
 @Entity
 class Profile @Inject constructor(
     @PrimaryKey (autoGenerate = true)
