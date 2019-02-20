@@ -2,11 +2,11 @@ package com.example.test2antplus.ui.view
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProfilePresenter
@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_profiles.*
 import javax.inject.Inject
 
 interface ProfileInterface {
-    fun setProfilesList(profiles: List<String>)
+    fun setProfilesList(newProfiles: List<String>)
     fun onProfileClick()
     fun showToast(text: String)
     fun onCreateProfile()
@@ -34,6 +34,8 @@ class ProfileFragment: Fragment(), ProfileInterface {
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ArrayAdapter<String>
 
+    private var profiles: ArrayList<String> = arrayListOf()
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
         return inflater.inflate(R.layout.fragment_profiles, container, false)
@@ -41,6 +43,9 @@ class ProfileFragment: Fragment(), ProfileInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = ProfilePresenter(this)
+
+        profilesAdapter = ArrayAdapter(appContext, R.layout.layout_profile_info, profiles)
+        listProfiles.adapter = profilesAdapter
 
         fabCreate.setOnClickListener {
             presenter.onCreateProfileClick()
@@ -63,13 +68,10 @@ class ProfileFragment: Fragment(), ProfileInterface {
 
     }
 
-    override fun setProfilesList(profiles: List<String>) {
-        profilesAdapter = ArrayAdapter(appContext, R.layout.layout_profile_info, profiles)
-        listProfiles.adapter = profilesAdapter
-
-        listProfiles.setOnItemClickListener { _, _, position, id ->
-            presenter.selectProfile(position)
-        }
+    override fun setProfilesList(newProfiles: List<String>) {
+        profiles.clear()
+        profiles.addAll(newProfiles)
+        profilesAdapter.notifyDataSetChanged()
 
         listProfiles.visibility = View.VISIBLE
         pbProfiles.visibility = View.GONE

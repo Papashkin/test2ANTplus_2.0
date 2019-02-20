@@ -1,5 +1,6 @@
 package com.example.test2antplus.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -11,7 +12,7 @@ import io.reactivex.Single
 interface ProfileDao {
 
     @Query("SELECT * from profile")
-    fun getAll(): Single<List<Profile>>
+    fun getAll(): LiveData<List<Profile>>
 
     @Query("Select * from profile where name = :profileName")
     fun getProfile(profileName: String): Single<Profile>

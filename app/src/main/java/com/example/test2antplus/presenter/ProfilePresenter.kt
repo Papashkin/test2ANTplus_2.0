@@ -2,23 +2,15 @@ package com.example.test2antplus.presenter
 
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Profile
-import com.example.test2antplus.data.ProfilesDatabase
 import com.example.test2antplus.data.ProfilesRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.navigation.Screens
 import com.example.test2antplus.ui.view.ProfileFragment
-import io.reactivex.Flowable
-import io.reactivex.Maybe
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class ProfilePresenter(private val view: ProfileFragment) {
     @Inject
     lateinit var router: AppRouter
-    @Inject
-    lateinit var database: ProfilesDatabase
     @Inject
     lateinit var profilesRepository: ProfilesRepository
 
@@ -29,11 +21,11 @@ class ProfilePresenter(private val view: ProfileFragment) {
     init {
         MainApplication.graph.inject(this)
         view.showLoading()
+
         profilesRepository
             .getAllProfiles()
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe { list ->
+            .observeForever { list ->
+                profiles.clear()
                 profiles.addAll(list)
                 setData()
             }
@@ -48,7 +40,7 @@ class ProfilePresenter(private val view: ProfileFragment) {
             view.hideEmptyProfilesList()
             view.showProfilesList()
         }
-        view.setProfilesList(profiles.map { it -> it.getName() })
+        view.setProfilesList(profiles.map { it.getName() })
     }
 
     fun selectProfile(id: Int) {
@@ -59,5 +51,4 @@ class ProfilePresenter(private val view: ProfileFragment) {
     fun onCreateProfileClick() {
         router.navigateTo(Screens.SETTING_FRAGMENT) //"settings screen")
     }
-
 }

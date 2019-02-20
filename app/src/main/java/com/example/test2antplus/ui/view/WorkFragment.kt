@@ -79,14 +79,6 @@ class WorkFragment : Fragment(), WorkInterface {
             devices = this.getParcelableArrayList(DEVICES_LIST)
         }
 
-//        bundle = this.arguments ?: Bundle()
-//        devices = if (!bundle.isEmpty) {
-//            val devices: ArrayList<SelectedDevice> = bundle.get("selected_devices") as ArrayList<SelectedDevice>? ?: arrayListOf()
-//            devices.map { it -> it.device } as ArrayList<MultiDeviceSearchResult>
-//        } else {
-//            arrayListOf()
-//        }
-
         devices?.forEach {
             if (it.antDeviceType == DeviceType.HEARTRATE && !isHRMInWork) {
                 heartRateCensor = HeartRateDevice(

@@ -7,7 +7,6 @@ import com.example.test2antplus.Profile
 import com.example.test2antplus.data.ProfilesRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.SettingsInterface
-import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -55,10 +54,9 @@ class SettingPresenter(private val view: SettingsInterface) {
             Observable.fromCallable {
                 profilesRepository.insertProfile(profile)
             }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe{
-                    runOnUiThread {
-                        onCancelClick()
-                    }
+                    onCancelClick()
                 }
         } else {
             view.showToast("Invalid data")
