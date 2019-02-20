@@ -17,9 +17,7 @@ import javax.inject.Inject
 
 interface ProfileInterface {
     fun setProfilesList(newProfiles: List<String>)
-    fun onProfileClick()
     fun showToast(text: String)
-    fun onCreateProfile()
     fun showProfilesList()
     fun hideProfilesList()
     fun showEmptyProfilesList()
@@ -28,9 +26,10 @@ interface ProfileInterface {
     fun hideLoading()
 }
 
-class ProfileFragment: Fragment(), ProfileInterface {
+class ProfileFragment : Fragment(), ProfileInterface {
 
-    @Inject lateinit var appContext: Context
+    @Inject
+    lateinit var appContext: Context
 
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ArrayAdapter<String>
@@ -60,16 +59,8 @@ class ProfileFragment: Fragment(), ProfileInterface {
         }
     }
 
-    override fun onProfileClick() {
-
-    }
-
     override fun showToast(text: String) {
         toast(text)
-    }
-
-    override fun onCreateProfile() {
-
     }
 
     override fun setProfilesList(newProfiles: List<String>) {

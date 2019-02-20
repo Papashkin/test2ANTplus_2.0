@@ -55,7 +55,7 @@ class SettingPresenter(private val view: SettingsInterface) {
                 profilesRepository.insertProfile(profile)
             }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe{
+                .subscribe {
                     onCancelClick()
                 }
         } else {

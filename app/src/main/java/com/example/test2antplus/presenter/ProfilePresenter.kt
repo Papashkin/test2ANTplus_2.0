@@ -26,7 +26,7 @@ class ProfilePresenter(private val view: ProfileFragment, private val owner: Lif
 
         profilesRepository
             .getAllProfiles()
-            .observe(owner, Observer {list ->
+            .observe(owner, Observer { list ->
                 profiles.clear()
                 profiles.addAll(list)
                 setData()
