@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Profile
-import com.example.test2antplus.data.ProfilesRepository
+import com.example.test2antplus.data.profiles.ProfilesRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.SettingsInterface
 import io.reactivex.Observable

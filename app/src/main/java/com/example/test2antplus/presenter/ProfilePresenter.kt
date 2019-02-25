@@ -4,7 +4,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Profile
-import com.example.test2antplus.data.ProfilesRepository
+import com.example.test2antplus.data.profiles.ProfilesRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.navigation.Screens
 import com.example.test2antplus.ui.view.ProfileFragment

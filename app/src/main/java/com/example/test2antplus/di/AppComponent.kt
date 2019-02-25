@@ -4,14 +4,8 @@ import com.example.test2antplus.MainActivity
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.di.modules.AppModule
 import com.example.test2antplus.di.modules.NavigationModule
-import com.example.test2antplus.presenter.ProfilePresenter
-import com.example.test2antplus.presenter.ScanPresenter
-import com.example.test2antplus.presenter.SettingPresenter
-import com.example.test2antplus.presenter.WorkPresenter
-import com.example.test2antplus.ui.view.ProfileFragment
-import com.example.test2antplus.ui.view.ScanFragment
-import com.example.test2antplus.ui.view.SettingsFragment
-import com.example.test2antplus.ui.view.WorkFragment
+import com.example.test2antplus.presenter.*
+import com.example.test2antplus.ui.view.*
 import dagger.Component
 import javax.inject.Singleton
 
@@ -33,4 +27,6 @@ interface AppComponent {
     fun inject(settingPresenter: SettingPresenter)
     fun inject(profileFragment: ProfileFragment)
     fun inject(profilePresenter: ProfilePresenter)
+    fun inject(programFragment: ProgramFragment)
+    fun inject(programPresenter: ProgramPresenter)
 }

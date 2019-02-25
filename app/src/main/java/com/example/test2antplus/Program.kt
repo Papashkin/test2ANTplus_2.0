@@ -1,17 +1,35 @@
 package com.example.test2antplus
 
-import java.math.BigDecimal
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import javax.inject.Inject
 
 /**
  * [Program] - data set class for trainings program
- * @param targetPower - target power (BigDecimal) in W;
- * @param duringTime - time of target power working (Int) in minutes.
+ * @param name - name of program
+ * @param program - text representation of the program values (<power>*<duration>|<power>*<duration>|...)
  */
-class Program(
-    private var targetPower: BigDecimal,
-    private var duringTime: Int
-) {
-    fun getTargetPower() = this.targetPower
+@Entity
+class Program @Inject constructor(
+    @PrimaryKey(autoGenerate = true)
+    private var id: Int,
 
-    fun getDuringTime() = this.duringTime
+    @ColumnInfo(name = "name")
+    private var name: String,
+
+    @ColumnInfo(name = "program")
+    private var program: String
+) {
+    fun getId() = this.id
+    fun getName() = this.name
+    fun getProgram() = this.program
+
+    fun setName(newName: String) {
+        this.name = newName
+    }
+
+    fun setProgram(newProgram: String) {
+        this.program = newProgram
+    }
 }

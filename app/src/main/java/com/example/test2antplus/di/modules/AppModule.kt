@@ -1,11 +1,14 @@
 package com.example.test2antplus.di.modules
 
-import androidx.room.Room
 import android.content.Context
 import androidx.annotation.NonNull
-import com.example.test2antplus.data.ProfileDao
-import com.example.test2antplus.data.ProfilesDatabase
-import com.example.test2antplus.data.ProfilesRepository
+import androidx.room.Room
+import com.example.test2antplus.data.profiles.ProfileDao
+import com.example.test2antplus.data.profiles.ProfilesDatabase
+import com.example.test2antplus.data.profiles.ProfilesRepository
+import com.example.test2antplus.data.programs.ProgramDao
+import com.example.test2antplus.data.programs.ProgramsDatabase
+import com.example.test2antplus.data.programs.ProgramsRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -19,7 +22,7 @@ class AppModule(@NonNull private val context: Context) {
 
     @Provides
     @Singleton
-    fun getDatabase(): ProfilesDatabase = Room.databaseBuilder(
+    fun getProfilesDatabase(): ProfilesDatabase = Room.databaseBuilder(
         context,
         ProfilesDatabase::class.java,
         "profiles"
@@ -29,8 +32,26 @@ class AppModule(@NonNull private val context: Context) {
     @Singleton
     fun getProfileDao(database: ProfilesDatabase) = database.profileDao()
 
+    @Provides
+    @Singleton
+    fun getProfilesRepository(dao: ProfileDao) =
+        ProfilesRepository(dao)
+
 
     @Provides
     @Singleton
-    fun getProfilesRepository(dao: ProfileDao) = ProfilesRepository(dao)
+    fun getProgramsDatabase(): ProgramsDatabase = Room.databaseBuilder(
+        context,
+        ProgramsDatabase::class.java,
+        "programs"
+    ).build()
+
+    @Provides
+    @Singleton
+    fun getProgramDao(database: ProgramsDatabase) = database.programDao()
+
+
+    @Provides
+    @Singleton
+    fun getProgramsRepository(dao: ProgramDao) = ProgramsRepository(dao)
 }

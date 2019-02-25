@@ -1,4 +1,4 @@
-package com.example.test2antplus.data
+package com.example.test2antplus.data.profiles
 
 import androidx.lifecycle.LiveData
 import com.example.test2antplus.Profile

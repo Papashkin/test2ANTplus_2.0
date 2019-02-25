@@ -1,4 +1,4 @@
-package com.example.test2antplus.data
+package com.example.test2antplus.data.profiles
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
