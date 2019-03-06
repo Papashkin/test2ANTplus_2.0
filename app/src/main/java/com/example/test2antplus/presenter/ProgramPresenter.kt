@@ -48,7 +48,6 @@ class ProgramPresenter(private val view: ProgramFragment) {
 
     fun onAddClick() {
         val durationInSeconds = (duration * 60).toLong()
-
         val lastPoint = if (entries.size == 0) {
             0L
         } else {
@@ -58,7 +57,6 @@ class ProgramPresenter(private val view: ProgramFragment) {
         for (i in lastPoint .. (lastPoint + durationInSeconds)) {
             entries.add(Entry(i.toFloat(), powerTemp))
         }
-
 
         program = LineDataSet(entries, programName)
         view.updateBarChart(LineData(program))

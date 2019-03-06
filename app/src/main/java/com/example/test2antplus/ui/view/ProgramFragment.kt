@@ -10,12 +10,14 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.showDialog
+import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.LineData
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_program.*
 
 interface ProgramInterface {
     fun updateBarChart(data: LineData)
+//    fun updateBarChart(data: BarData)
     fun showAddPowerFab()
     fun hideAddPowerFab()
     fun showLoading()
@@ -82,6 +84,11 @@ interface ProgramInterface {
          chartProgram.data = data
          chartProgram.invalidate()
      }
+
+//     override fun updateBarChart(data: BarData) {
+//         chartProgram.data = data
+//         chartProgram.invalidate()
+//     }
 
      override fun showAddPowerFab() {
          fabAddPower.show()
