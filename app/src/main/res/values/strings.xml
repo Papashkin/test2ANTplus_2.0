@@ -25,6 +25,6 @@
     <string name="settings_create">CREATE</string>
     <string name="settings_cancel">CANCEL</string>
     <string name="program_name">Program Name:</string>
-    <string name="program_duration">Duration:</string>
-    <string name="program_power">Power:</string>
+    <string name="program_duration">Duration (min):</string>
+    <string name="program_power">Power (W):</string>
 </resources>

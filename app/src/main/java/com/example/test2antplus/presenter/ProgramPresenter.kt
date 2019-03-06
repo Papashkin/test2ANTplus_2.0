@@ -6,9 +6,7 @@ import com.example.test2antplus.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.ProgramFragment
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -22,12 +20,12 @@ class ProgramPresenter(private val view: ProgramFragment) {
     @Inject
     lateinit var programsRepository: ProgramsRepository
 
-    private lateinit var programName: String
-    private lateinit var program: BarDataSet
+    private lateinit var program: LineDataSet
 
+    private  var programName: String = ""
     private var powerTemp: Float = 0.0f
     private var duration: Float = 0.0f
-    private var entries: ArrayList<BarEntry> = arrayListOf()
+    private var entries: ArrayList<Entry> = arrayListOf()
 
     init {
         MainApplication.graph.inject(this)
@@ -49,15 +47,27 @@ class ProgramPresenter(private val view: ProgramFragment) {
     }
 
     fun onAddClick() {
-        program = BarDataSet(entries, programName)
-        view.updateBarChart(BarData(program))
+        val durationInSeconds = (duration * 60).toLong()
+
+        val lastPoint = if (entries.size == 0) {
+            0L
+        } else {
+            entries.last().x.toLong()
+        }
+
+        for (i in lastPoint .. (lastPoint + durationInSeconds)) {
+            entries.add(Entry(i.toFloat(), powerTemp))
+        }
+
+
+        program = LineDataSet(entries, programName)
+        view.updateBarChart(LineData(program))
         clearData()
         view.hideAddPowerFab()
     }
 
     private fun checkAddFab() {
         if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f) {
-            entries.add(BarEntry(powerTemp, duration))
             view.showAddPowerFab()
         }
     }
@@ -65,6 +75,7 @@ class ProgramPresenter(private val view: ProgramFragment) {
     private fun clearData() {
         powerTemp = 0.0f
         duration = 0.0f
+        view.clearTextFields()
     }
 
     @SuppressLint("CheckResult")

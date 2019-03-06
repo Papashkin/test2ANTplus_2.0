@@ -10,16 +10,17 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.showDialog
-import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.LineData
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_program.*
 
 interface ProgramInterface {
-    fun updateBarChart(data: BarData)
+    fun updateBarChart(data: LineData)
     fun showAddPowerFab()
     fun hideAddPowerFab()
     fun showLoading()
     fun hideLoading()
+    fun clearTextFields()
 }
 
  class ProgramFragment: Fragment(), ProgramInterface {
@@ -77,7 +78,7 @@ interface ProgramInterface {
          }
      }
 
-     override fun updateBarChart(data: BarData) {
+     override fun updateBarChart(data: LineData) {
          chartProgram.data = data
          chartProgram.invalidate()
      }
@@ -96,5 +97,10 @@ interface ProgramInterface {
 
      override fun showLoading() {
          dialog = showDialog(requireActivity(), "Сохранение программы")
+     }
+
+     override fun clearTextFields() {
+         editDuration.setText("")
+         editTargetPower.setText("")
      }
  }
