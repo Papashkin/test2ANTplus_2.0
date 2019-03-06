@@ -6,7 +6,9 @@ import com.example.test2antplus.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.ProgramFragment
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -26,6 +28,7 @@ class ProgramPresenter(private val view: ProgramFragment) {
     private var powerTemp: Float = 0.0f
     private var duration: Float = 0.0f
     private var entries: ArrayList<Entry> = arrayListOf()
+//    private var axisX: ArrayList<String> = arrayListOf()
 
     init {
         MainApplication.graph.inject(this)
@@ -58,6 +61,8 @@ class ProgramPresenter(private val view: ProgramFragment) {
             entries.add(Entry(i.toFloat(), powerTemp))
         }
 
+//        val formattedTime = SimpleDateFormat("hh:mm:ss").format(durationInSeconds)
+//        axisX.add(formattedTime)
         program = LineDataSet(entries, programName)
         view.updateBarChart(LineData(program))
         clearData()

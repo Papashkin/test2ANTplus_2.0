@@ -10,14 +10,12 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.showDialog
-import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.LineData
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_program.*
 
 interface ProgramInterface {
     fun updateBarChart(data: LineData)
-//    fun updateBarChart(data: BarData)
     fun showAddPowerFab()
     fun hideAddPowerFab()
     fun showLoading()
@@ -82,13 +80,17 @@ interface ProgramInterface {
 
      override fun updateBarChart(data: LineData) {
          chartProgram.data = data
+         chartProgram.xAxis.setValueFormatter { value, _ ->
+             val hours = (value / 3600).toInt().toString()
+             var minuties = ((value % 3600) / 60).toInt().toString()
+             if (minuties.length < 2) minuties = "0$minuties"
+             var seconds= ((value) / 3600).toInt().toString()
+             if (seconds.length < 2) seconds = "0$seconds"
+             "$hours:$minuties:$seconds"
+         }
+         chartProgram.setDrawGridBackground(false)
          chartProgram.invalidate()
      }
-
-//     override fun updateBarChart(data: BarData) {
-//         chartProgram.data = data
-//         chartProgram.invalidate()
-//     }
 
      override fun showAddPowerFab() {
          fabAddPower.show()
