@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 @Entity
 class Profile @Inject constructor(
-    @PrimaryKey (autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     private var id: Int,
 
     @ColumnInfo(name = "name")

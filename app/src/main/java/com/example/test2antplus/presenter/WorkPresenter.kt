@@ -42,4 +42,8 @@ class WorkPresenter(private val view: WorkInterface) {
     fun showDialog(name: String, packageName: String) {
         view.showDialog(name, packageName)
     }
+
+    fun selectProgram() {
+        router.navigateTo(Screens.PROGRAM_FRAGMENT)
+    }
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class SelectedDevice @Inject constructor(
     val device: MultiDeviceSearch.MultiDeviceSearchResult,
     var isSelected: Boolean
-): Parcelable {
+) : Parcelable {
 
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(MultiDeviceSearch.MultiDeviceSearchResult::class.java.classLoader)!!,

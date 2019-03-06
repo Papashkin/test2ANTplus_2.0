@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
+import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.BarData
@@ -29,7 +30,7 @@ interface ProgramInterface {
 
      override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
          MainApplication.graph.inject(this)
-         return super.onCreateView(inflater, container, savedInstanceState)
+         return inflater.inflate(R.layout.fragment_program, container, false)
      }
 
      override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

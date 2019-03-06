@@ -6,7 +6,9 @@ import com.example.test2antplus.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.ProgramFragment
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

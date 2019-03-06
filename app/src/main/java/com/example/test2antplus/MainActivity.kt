@@ -4,8 +4,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.test2antplus.navigation.AppNavigator
 import com.example.test2antplus.navigation.AppRouter
+import com.example.test2antplus.navigation.Screens
 import ru.terrakok.cicerone.Cicerone
-//import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
     lateinit var router: AppRouter
 
     private lateinit var navigator: AppNavigator
-//    private lateinit var navigator: SupportAppNavigator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,9 +23,8 @@ class MainActivity : AppCompatActivity() {
         MainApplication.graph.inject(this)
 
         navigator = AppNavigator(this)
-//        val test = SupportAppNavigator(this, R.id.fragmentLayout)
 
-        router.startChain("profiles screen")
+        router.startChain(Screens.START_FRAGMENT)
     }
 
     override fun onPause() {

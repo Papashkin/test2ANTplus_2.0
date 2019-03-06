@@ -194,6 +194,10 @@ class WorkFragment : Fragment(), WorkInterface {
         fabBackToScan.setOnClickListener {
             presenter.onFabClick()
         }
+
+        fabSelectProgram.setOnClickListener {
+            presenter.selectProgram()
+        }
     }
 
     override fun onFabClick() {

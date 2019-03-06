@@ -4,18 +4,14 @@ import androidx.fragment.app.Fragment
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 import com.example.test2antplus.MainActivity
 import com.example.test2antplus.R
-import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.navigation.commands.Back
 import com.example.test2antplus.navigation.commands.BackTo
 import com.example.test2antplus.navigation.commands.NavigateTo
 import com.example.test2antplus.navigation.commands.StartChain
-import com.example.test2antplus.ui.view.ProfileFragment
-import com.example.test2antplus.ui.view.ScanFragment
-import com.example.test2antplus.ui.view.SettingsFragment
-import com.example.test2antplus.ui.view.WorkFragment
+import com.example.test2antplus.ui.view.*
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.commands.Command
-import java.util.ArrayList
+import java.util.*
 import javax.inject.Inject
 
 class AppNavigator @Inject constructor(
@@ -63,7 +59,16 @@ class AppNavigator @Inject constructor(
                 moveToFragment(currentFragment, command.screenKey, true)
             }
             Screens.WORK_FRAGMENT -> {
-                currentFragment = WorkFragment().newInstance(command.data as ArrayList<MultiDeviceSearch.MultiDeviceSearchResult>)
+                currentFragment =
+                    WorkFragment().newInstance(command.data as ArrayList<MultiDeviceSearch.MultiDeviceSearchResult>)
+                moveToFragment(currentFragment, command.screenKey, true)
+            }
+            Screens.PROGRAM_FRAGMENT -> {
+                currentFragment = ProgramFragment()
+                moveToFragment(currentFragment, command.screenKey, true)
+            }
+            Screens.PROFILES_FRAGMENT -> {
+                currentFragment = ProfileFragment()
                 moveToFragment(currentFragment, command.screenKey, true)
             }
         }
@@ -91,15 +96,11 @@ class AppNavigator @Inject constructor(
 
     private fun startChain(command: StartChain) {
         activity.supportFragmentManager.popBackStack()
-        when (command.screenKey) {
-            Screens.PROFILES_FRAGMENT -> {
-                fragmentStack.add(command.screenKey)
-                val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
-                fragmentTransaction.add(R.id.fragmentLayout, ProfileFragment(), command.screenKey)
-                fragmentTransaction.addToBackStack(command.screenKey)
-                fragmentTransaction.commit()
-            }
-        }
+        fragmentStack.add(command.screenKey)
+        val fragmentTransaction = activity.supportFragmentManager.beginTransaction()
+        fragmentTransaction.add(R.id.fragmentLayout, StartFragment(), command.screenKey)
+        fragmentTransaction.addToBackStack(command.screenKey)
+        fragmentTransaction.commit()
     }
 
     private fun moveToFragment(fragment: Fragment, tag: String, addToStack: Boolean) {
