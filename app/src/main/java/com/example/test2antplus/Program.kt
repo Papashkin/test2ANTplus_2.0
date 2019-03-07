@@ -8,7 +8,7 @@ import javax.inject.Inject
 /**
  * [Program] - data set class for trainings program
  * @param name - name of program
- * @param program - text representation of the program values (<power>*<duration>|<power>*<duration>|...)
+ * @param program - text representation of the program values (<time>*<power>|<time>*<power>|...)
  */
 @Entity
 class Program @Inject constructor(

@@ -35,6 +35,7 @@ class ProgramFragment: Fragment(), ProgramInterface {
         presenter = ProgramPresenter(this, owner)
 
         programAdapter = ProgramAdapter()
+        listPrograms.adapter = programAdapter
 
         fabAddProgram.setOnClickListener {
             presenter.addProgram()
