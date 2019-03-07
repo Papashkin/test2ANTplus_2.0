@@ -12,7 +12,7 @@ import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.ui.adapter.ProgramAdapter
 import kotlinx.android.synthetic.main.fragment_program.*
-import kotlinx.android.synthetic.main.fragment_start.*
+
 
 interface ProgramInterface {
     fun selectProgram()
@@ -66,7 +66,7 @@ class ProgramFragment: Fragment(), ProgramInterface {
     }
 
     override fun hideLoading() {
-        btnPrograms.visibility = View.INVISIBLE
+        pbPrograms.visibility = View.INVISIBLE
     }
 
     override fun hideEmptyProgramsList() {
