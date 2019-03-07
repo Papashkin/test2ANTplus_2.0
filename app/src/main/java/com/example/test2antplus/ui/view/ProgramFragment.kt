@@ -7,16 +7,26 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.example.test2antplus.MainApplication
+import com.example.test2antplus.Program
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.ui.adapter.ProgramAdapter
 import kotlinx.android.synthetic.main.fragment_program.*
+import kotlinx.android.synthetic.main.fragment_start.*
 
 interface ProgramInterface {
     fun selectProgram()
     fun addNewProgram()
     fun deleteProgram()
+    fun showLoading()
+    fun hideLoading()
 
+    fun setProgramsList(programsList: List<Program>)
+
+    fun showProgramsList()
+    fun hideProgramsList()
+    fun showEmptyProgramsList()
+    fun hideEmptyProgramsList()
 }
 
 class ProgramFragment: Fragment(), ProgramInterface {
@@ -40,7 +50,6 @@ class ProgramFragment: Fragment(), ProgramInterface {
         fabAddProgram.setOnClickListener {
             presenter.addProgram()
         }
-
     }
 
     override fun selectProgram() {
@@ -50,5 +59,33 @@ class ProgramFragment: Fragment(), ProgramInterface {
     }
 
     override fun deleteProgram() {
+    }
+
+    override fun showLoading() {
+        pbPrograms.visibility = View.VISIBLE
+    }
+
+    override fun hideLoading() {
+        btnPrograms.visibility = View.INVISIBLE
+    }
+
+    override fun hideEmptyProgramsList() {
+        emptyListPrograms.visibility = View.INVISIBLE
+    }
+
+    override fun showEmptyProgramsList() {
+        emptyListPrograms.visibility = View.VISIBLE
+    }
+
+    override fun hideProgramsList() {
+
+    }
+
+    override fun showProgramsList() {
+
+    }
+
+    override fun setProgramsList(programsList: List<Program>) {
+
     }
 }

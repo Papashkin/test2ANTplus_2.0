@@ -47,7 +47,6 @@ class ProgramAdapter: RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
         holder.bind(this.programs[position], position)
     }
 
-
     inner class ProgramViewHolder(view: View): RecyclerView.ViewHolder(view) {
         private val programName = view.findViewById<TextView>(R.id.textProgramName)
         private val avgPower = view.findViewById<TextView>(R.id.textAveragePower)
