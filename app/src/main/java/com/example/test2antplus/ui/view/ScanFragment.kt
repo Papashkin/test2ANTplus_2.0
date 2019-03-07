@@ -1,11 +1,10 @@
 package com.example.test2antplus.ui.view
 
-import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
@@ -14,7 +13,6 @@ import com.example.test2antplus.ui.adapter.NewDeviceAdapter
 import com.pawegio.kandroid.putParcelableCollection
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_scan.*
-import javax.inject.Inject
 
 interface ScanInterface {
     fun startScan()
@@ -35,13 +33,11 @@ class ScanFragment : Fragment(), ScanInterface {
     private lateinit var presenter: ScanPresenter
     private lateinit var newDeviceAdapter: NewDeviceAdapter
 
-    @Inject lateinit var appContext: Context
-
-    fun newInstance(devices: ArrayList<SelectedDevice>): WorkFragment = WorkFragment().apply {
-        arguments = Bundle().apply {
-            putParcelableCollection(SCAN_LIST, devices)
-        }
-    }
+//    fun newInstance(devices: ArrayList<SelectedDevice>): WorkFragment = WorkFragment().apply {
+//        arguments = Bundle().apply {
+//            putParcelableCollection(SCAN_LIST, devices)
+//        }
+//    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
      MainApplication.graph.inject(this)

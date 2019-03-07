@@ -1,6 +1,5 @@
 package com.example.test2antplus.ui.view
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +12,6 @@ import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProfilePresenter
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_profiles.*
-import javax.inject.Inject
 
 interface ProfileInterface {
     fun setProfilesList(newProfiles: List<String>)
@@ -27,9 +25,6 @@ interface ProfileInterface {
 }
 
 class ProfileFragment : Fragment(), ProfileInterface {
-
-    @Inject
-    lateinit var appContext: Context
 
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ArrayAdapter<String>
@@ -46,8 +41,10 @@ class ProfileFragment : Fragment(), ProfileInterface {
         owner = LifecycleOwner { lifecycle }
         presenter = ProfilePresenter(this, owner)
 
-        profilesAdapter = ArrayAdapter(appContext, R.layout.layout_profile_info, profiles)
-        listProfiles.adapter = profilesAdapter
+        activity?.let {
+            profilesAdapter = ArrayAdapter(it.applicationContext, R.layout.card_profile_info, profiles)
+            listProfiles.adapter = profilesAdapter
+        }
 
         fabCreate.setOnClickListener {
             presenter.onCreateProfileClick()

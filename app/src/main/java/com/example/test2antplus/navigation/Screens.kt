@@ -6,5 +6,6 @@ object Screens {
     const val SETTING_FRAGMENT = "settings screen"
     const val SCAN_FRAGMENT = "scan screen"
     const val WORK_FRAGMENT = "work screen"
+    const val PROGRAM_SETTINGS_FRAGMENT = "program settings screen"
     const val PROGRAM_FRAGMENT = "program screen"
 }

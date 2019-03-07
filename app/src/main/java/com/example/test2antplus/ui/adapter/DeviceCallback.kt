@@ -3,7 +3,7 @@ package com.example.test2antplus.ui.adapter
 import androidx.recyclerview.widget.DiffUtil
 import com.example.test2antplus.SelectedDevice
 
-class DiffUtilCallback(
+class DeviceCallback(
     private val oldList: ArrayList<SelectedDevice>,
     private val newList: ArrayList<SelectedDevice>
 ): DiffUtil.Callback() {

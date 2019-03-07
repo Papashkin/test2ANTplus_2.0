@@ -63,6 +63,10 @@ class AppNavigator @Inject constructor(
                     WorkFragment().newInstance(command.data as ArrayList<MultiDeviceSearch.MultiDeviceSearchResult>)
                 moveToFragment(currentFragment, command.screenKey, true)
             }
+            Screens.PROGRAM_SETTINGS_FRAGMENT -> {
+                currentFragment = ProgramSettingsFragment()
+                moveToFragment(currentFragment, command.screenKey, true)
+            }
             Screens.PROGRAM_FRAGMENT -> {
                 currentFragment = ProgramFragment()
                 moveToFragment(currentFragment, command.screenKey, true)

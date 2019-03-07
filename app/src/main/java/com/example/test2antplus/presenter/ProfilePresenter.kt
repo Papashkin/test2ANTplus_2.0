@@ -42,15 +42,17 @@ class ProfilePresenter(private val view: ProfileFragment, owner: LifecycleOwner)
             view.hideEmptyProfilesList()
             view.showProfilesList()
         }
-        view.setProfilesList(profiles.map { it.getName() })
+        view.setProfilesList(profiles.map {
+            it.getName()
+        })
     }
 
     fun selectProfile(id: Int) {
         selectedProfile = profiles[id]
-        router.navigateTo(Screens.SCAN_FRAGMENT) //"scan screen")
+        router.navigateTo(Screens.SCAN_FRAGMENT)
     }
 
     fun onCreateProfileClick() {
-        router.navigateTo(Screens.SETTING_FRAGMENT) //"settings screen")
+        router.navigateTo(Screens.SETTING_FRAGMENT)
     }
 }

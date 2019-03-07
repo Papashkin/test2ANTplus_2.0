@@ -15,16 +15,14 @@ class NewDeviceAdapter(
     private val onItemClick: (position: Int) -> Unit
 ) : RecyclerView.Adapter<NewDeviceAdapter.DeviceViewHolder>() {
     private var devices: ArrayList<SelectedDevice> = arrayListOf()
-    private lateinit var devicesDiffUtil: DiffUtilCallback
+    private lateinit var devicesDiffUtil: DeviceCallback
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): DeviceViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_device_row_info, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_sensor_info, parent, false)
         return DeviceViewHolder(view)
     }
 
-    override fun getItemCount(): Int {
-        return devices.size
-    }
+    override fun getItemCount(): Int = devices.size
 
     override fun onBindViewHolder(viewHolder: DeviceViewHolder, position: Int) {
         viewHolder.bind(this.devices[position], position)
@@ -35,7 +33,7 @@ class NewDeviceAdapter(
         if (!devices.contains(newDevice)) {
             devices.add(newDevice)
         }
-        devicesDiffUtil = DiffUtilCallback(oldDevices, devices)
+        devicesDiffUtil = DeviceCallback(oldDevices, devices)
         val productDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(devicesDiffUtil, false)
         productDiffResult.dispatchUpdatesTo(this)
         this.notifyItemInserted(devices.size)

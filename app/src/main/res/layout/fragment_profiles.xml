@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:textSize="20sp"
-                android:text="There is no profiles in DB"/>
+                android:text="@string/profiles_empty_list"/>
 
     </FrameLayout>
 

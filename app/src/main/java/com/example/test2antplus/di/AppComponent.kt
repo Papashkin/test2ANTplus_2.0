@@ -27,9 +27,11 @@ interface AppComponent {
     fun inject(settingPresenter: SettingPresenter)
     fun inject(profileFragment: ProfileFragment)
     fun inject(profilePresenter: ProfilePresenter)
-    fun inject(programFragment: ProgramFragment)
-    fun inject(programPresenter: ProgramPresenter)
+    fun inject(programSettingsFragment: ProgramSettingsFragment)
+    fun inject(programSettingsPresenter: ProgramSettingsPresenter)
     fun inject(startFragment: StartFragment)
     fun inject(startPresenter: StartPresenter)
+    fun inject(programFragment: ProgramFragment)
+    fun inject(programPresenter: ProgramPresenter)
 
 }
