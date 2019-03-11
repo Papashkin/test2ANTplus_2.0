@@ -22,3 +22,16 @@ fun showDialog(activity: Activity, text: String): Dialog? {
     }
     return null
 }
+
+fun String.getTwoDigits() = if (this.length < 2) "0$this" else this
+
+fun Long.formatToTime(): String {
+    val hours = (this / 3600).toInt().toString()
+    var minutes = ((this % 3600) / 60).toInt().toString()
+    if (minutes.length < 2) minutes = "0$minutes"
+    minutes = minutes.getTwoDigits()
+    var seconds= ((this) / 3600).toInt().toString()
+    seconds = seconds.getTwoDigits()
+
+    return "$hours:$minutes:$seconds"
+}

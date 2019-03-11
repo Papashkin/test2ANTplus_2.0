@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
+import com.example.test2antplus.formatToTime
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.LineData
@@ -83,12 +84,12 @@ interface ProgramSettingsInterface {
          chartProgram.data = data
          chartProgram.xAxis.setValueFormatter { value, _ ->
              count += 1
-             val hours = (value / 3600).toInt().toString()
-             var minuties = ((value % 3600) / 60).toInt().toString()
-             if (minuties.length < 2) minuties = "0$minuties"
-             var seconds= ((value) / 3600).toInt().toString()
-             if (seconds.length < 2) seconds = "0$seconds"
-             if (0 == count % 2) "$hours:$minuties:$seconds" else ""
+             val time = value.toLong().formatToTime()
+             if (0 == count % 2) {
+                 time
+             } else {
+                 ""
+             }
          }
          chartProgram.setDrawGridBackground(false)
          chartProgram.setTouchEnabled(true)

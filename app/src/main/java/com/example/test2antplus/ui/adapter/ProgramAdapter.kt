@@ -9,10 +9,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.Program
 import com.example.test2antplus.R
+import com.example.test2antplus.formatToTime
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import java.util.*
 
 class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
     private var programs: ArrayList<Program> = arrayListOf()
@@ -51,28 +53,26 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
         programs.clear()
         programs.addAll(newPrograms)
         notifyDataSetChanged()
-
-//        val oldPrograms = this.getData()
-//        programsDiffUtil = ProgramCallback(oldPrograms, newPrograms)
-//        val productDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(programsDiffUtil, false)
-//        productDiffResult.dispatchUpdatesTo(this)
-//        this.notifyItemInserted(programs.size)
     }
 
 
     inner class ProgramViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val programName = view.findViewById<TextView>(R.id.textProgramName)
         private val avgPower = view.findViewById<TextView>(R.id.textAveragePower)
+        private val duration = view.findViewById<TextView>(R.id.textDuration)
         private val programChart = view.findViewById<LineChart>(R.id.chartProgram)
         private val checkBox = view.findViewById<CheckBox>(R.id.checkBoxIsSelected)
 
         fun bind(program: Program, position: Int) {
 
+            val programSource = program.getProgram()
             programName.text = program.getName()
+            avgPower.text = getAveragePower(programSource)
+            duration.text = getDuration(programSource)
 
-            avgPower.text = getAveragePower(program.getProgram())
-
-            programChart.data = getChartData(program.getProgram())
+            programChart.data = getChartData(programSource)
+            programChart.axisLeft.isEnabled = false
+            programChart.xAxis.isEnabled = false
             programChart.invalidate()
 
             checkBox.isChecked = false
@@ -109,6 +109,18 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             }
             val chart = LineDataSet(entries, "")
             return LineData(chart)
+        }
+
+        private fun getDuration(program: String): CharSequence {
+            var count = 0L
+            program.split("|").forEach {
+                if (it.isNotEmpty()) {
+                    count += 1
+                }
+            }
+
+            val time = count.formatToTime()
+            return "Duration: $time"
         }
     }
 
