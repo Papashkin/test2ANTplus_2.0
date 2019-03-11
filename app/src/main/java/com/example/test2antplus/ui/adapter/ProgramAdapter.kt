@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
-class ProgramAdapter: RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
+class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
     private var programs: ArrayList<Program> = arrayListOf()
     private lateinit var selectedProgram: Program
     private lateinit var programsDiffUtil: ProgramCallback
@@ -24,7 +24,7 @@ class ProgramAdapter: RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
         return ProgramViewHolder(view)
     }
 
-    fun addDevice(newProgram: Program) {
+    fun addProgram(newProgram: Program) {
         val oldPrograms = this.getData()
         if (!programs.contains(newProgram)) {
             programs.add(newProgram)
@@ -47,7 +47,20 @@ class ProgramAdapter: RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
         holder.bind(this.programs[position], position)
     }
 
-    inner class ProgramViewHolder(view: View): RecyclerView.ViewHolder(view) {
+    fun setProgramList(newPrograms: ArrayList<Program>) {
+        programs.clear()
+        programs.addAll(newPrograms)
+        notifyDataSetChanged()
+
+//        val oldPrograms = this.getData()
+//        programsDiffUtil = ProgramCallback(oldPrograms, newPrograms)
+//        val productDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(programsDiffUtil, false)
+//        productDiffResult.dispatchUpdatesTo(this)
+//        this.notifyItemInserted(programs.size)
+    }
+
+
+    inner class ProgramViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val programName = view.findViewById<TextView>(R.id.textProgramName)
         private val avgPower = view.findViewById<TextView>(R.id.textAveragePower)
         private val programChart = view.findViewById<LineChart>(R.id.chartProgram)
@@ -73,19 +86,26 @@ class ProgramAdapter: RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
          */
         private fun getAveragePower(program: String): CharSequence {
             var avgPower = 0L
-                program.split("|").forEach {
-                    val power = it.split("*").last()
-                    avgPower += power.toLong()
+            var count = 0
+            program.split("|").forEach {
+                val power = it.split("*").last()
+                if (power.isNotEmpty()) {
+                    avgPower += power.toBigDecimal().toLong()
+                    count += 1
+                }
             }
-            return "Average power: $avgPower"
+
+            return "Average power: ${avgPower / count}"
         }
 
         private fun getChartData(program: String): LineData {
             val entries: ArrayList<Entry> = arrayListOf()
             program.split("|").forEach {
-                val time = it.split("*").first().toFloat()
-                val power = it.split("*").last().toFloat()
-                entries.add(Entry(time, power))
+                if (it.isNotEmpty()) {
+                    val time = it.split("*").first().toFloat()
+                    val power = it.split("*").last().toFloat()
+                    entries.add(Entry(time, power))
+                }
             }
             val chart = LineDataSet(entries, "")
             return LineData(chart)

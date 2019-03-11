@@ -21,7 +21,7 @@ interface ProgramInterface {
     fun showLoading()
     fun hideLoading()
 
-    fun setProgramsList(programsList: List<Program>)
+    fun setProgramsList(programsList: ArrayList<Program>)
 
     fun showProgramsList()
     fun hideProgramsList()
@@ -78,14 +78,14 @@ class ProgramFragment: Fragment(), ProgramInterface {
     }
 
     override fun hideProgramsList() {
-
+        listPrograms.visibility = View.INVISIBLE
     }
 
     override fun showProgramsList() {
-
+        listPrograms.visibility = View.VISIBLE
     }
 
-    override fun setProgramsList(programsList: List<Program>) {
-
+    override fun setProgramsList(programsList: ArrayList<Program>) {
+        programAdapter.setProgramList(programsList)
     }
 }
