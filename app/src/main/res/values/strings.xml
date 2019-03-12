@@ -17,11 +17,12 @@
     <string name="setting_age">Age:</string>
     <string name="setting_name">Name:</string>
     <string name="setting_gender">Gender:</string>
-    <string name="gender_male">Male</string>
-    <string name="gender_female">Female</string>
     <string name="setting_weight">Weight:</string>
     <string name="setting_height">Height:</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
     <string name="profiles_text">Profiles:</string>
+    <string name="profiles_empty_list">There is no profiles in DB</string>
     <string name="settings_create">CREATE</string>
     <string name="settings_cancel">CANCEL</string>
     <string name="program_name">Program Name:</string>
@@ -30,5 +31,13 @@
     <string name="program_power">Power (W):</string>
     <string name="programs_text">Programs:</string>
     <string name="programs_empty_list">There is no programs in DB</string>
-    <string name="profiles_empty_list">There is no profiles in DB</string>
+    <string name="program_count">Count:</string>
+    <string name="program_rest_power">Rest power (W):</string>
+
+    <string-array name="programType">
+        <item></item>
+        <item>Single</item>
+        <item>Intervals</item>
+    </string-array>
+
 </resources>

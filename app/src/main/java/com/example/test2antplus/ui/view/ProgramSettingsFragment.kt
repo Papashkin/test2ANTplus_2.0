@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
@@ -22,9 +23,18 @@ interface ProgramSettingsInterface {
     fun showLoading()
     fun hideLoading()
     fun clearTextFields()
+
+    fun setViewsEnabled()
+    fun setViewsDisabled()
+    fun setProgramType(type: Int)
 }
 
  class ProgramSettingsFragment: Fragment(), ProgramSettingsInterface {
+    companion object {
+        const val NOTHING = 0
+        const val SINGLE = 1
+        const val INTERVAL = 2
+    }
 
      private lateinit var presenter: ProgramSettingsPresenter
 
@@ -67,6 +77,46 @@ interface ProgramSettingsInterface {
                  } else {
                      presenter.setDuration(0.0f)
                  }
+             }
+         }
+
+         editIntervalsCount.textWatcher {
+             afterTextChanged {
+                 if (!it.isNullOrEmpty()) {
+                     presenter.setIntervalCount(it.toString().toInt())
+                 } else {
+                     presenter.setIntervalCount(0)
+                 }
+             }
+         }
+
+         editRestDuration.textWatcher {
+             afterTextChanged {
+                 if (!it.isNullOrEmpty()) {
+                     presenter.setRestDuration(it.toString().toFloat())
+                 } else {
+                     presenter.setRestDuration(0.0f)
+                 }
+             }
+         }
+
+         editRestPower.textWatcher {
+             afterTextChanged {
+                 if (!it.isNullOrEmpty()) {
+                     presenter.setRestPower(it.toString().toFloat())
+                 } else {
+                     presenter.setRestPower(0.0f)
+                 }
+             }
+         }
+
+         spinType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+             override fun onNothingSelected(parent: AdapterView<*>?) {
+                 presenter.setProgramType(0)
+             }
+
+             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                 presenter.setProgramType(id.toInt())
              }
          }
 
@@ -115,5 +165,40 @@ interface ProgramSettingsInterface {
      override fun clearTextFields() {
          editDuration.setText("")
          editTargetPower.setText("")
+     }
+
+     override fun setViewsEnabled() {
+         editDuration.isEnabled = true
+         editTargetPower.isEnabled = true
+         editIntervalsCount.isEnabled = true
+         editRestDuration.isEnabled = true
+         editRestPower.isEnabled = true
+     }
+
+     override fun setViewsDisabled() {
+         editDuration.isEnabled = false
+         editTargetPower.isEnabled = false
+         editIntervalsCount.isEnabled = false
+         editRestDuration.isEnabled = false
+         editRestPower.isEnabled = false
+     }
+
+     override fun setProgramType(type: Int) {
+         when (type) {
+             SINGLE -> {
+                 editIntervalsCount.visibility = View.INVISIBLE
+                 editRestDuration.visibility = View.INVISIBLE
+                 editRestPower.visibility = View.INVISIBLE
+             }
+
+             INTERVAL -> {
+                 editIntervalsCount.visibility = View.VISIBLE
+                 editRestDuration.visibility = View.VISIBLE
+                 editRestPower.visibility = View.VISIBLE
+             }
+             NOTHING -> {
+                 setViewsDisabled()
+             }
+         }
      }
  }

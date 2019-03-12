@@ -26,7 +26,11 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     private  var programName: String = ""
     private var powerTemp: Float = 0.0f
+    private var restPowerTemp: Float = 0.0f
     private var duration: Float = 0.0f
+    private var restDuration: Float = 0.0f
+    private var intervalCount = 0
+    private var programType = 0
     private var entries: ArrayList<Entry> = arrayListOf()
 
     init {
@@ -35,6 +39,11 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     fun setProgramName(text: String) {
         programName = text
+        if (text.isNotEmpty()) {
+            view.setViewsEnabled()
+        } else {
+            view.setViewsDisabled()
+        }
         checkAddFab()
     }
 
@@ -46,6 +55,26 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     fun setDuration(time: Float) {
         duration = time
         checkAddFab()
+    }
+
+    fun setRestPower(power: Float) {
+        restPowerTemp = power
+        checkAddFab()
+    }
+
+    fun setRestDuration(time: Float) {
+        restDuration = time
+        checkAddFab()
+    }
+
+    fun setIntervalCount(count: Int) {
+        intervalCount = count
+        checkAddFab()
+    }
+
+    fun setProgramType(type: Int) {
+        programType = type
+        view.setProgramType(type)
     }
 
     fun onAddClick() {
