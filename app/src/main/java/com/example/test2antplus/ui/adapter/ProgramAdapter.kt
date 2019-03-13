@@ -108,6 +108,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
                 }
             }
             val chart = LineDataSet(entries, "")
+            chart.setDrawFilled(true)
             return LineData(chart)
         }
 

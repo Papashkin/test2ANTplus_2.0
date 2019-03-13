@@ -114,6 +114,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     private fun updateChart() {
         program = LineDataSet(entries, programName)
+        program.setDrawFilled(true)
         view.updateChart(LineData(program))
         clearData()
         view.hideAddPowerFab()
@@ -137,6 +138,9 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     private fun clearData() {
         powerTemp = 0.0f
         duration = 0.0f
+        restDuration = 0.0f
+        restPowerTemp = 0.0f
+        intervalCount = 0
         view.clearTextFields()
     }
 
