@@ -35,7 +35,6 @@ class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner
     }
 
     private fun setData() {
-        view.hideLoading()
         if (programs.isEmpty()) {
             view.hideProgramsList()
             view.showEmptyProgramsList()
@@ -54,5 +53,4 @@ class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner
         selectedProgram = programs[id]
         // TODO add selected program to broadcast
     }
-
 }

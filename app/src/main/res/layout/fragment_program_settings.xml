@@ -199,7 +199,7 @@
             app:fabSize="mini"
             android:src="@drawable/ic_add_white"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="46dp"
+            android:layout_marginTop="16dp"
             android:foregroundGravity="center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/layoutIntervalsCount"/>
@@ -211,7 +211,7 @@
             android:isScrollContainer="false"
             android:layout_height="240dp"
             android:background="#ffffff"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="70dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/fabAddPower"/>

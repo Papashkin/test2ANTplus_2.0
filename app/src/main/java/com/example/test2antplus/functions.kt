@@ -4,6 +4,10 @@ import android.app.Activity
 import android.app.Dialog
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import io.reactivex.Observable
+import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_program.view.*
 
 /**
@@ -35,3 +39,11 @@ fun Long.formatToTime(): String {
 
     return "$hours:$minutes:$seconds"
 }
+
+fun <T> Single<T>.workInAsinc(): Single<T> =
+    this.observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+
+fun <T> Observable<T>.workInAsinc(): Observable<T> =
+    this.observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())

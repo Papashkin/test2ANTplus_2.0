@@ -1,5 +1,6 @@
 package com.example.test2antplus.ui.view
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +11,9 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Program
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramPresenter
+import com.example.test2antplus.showDialog
 import com.example.test2antplus.ui.adapter.ProgramAdapter
+import com.pawegio.kandroid.runDelayed
 import kotlinx.android.synthetic.main.fragment_program.*
 
 
@@ -29,11 +32,17 @@ interface ProgramInterface {
     fun hideEmptyProgramsList()
 }
 
-class ProgramFragment: Fragment(), ProgramInterface {
+class ProgramFragment : Fragment(), ProgramInterface {
+
+    companion object {
+        const val DIALOG_DELAY = 1000L // delay for loading dialog
+    }
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
     private lateinit var owner: LifecycleOwner
+
+    private var dialog: Dialog? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
@@ -62,11 +71,11 @@ class ProgramFragment: Fragment(), ProgramInterface {
     }
 
     override fun showLoading() {
-        pbPrograms.visibility = View.VISIBLE
+        dialog = showDialog(requireActivity(), "Идет загрузка, подождите ...")
     }
 
     override fun hideLoading() {
-        pbPrograms.visibility = View.INVISIBLE
+        dialog?.dismiss()
     }
 
     override fun hideEmptyProgramsList() {
@@ -87,5 +96,8 @@ class ProgramFragment: Fragment(), ProgramInterface {
 
     override fun setProgramsList(programsList: ArrayList<Program>) {
         programAdapter.setProgramList(programsList)
+        runDelayed(DIALOG_DELAY) {
+            hideLoading()
+        }
     }
 }

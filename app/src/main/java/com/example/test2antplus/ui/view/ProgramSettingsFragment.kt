@@ -14,10 +14,11 @@ import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.LineData
 import com.pawegio.kandroid.textWatcher
+import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_program_settings.*
 
 interface ProgramSettingsInterface {
-    fun updateBarChart(data: LineData)
+    fun updateChart(data: LineData)
     fun showAddPowerFab()
     fun hideAddPowerFab()
     fun showLoading()
@@ -27,6 +28,8 @@ interface ProgramSettingsInterface {
     fun setViewsEnabled()
     fun setViewsDisabled()
     fun setProgramType(type: Int)
+
+    fun showToast(text: String)
 }
 
  class ProgramSettingsFragment: Fragment(), ProgramSettingsInterface {
@@ -112,7 +115,7 @@ interface ProgramSettingsInterface {
 
          spinType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
              override fun onNothingSelected(parent: AdapterView<*>?) {
-                 presenter.setProgramType(0)
+                 presenter.setProgramType(NOTHING)
              }
 
              override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -129,7 +132,7 @@ interface ProgramSettingsInterface {
          }
      }
 
-     override fun updateBarChart(data: LineData) {
+     override fun updateChart(data: LineData) {
          var count = 0
          chartProgram.data = data
          chartProgram.xAxis.setValueFormatter { value, _ ->
@@ -187,18 +190,27 @@ interface ProgramSettingsInterface {
          when (type) {
              SINGLE -> {
                  editIntervalsCount.visibility = View.INVISIBLE
+                 textIntervalsCount.visibility = View.INVISIBLE
                  editRestDuration.visibility = View.INVISIBLE
+                 textRestDurationTime.visibility = View.INVISIBLE
                  editRestPower.visibility = View.INVISIBLE
+                 textRestPower.visibility = View.INVISIBLE
              }
-
              INTERVAL -> {
                  editIntervalsCount.visibility = View.VISIBLE
+                 textIntervalsCount.visibility = View.VISIBLE
                  editRestDuration.visibility = View.VISIBLE
+                 textRestDurationTime.visibility = View.VISIBLE
                  editRestPower.visibility = View.VISIBLE
+                 textRestPower.visibility = View.VISIBLE
              }
              NOTHING -> {
                  setViewsDisabled()
              }
          }
+     }
+
+     override fun showToast(text: String) {
+         toast(text)
      }
  }

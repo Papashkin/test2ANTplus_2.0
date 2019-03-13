@@ -5,13 +5,14 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.navigation.AppRouter
+import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
+import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
 import com.example.test2antplus.ui.view.ProgramSettingsInterface
+import com.example.test2antplus.workInAsinc
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     private lateinit var program: LineDataSet
 
-    private  var programName: String = ""
+    private var programName: String = ""
     private var powerTemp: Float = 0.0f
     private var restPowerTemp: Float = 0.0f
     private var duration: Float = 0.0f
@@ -39,12 +40,16 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     fun setProgramName(text: String) {
         programName = text
-        if (text.isNotEmpty()) {
+        checkViewsEnabled()
+        checkAddFab()
+    }
+
+    private fun checkViewsEnabled() {
+        if (programName.isNotEmpty() && programType != 0) {
             view.setViewsEnabled()
         } else {
             view.setViewsDisabled()
         }
-        checkAddFab()
     }
 
     fun setTargetPower(power: Float) {
@@ -74,10 +79,27 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     fun setProgramType(type: Int) {
         programType = type
+        checkViewsEnabled()
         view.setProgramType(type)
     }
 
     fun onAddClick() {
+        when (programType) {
+            SINGLE -> {
+                setInterval(duration, powerTemp)
+                updateChart()
+            }
+            INTERVAL -> {
+                for (interval in 0 until intervalCount) {
+                    setInterval(duration, powerTemp)
+                    setInterval(restDuration, restPowerTemp)
+                }
+                updateChart()
+            }
+        }
+    }
+
+    private fun setInterval(duration: Float, power: Float) {
         val durationInSeconds = (duration * 60).toLong()
         val lastPoint = if (entries.size == 0) {
             0L
@@ -85,19 +107,30 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
             entries.last().x.toLong()
         }
 
-        for (i in lastPoint .. (lastPoint + durationInSeconds)) {
-            entries.add(Entry(i.toFloat(), powerTemp))
+        for (i in lastPoint until (lastPoint + durationInSeconds)) {
+            entries.add(Entry(i.toFloat(), power))
         }
+    }
 
+    private fun updateChart() {
         program = LineDataSet(entries, programName)
-        view.updateBarChart(LineData(program))
+        view.updateChart(LineData(program))
         clearData()
         view.hideAddPowerFab()
     }
 
     private fun checkAddFab() {
-        if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f) {
-            view.showAddPowerFab()
+        when (programType) {
+            SINGLE -> {
+                if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f) {
+                    view.showAddPowerFab()
+                }
+            }
+            INTERVAL -> {
+                if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f && restDuration != 0.0f && restPowerTemp != 0.0f && intervalCount != 0) {
+                    view.showAddPowerFab()
+                }
+            }
         }
     }
 
@@ -115,19 +148,32 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
             programValues += "${it.x}*${it.y}|"
         }
 
+        programsRepository.getProgramByName(programName)
+            .compose {
+                it.workInAsinc()
+            }.subscribe({
+                view.showToast("The program with the same name is exist in database")
+                view.hideLoading()
+            }, {
+                insertToDb(programValues)
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    private fun insertToDb(values: String) {
         Observable.fromCallable {
             programsRepository.insertProgram(
                 Program(
                     id = 0,
                     name = programName,
-                    program = programValues
+                    program = values
                 )
             )
-        }.subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                view.hideLoading()
-                router.exit()
-            }
+        }.compose {
+            it.workInAsinc()
+        }.subscribe {
+            view.hideLoading()
+            router.exit()
+        }
     }
 }
