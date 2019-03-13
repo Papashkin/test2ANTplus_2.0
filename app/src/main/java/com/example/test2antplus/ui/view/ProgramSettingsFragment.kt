@@ -150,6 +150,8 @@ interface ProgramSettingsInterface {
              }
          }
          chartProgram.setDrawGridBackground(false)
+         chartProgram.axisRight.isEnabled = false
+         chartProgram.description = null
          chartProgram.setTouchEnabled(true)
          chartProgram.invalidate()
      }

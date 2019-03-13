@@ -71,8 +71,9 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             duration.text = getDuration(programSource)
 
             programChart.data = getChartData(programSource)
-            programChart.axisLeft.isEnabled = false
+            programChart.axisRight.isEnabled = false
             programChart.xAxis.isEnabled = false
+            programChart.description = null
             programChart.invalidate()
 
             checkBox.isChecked = false
