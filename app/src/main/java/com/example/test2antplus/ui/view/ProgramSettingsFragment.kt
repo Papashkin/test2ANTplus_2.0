@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
@@ -13,6 +14,7 @@ import com.example.test2antplus.formatToTime
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.LineData
+import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_program_settings.*
@@ -30,6 +32,9 @@ interface ProgramSettingsInterface {
     fun setProgramType(type: Int)
 
     fun showToast(text: String)
+
+    fun showKeyboard()
+    fun hideKeyboard()
 }
 
  class ProgramSettingsFragment: Fragment(), ProgramSettingsInterface {
@@ -212,5 +217,15 @@ interface ProgramSettingsInterface {
 
      override fun showToast(text: String) {
          toast(text)
+     }
+
+     override fun showKeyboard() {
+         val inputMethodManager = activity?.inputMethodManager
+         inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+     }
+
+     override fun hideKeyboard() {
+         val inputMethodManager = activity?.inputMethodManager
+         inputMethodManager?.hideSoftInputFromWindow(view?.windowToken, 0)
      }
  }

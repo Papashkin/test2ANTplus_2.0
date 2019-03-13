@@ -117,6 +117,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
         program.setDrawFilled(true)
         view.updateChart(LineData(program))
         clearData()
+        view.hideKeyboard()
         view.hideAddPowerFab()
     }
 
