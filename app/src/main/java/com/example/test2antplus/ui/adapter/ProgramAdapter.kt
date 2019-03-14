@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test2antplus.Program
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.R
 import com.example.test2antplus.formatToTime
 import com.github.mikephil.charting.charts.LineChart

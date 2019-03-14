@@ -11,11 +11,11 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.ant.service.AntRadioServiceConnection
-import com.example.test2antplus.navigation.AppRouter
-import com.example.test2antplus.navigation.Screens
+import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ScanInterface
 import com.pawegio.kandroid.runDelayed
 import com.pawegio.kandroid.runOnUiThread
+import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
 
@@ -25,8 +25,10 @@ class ScanPresenter(private val view: ScanInterface) {
         const val TAG = "test2antplus"
     }
 
-    @Inject lateinit var router: AppRouter
-    @Inject lateinit var context: Context
+    @Inject
+    lateinit var router: Router
+    @Inject
+    lateinit var context: Context
 
     private var search: MultiDeviceSearch? = null
     private var connection: AntRadioServiceConnection
@@ -120,10 +122,10 @@ class ScanPresenter(private val view: ScanInterface) {
             it.close()
             view.stopScan()
         }
-        router.navigateTo(
-            Screens.WORK_FRAGMENT,
-            foundedDevices.filter { it.isSelected }
-                .map { it.device }
-        )
+        router.navigateTo(FragmentScreens.WorkScreen(foundedDevices.filter {
+            it.isSelected
+        }.map {
+            it.device
+        } as ArrayList<MultiDeviceSearchResult>))
     }
 }

@@ -16,7 +16,7 @@ interface SettingsInterface {
     fun showToast(text: String)
 }
 
-class SettingsFragment: Fragment(), SettingsInterface {
+class ProfileSettingsFragment: Fragment(), SettingsInterface {
 
     private lateinit var presenter: SettingPresenter
 

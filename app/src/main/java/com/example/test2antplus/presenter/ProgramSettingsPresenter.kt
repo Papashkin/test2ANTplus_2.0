@@ -2,9 +2,8 @@ package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.Program
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
-import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
 import com.example.test2antplus.ui.view.ProgramSettingsInterface
@@ -13,13 +12,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import io.reactivex.Observable
+import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
 
 class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     @Inject
-    lateinit var router: AppRouter
+    lateinit var router: Router
     @Inject
     lateinit var programsRepository: ProgramsRepository
 
@@ -177,6 +177,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
             it.workInAsinc()
         }.subscribe {
             view.hideLoading()
+            view.closeScreen()
             router.exit()
         }
     }

@@ -1,7 +1,7 @@
 package com.example.test2antplus.ui.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.test2antplus.Program
+import com.example.test2antplus.data.programs.Program
 
 class ProgramCallback(
     private val oldList: ArrayList<Program>,

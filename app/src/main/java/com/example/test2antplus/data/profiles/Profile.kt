@@ -1,4 +1,4 @@
-package com.example.test2antplus
+package com.example.test2antplus.data.profiles
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

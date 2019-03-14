@@ -8,7 +8,18 @@ import com.example.test2antplus.di.modules.NavigationModule
 
 class MainApplication: Application() {
     companion object {
+        @JvmStatic
         lateinit var graph: AppComponent
+
+        const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.ui.view.ProgramFragment"
+        const val ACTION_PROFILE_SETTINGS = "com.example.test2antplus.ui.view.ProfileFragment"
+
+        const val UPD_PROGRAMS_LIST = "programs list"
+        const val UPD_PROFILES_LIST = "profiles list"
+
+        const val ARGS_PROFILE = "selected profile"
+        const val ARGS_PROGRAM = "selected program"
+
     }
 
     override fun onCreate() {

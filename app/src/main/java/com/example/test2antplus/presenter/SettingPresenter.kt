@@ -2,13 +2,13 @@ package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.Profile
+import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.data.profiles.ProfilesRepository
-import com.example.test2antplus.navigation.AppRouter
 import com.example.test2antplus.ui.view.SettingsInterface
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class SettingPresenter(private val view: SettingsInterface) {
@@ -16,7 +16,7 @@ class SettingPresenter(private val view: SettingsInterface) {
     private var profile: Profile
 
     @Inject
-    lateinit var router: AppRouter
+    lateinit var router: Router
     @Inject
     lateinit var profilesRepository: ProfilesRepository
 

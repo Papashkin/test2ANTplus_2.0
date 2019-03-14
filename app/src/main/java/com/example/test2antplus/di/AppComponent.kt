@@ -23,7 +23,7 @@ interface AppComponent {
     fun inject(scanPresenter: ScanPresenter)
     fun inject(workFragment: WorkFragment)
     fun inject(workPresenter: WorkPresenter)
-    fun inject(settingsFragment: SettingsFragment)
+    fun inject(settingsFragment: ProfileSettingsFragment)
     fun inject(settingPresenter: SettingPresenter)
     fun inject(profileFragment: ProfileFragment)
     fun inject(profilePresenter: ProfilePresenter)

@@ -3,16 +3,17 @@ package com.example.test2antplus.presenter
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.Profile
+import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.data.profiles.ProfilesRepository
-import com.example.test2antplus.navigation.AppRouter
-import com.example.test2antplus.navigation.Screens
+import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ProfileFragment
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class ProfilePresenter(private val view: ProfileFragment, owner: LifecycleOwner) {
+
     @Inject
-    lateinit var router: AppRouter
+    lateinit var router: Router
     @Inject
     lateinit var profilesRepository: ProfilesRepository
 
@@ -49,10 +50,10 @@ class ProfilePresenter(private val view: ProfileFragment, owner: LifecycleOwner)
 
     fun selectProfile(id: Int) {
         selectedProfile = profiles[id]
-        router.navigateTo(Screens.SCAN_FRAGMENT)
+        router.navigateTo(FragmentScreens.ScanScreen())
     }
 
     fun onCreateProfileClick() {
-        router.navigateTo(Screens.SETTING_FRAGMENT)
+        router.navigateTo(FragmentScreens.SettingScreen())
     }
 }

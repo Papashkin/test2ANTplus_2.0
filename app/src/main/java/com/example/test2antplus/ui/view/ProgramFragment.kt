@@ -1,15 +1,19 @@
 package com.example.test2antplus.ui.view
 
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.Program
+import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.R
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.showDialog
 import com.example.test2antplus.ui.adapter.ProgramAdapter
@@ -40,9 +44,19 @@ class ProgramFragment : Fragment(), ProgramInterface {
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
-    private lateinit var owner: LifecycleOwner
 
     private var dialog: Dialog? = null
+
+    private val receiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            val extra = intent?.getStringExtra(ACTION_PROGRAM_SETTINGS)
+            when (extra) {
+                MainApplication.UPD_PROGRAMS_LIST -> {
+                    // do something
+                }
+            }
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
@@ -50,8 +64,8 @@ class ProgramFragment : Fragment(), ProgramInterface {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        owner = LifecycleOwner { lifecycle }
-        presenter = ProgramPresenter(this, owner)
+        showLoading()
+        presenter = ProgramPresenter(this)
 
         programAdapter = ProgramAdapter()
         listPrograms.adapter = programAdapter
@@ -59,6 +73,8 @@ class ProgramFragment : Fragment(), ProgramInterface {
         fabAddProgram.setOnClickListener {
             presenter.addProgram()
         }
+
+        activity?.registerReceiver(receiver, IntentFilter(ACTION_PROGRAM_SETTINGS))
     }
 
     override fun selectProgram() {
@@ -71,6 +87,8 @@ class ProgramFragment : Fragment(), ProgramInterface {
     }
 
     override fun showLoading() {
+        hideEmptyProgramsList()
+        hideProgramsList()
         dialog = showDialog(requireActivity(), "Идет загрузка, подождите ...")
     }
 

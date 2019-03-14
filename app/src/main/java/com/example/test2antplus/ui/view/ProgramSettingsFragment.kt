@@ -1,6 +1,7 @@
 package com.example.test2antplus.ui.view
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
+import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
+import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
+import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
 import com.example.test2antplus.R
 import com.example.test2antplus.formatToTime
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
@@ -35,6 +39,8 @@ interface ProgramSettingsInterface {
 
     fun showKeyboard()
     fun hideKeyboard()
+
+    fun closeScreen()
 }
 
  class ProgramSettingsFragment: Fragment(), ProgramSettingsInterface {
@@ -232,5 +238,11 @@ interface ProgramSettingsInterface {
      override fun hideKeyboard() {
          val inputMethodManager = activity?.inputMethodManager
          inputMethodManager?.hideSoftInputFromWindow(view?.windowToken, 0)
+     }
+
+     override fun closeScreen() {
+         activity?.sendBroadcast(Intent(ACTION_PROGRAM_SETTINGS).apply {
+             this.putExtra(UPD_PROGRAMS_LIST, ARGS_PROGRAM)
+         })
      }
  }

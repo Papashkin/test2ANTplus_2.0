@@ -1,7 +1,6 @@
 package com.example.test2antplus.data.profiles
 
 import androidx.lifecycle.LiveData
-import com.example.test2antplus.Profile
 import javax.inject.Inject
 import javax.inject.Singleton
 

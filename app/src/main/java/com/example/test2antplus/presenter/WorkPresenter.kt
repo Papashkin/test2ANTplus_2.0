@@ -1,14 +1,14 @@
 package com.example.test2antplus.presenter
 
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.navigation.AppRouter
-import com.example.test2antplus.navigation.Screens
+import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.WorkInterface
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 class WorkPresenter(private val view: WorkInterface) {
 
-    @Inject lateinit var router: AppRouter
+    @Inject lateinit var router: Router
 
     init {
         MainApplication.graph.inject(this)
@@ -16,7 +16,7 @@ class WorkPresenter(private val view: WorkInterface) {
 
     fun onFabClick() {
         view.closeAccess()
-        router.backTo(Screens.SCAN_FRAGMENT)
+        router.backTo(FragmentScreens.ScanScreen())
     }
 
     fun setHeartRate(hr: String) {
@@ -44,6 +44,6 @@ class WorkPresenter(private val view: WorkInterface) {
     }
 
     fun selectProgram() {
-        router.navigateTo(Screens.PROGRAM_FRAGMENT)
+        router.navigateTo(FragmentScreens.ProgramScreen())
     }
 }

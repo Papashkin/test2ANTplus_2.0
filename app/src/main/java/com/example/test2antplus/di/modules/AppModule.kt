@@ -34,8 +34,7 @@ class AppModule(@NonNull private val context: Context) {
 
     @Provides
     @Singleton
-    fun getProfilesRepository(dao: ProfileDao) =
-        ProfilesRepository(dao)
+    fun getProfilesRepository(dao: ProfileDao) = ProfilesRepository(dao)
 
 
     @Provides

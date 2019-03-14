@@ -1,19 +1,19 @@
 package com.example.test2antplus.presenter
 
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
+import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.Program
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
-import com.example.test2antplus.navigation.AppRouter
-import com.example.test2antplus.navigation.Screens
+import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ProgramInterface
+import com.example.test2antplus.workInAsinc
+import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
-class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner) {
+class ProgramPresenter(private val view: ProgramInterface) {
 
     @Inject
-    lateinit var router: AppRouter
+    lateinit var router: Router
     @Inject
     lateinit var programsRepository: ProgramsRepository
 
@@ -21,15 +21,7 @@ class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner
 
     init {
         MainApplication.graph.inject(this)
-        view.showLoading()
-
-        programsRepository
-            .getAllPrograms()
-            .observe(owner, Observer { list ->
-                programs.clear()
-                programs.addAll(list)
-                setData()
-            })
+        updateProgramsList()
     }
 
     private fun setData() {
@@ -44,7 +36,22 @@ class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner
     }
 
     fun addProgram() {
-        router.navigateTo(Screens.PROGRAM_SETTINGS_FRAGMENT)
+        router.navigateTo(FragmentScreens.ProgramSettingsScreen())
+    }
+
+    @SuppressLint("CheckResult")
+    fun updateProgramsList() {
+        programs.clear()
+        programsRepository.getAllPrograms()
+            .compose {
+                it.workInAsinc()
+            }.subscribe({ list ->
+                programs.addAll(list)
+                setData()
+            }, { error ->
+                error.printStackTrace()
+                setData()
+            })
     }
 
 //    fun selectProfile(id: Int) {
