@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
-import com.example.test2antplus.formatToTime
+import com.example.test2antplus.fullTimeFormat
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -71,6 +71,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             programChart.axisRight.isEnabled = false
             programChart.xAxis.isEnabled = false
             programChart.setTouchEnabled(false)
+            programChart.setBorderWidth(1f)
             programChart.description = null
             programChart.invalidate()
 
@@ -116,9 +117,8 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
                 }
             }
             val chart = BarDataSet(entries, "")
-            chart.barBorderWidth = 1.3f
+            chart.barBorderWidth = 1f
             chart.barBorderColor = Color.RED
-            chart.barShadowColor = Color.RED
             return BarData(chart)
         }
 
@@ -130,7 +130,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
                 }
             }
 
-            val time = count.formatToTime()
+            val time = count.fullTimeFormat()
             return "Duration: $time"
         }
     }

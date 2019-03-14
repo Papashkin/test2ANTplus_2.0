@@ -4,12 +4,13 @@ import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
-import com.example.test2antplus.formatToTime
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
 import com.example.test2antplus.ui.view.ProgramSettingsInterface
 import com.example.test2antplus.workInAsinc
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
 import java.util.*
@@ -32,7 +33,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     private var intervalCount = 0
     private var programType = 0
     private var entries: ArrayList<BarEntry> = arrayListOf()
-    private var descriptors: ArrayList<String> = arrayListOf()
+    private var descriptors: ArrayList<Float> = arrayListOf()
 
     init {
         MainApplication.graph.inject(this)
@@ -101,7 +102,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     private fun setInterval(duration: Float, power: Float) {
         entries.add(BarEntry(entries.size.toFloat(), power))
-        descriptors.add(duration.toLong().formatToTime())
+        descriptors.add(duration)
     }
 
     private fun updateChart() {
@@ -139,21 +140,10 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     @SuppressLint("CheckResult")
     fun saveProgram() {
-        when (programType) {
-            SINGLE -> {
-                if (programName.isNotEmpty() || powerTemp != 0.0f || duration != 0.0f) {
-                    view.showToast("invalid data")
-                } else {
-                    prepareToSave()
-                }
-            }
-            INTERVAL -> {
-                if (programName.isNotEmpty() || powerTemp != 0.0f || duration != 0.0f || restDuration != 0.0f || restPowerTemp != 0.0f || intervalCount != 0) {
-                    view.showToast("invalid data")
-                } else {
-                    prepareToSave()
-                }
-            }
+        if (programName.isEmpty() || entries.isEmpty()) {
+            view.showToast("invalid data")
+        } else {
+            prepareToSave()
         }
     }
 
@@ -161,8 +151,9 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     private fun prepareToSave() {
         view.showLoading()
         var programValues = ""
-        entries.forEach {
-            programValues += "${it.x}*${it.y}|"
+        for (i in entries.indices) {
+            programValues += "${entries[i].x}*${entries[i].y}|"
+            programValues += "${descriptors[i]}*${entries[i].y}|"
         }
 
         programsRepository.getProgramByName(programName)

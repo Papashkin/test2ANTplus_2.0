@@ -17,6 +17,7 @@ import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.example.test2antplus.showDialog
+import com.example.test2antplus.timeFormat
 import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
@@ -24,7 +25,7 @@ import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_program_settings.*
 
 interface ProgramSettingsInterface {
-    fun updateChart(data: BarData, duration: ArrayList<String>)
+    fun updateChart(data: BarData, duration: ArrayList<Float>)
     fun showAddPowerFab()
     fun hideAddPowerFab()
     fun showLoading()
@@ -134,6 +135,10 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
             }
         }
 
+        chartProgram.setOnTouchListener { localView, event ->
+            true
+        }
+
         fabAddPower.setOnClickListener {
             presenter.onAddClick()
         }
@@ -143,11 +148,11 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
         }
     }
 
-    override fun updateChart(data: BarData, duration: ArrayList<String>) {
-        data.barWidth = 1.3f
+    override fun updateChart(data: BarData, duration: ArrayList<Float>) {
+        data.barWidth = 0.9f
 
         data.setValueFormatter { _, entry, _, _ ->
-            duration[entry.x.toInt()]
+            duration[entry.x.toInt()].toLong().timeFormat()
         }
         data.setValueTextSize(9f)
         chartProgram.data = data
@@ -156,7 +161,7 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
         chartProgram.description = null
         chartProgram.setBorderColor(Color.RED)
         chartProgram.setTouchEnabled(true)
-        chartProgram.contentDescription = duration.last()
+        chartProgram.contentDescription = duration.last().toLong().timeFormat()
         chartProgram.invalidate()
     }
 
