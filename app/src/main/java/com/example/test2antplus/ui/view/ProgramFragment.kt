@@ -17,7 +17,6 @@ import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.showDialog
 import com.example.test2antplus.ui.adapter.ProgramAdapter
-import com.pawegio.kandroid.runDelayed
 import kotlinx.android.synthetic.main.fragment_program.*
 
 
@@ -37,10 +36,6 @@ interface ProgramInterface {
 }
 
 class ProgramFragment : Fragment(), ProgramInterface {
-
-    companion object {
-        const val DIALOG_DELAY = 200L // delay for loading dialog
-    }
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
@@ -114,8 +109,6 @@ class ProgramFragment : Fragment(), ProgramInterface {
 
     override fun setProgramsList(programsList: ArrayList<Program>) {
         programAdapter.setProgramList(programsList)
-        runDelayed(DIALOG_DELAY) {
-            hideLoading()
-        }
+        hideLoading()
     }
 }

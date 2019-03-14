@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
+import com.example.test2antplus.fullTimeFormat
+import com.example.test2antplus.timeFormat
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
 import com.example.test2antplus.ui.view.ProgramSettingsInterface
@@ -13,7 +15,6 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
-import java.util.*
 import javax.inject.Inject
 
 class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
@@ -106,8 +107,9 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     private fun updateChart() {
-        program = BarDataSet(entries, programName)
-        program.barBorderWidth = 1f
+        program = BarDataSet(entries, "Total time: ${descriptors.sum().toLong().fullTimeFormat()}")
+        program.stackLabels = descriptors.map { it.toLong().timeFormat() }.toTypedArray()
+        program.barBorderWidth = 0f
         view.updateChart(BarData(program), descriptors)
         clearData()
         view.hideKeyboard()
@@ -152,7 +154,6 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
         view.showLoading()
         var programValues = ""
         for (i in entries.indices) {
-            programValues += "${entries[i].x}*${entries[i].y}|"
             programValues += "${descriptors[i]}*${entries[i].y}|"
         }
 

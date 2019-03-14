@@ -1,6 +1,5 @@
 package com.example.test2antplus.ui.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
+import com.example.test2antplus.setCommonParams
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -67,12 +67,8 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             maxPower.text = getMaxPower(programSource)
             duration.text = getDuration(programSource)
 
-            programChart.data = getChartData(programSource)
-            programChart.axisRight.isEnabled = false
-            programChart.xAxis.isEnabled = false
+            programChart.setCommonParams(getChartData(programSource))
             programChart.setTouchEnabled(false)
-            programChart.setBorderWidth(1f)
-            programChart.description = null
             programChart.invalidate()
 
         }
@@ -108,30 +104,31 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
         }
 
         private fun getChartData(program: String): BarData {
+            var count = 0
             val entries: ArrayList<BarEntry> = arrayListOf()
             program.split("|").forEach {
                 if (it.isNotEmpty()) {
-                    val time = it.split("*").first().toFloat()
                     val power = it.split("*").last().toFloat()
-                    entries.add(BarEntry(time, power))
+                    entries.add(BarEntry(count.toFloat(), power))
+                    count += 1
                 }
             }
             val chart = BarDataSet(entries, "")
-            chart.barBorderWidth = 1f
-            chart.barBorderColor = Color.RED
+            chart.barBorderWidth = 0f
+            chart.setValueFormatter { _, _, _, _ ->
+                ""
+            }
             return BarData(chart)
         }
 
         private fun getDuration(program: String): CharSequence {
-            var count = 0L
+            var count = 0.0f
             program.split("|").forEach {
                 if (it.isNotEmpty()) {
-                    count += 1
+                    count += it.split("*").first().toFloat()
                 }
             }
-
-            val time = count.fullTimeFormat()
-            return "Duration: $time"
+            return "Duration: ${count.toLong().fullTimeFormat()}"
         }
     }
 

@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Dialog
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -57,3 +59,16 @@ fun <T> Single<T>.workInAsinc(): Single<T> =
 fun <T> Observable<T>.workInAsinc(): Observable<T> =
     this.observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
+
+/**
+ * Установка стандартных параметров гистограммы
+ */
+fun BarChart.setCommonParams(data: BarData) = this.also {
+    it.data = data
+    it.data.barWidth = 1f
+    it.data.setValueTextSize(9f)
+    it.xAxis.isEnabled = false
+    it.axisRight.isEnabled = false
+    it.description = null
+    it.setTouchEnabled(true)
+}

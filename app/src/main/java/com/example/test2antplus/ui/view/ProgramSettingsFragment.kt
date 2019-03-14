@@ -2,7 +2,6 @@ package com.example.test2antplus.ui.view
 
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,14 +9,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
-import com.example.test2antplus.MainApplication
+import com.example.test2antplus.*
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
-import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
-import com.example.test2antplus.showDialog
-import com.example.test2antplus.timeFormat
 import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
@@ -135,10 +131,6 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
             }
         }
 
-        chartProgram.setOnTouchListener { localView, event ->
-            true
-        }
-
         fabAddPower.setOnClickListener {
             presenter.onAddClick()
         }
@@ -149,19 +141,8 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
     }
 
     override fun updateChart(data: BarData, duration: ArrayList<Float>) {
-        data.barWidth = 0.9f
-
-        data.setValueFormatter { _, entry, _, _ ->
-            duration[entry.x.toInt()].toLong().timeFormat()
-        }
-        data.setValueTextSize(9f)
-        chartProgram.data = data
-        chartProgram.xAxis.setValueFormatter { _, _ -> "" }
-        chartProgram.axisRight.isEnabled = false
-        chartProgram.description = null
-        chartProgram.setBorderColor(Color.RED)
+        chartProgram.setCommonParams(data)
         chartProgram.setTouchEnabled(true)
-        chartProgram.contentDescription = duration.last().toLong().timeFormat()
         chartProgram.invalidate()
     }
 
