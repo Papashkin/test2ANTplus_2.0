@@ -58,7 +58,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     fun setDuration(time: Float) {
-        duration = time
+        duration = time*60
         checkAddFab()
     }
 
@@ -68,7 +68,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     fun setRestDuration(time: Float) {
-        restDuration = time
+        restDuration = (time*60)
         checkAddFab()
     }
 
@@ -100,14 +100,13 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     private fun setInterval(duration: Float, power: Float) {
-        val durationInSeconds = (duration * 60).toLong()
         val lastPoint = if (entries.size == 0) {
             0L
         } else {
             entries.last().x.toLong()
         }
 
-        for (i in lastPoint until (lastPoint + durationInSeconds)) {
+        for (i in lastPoint until (lastPoint + duration.toLong())) {
             entries.add(Entry(i.toFloat(), power))
         }
     }

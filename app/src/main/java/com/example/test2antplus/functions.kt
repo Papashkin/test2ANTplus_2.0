@@ -9,6 +9,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_program.view.*
+import java.util.concurrent.TimeUnit
 
 /**
  * Отображает окно с текстом
@@ -27,17 +28,15 @@ fun showDialog(activity: Activity, text: String): Dialog? {
     return null
 }
 
-fun String.getTwoDigits() = if (this.length < 2) "0$this" else this
-
+/**
+ * Форматирует время в формат "0:00:00"
+ */
 fun Long.formatToTime(): String {
-    val hours = (this / 3600).toInt().toString()
-    var minutes = ((this % 3600) / 60).toInt().toString()
-    if (minutes.length < 2) minutes = "0$minutes"
-    minutes = minutes.getTwoDigits()
-    var seconds= ((this) / 3600).toInt().toString()
-    seconds = seconds.getTwoDigits()
+    val hours = TimeUnit.SECONDS.toHours(this)
+    val minutes = TimeUnit.SECONDS.toMinutes(this) - (TimeUnit.SECONDS.toHours(this) * 60)
+    val seconds = TimeUnit.SECONDS.toSeconds(this) - (TimeUnit.SECONDS.toMinutes(this) * 60)
 
-    return "$hours:$minutes:$seconds"
+    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
 }
 
 fun <T> Single<T>.workInAsinc(): Single<T> =

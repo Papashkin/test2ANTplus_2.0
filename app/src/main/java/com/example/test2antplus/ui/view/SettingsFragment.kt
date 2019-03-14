@@ -1,26 +1,22 @@
 package com.example.test2antplus.ui.view
 
-import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.presenter.SettingPresenter
 import com.pawegio.kandroid.textWatcher
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_settings.*
-import javax.inject.Inject
 
 interface SettingsInterface {
     fun showToast(text: String)
 }
 
 class SettingsFragment: Fragment(), SettingsInterface {
-
-    @Inject lateinit var appContext: Context
 
     private lateinit var presenter: SettingPresenter
 

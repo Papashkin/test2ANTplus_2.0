@@ -12,7 +12,7 @@
     <string name="text_cadence">Cadence, RPM</string>
     <string name="text_speed">Speed, km/h</string>
     <string name="text_power">Power, W</string>
-    <string name="text_distance">Distance, m</string>
+    <string name="text_distance">Distance, km</string>
     <string name="text_null_value">---</string>
     <string name="setting_age">Age:</string>
     <string name="setting_name">Name:</string>
@@ -35,7 +35,7 @@
     <string name="program_rest_power">Rest power (W):</string>
 
     <string-array name="programType">
-        <item></item>
+        <item> </item>
         <item>Single</item>
         <item>Intervals</item>
     </string-array>

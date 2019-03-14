@@ -1,7 +1,6 @@
 package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
-import android.content.Context
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.Profile
 import com.example.test2antplus.data.profiles.ProfilesRepository
@@ -16,8 +15,6 @@ class SettingPresenter(private val view: SettingsInterface) {
 
     private var profile: Profile
 
-    @Inject
-    lateinit var appContext: Context
     @Inject
     lateinit var router: AppRouter
     @Inject

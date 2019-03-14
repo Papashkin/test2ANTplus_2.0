@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff">
 
@@ -30,7 +30,8 @@
                 android:inputType="text"
                 android:layout_marginTop="16dp"
                 android:layout_marginStart="4dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="LabelFor"/>
 
     </LinearLayout>
 
@@ -58,7 +59,8 @@
                 android:layout_marginTop="4dp"
                 android:inputType="number"
                 android:layout_marginStart="20dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="LabelFor"/>
 
     </LinearLayout>
 
@@ -131,7 +133,8 @@
                 android:inputType="numberDecimal"
                 android:layout_marginTop="4dp"
                 android:layout_marginStart="20dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="LabelFor"/>
 
     </LinearLayout>
 
@@ -159,25 +162,28 @@
                 android:layout_marginTop="4dp"
                 android:inputType="numberDecimal"
                 android:layout_marginStart="20dp"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                tools:ignore="LabelFor"/>
     </LinearLayout>
 
-    <Button
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnCreate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/settings_create"
+            android:src="@drawable/ic_check"
             app:layout_constraintTop_toBottomOf="@+id/layoutHeight"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnCancel"/>
 
-    <Button android:id="@+id/btnCancel"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnCancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/settings_cancel"
+            android:src="@drawable/ic_close"
             app:layout_constraintTop_toBottomOf="@+id/layoutHeight"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/btnCreate"
             app:layout_constraintEnd_toEndOf="parent"/>
 

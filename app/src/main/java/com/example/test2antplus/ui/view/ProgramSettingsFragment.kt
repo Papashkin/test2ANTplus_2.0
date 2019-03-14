@@ -175,6 +175,9 @@ interface ProgramSettingsInterface {
      override fun clearTextFields() {
          editDuration.setText("")
          editTargetPower.setText("")
+         editIntervalsCount.setText("")
+         editRestDuration.setText("")
+         editRestPower.setText("")
      }
 
      override fun setViewsEnabled() {

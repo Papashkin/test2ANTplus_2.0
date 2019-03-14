@@ -35,7 +35,7 @@ interface ProgramInterface {
 class ProgramFragment : Fragment(), ProgramInterface {
 
     companion object {
-        const val DIALOG_DELAY = 100L // delay for loading dialog
+        const val DIALOG_DELAY = 200L // delay for loading dialog
     }
 
     private lateinit var presenter: ProgramPresenter

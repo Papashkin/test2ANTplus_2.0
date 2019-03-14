@@ -19,8 +19,6 @@ class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner
 
     private var programs: ArrayList<Program> = arrayListOf()
 
-    private lateinit var selectedProgram: Program
-
     init {
         MainApplication.graph.inject(this)
         view.showLoading()
@@ -49,8 +47,8 @@ class ProgramPresenter(private val view: ProgramInterface, owner: LifecycleOwner
         router.navigateTo(Screens.PROGRAM_SETTINGS_FRAGMENT)
     }
 
-    fun selectProfile(id: Int) {
-        selectedProgram = programs[id]
-        // TODO add selected program to broadcast
-    }
+//    fun selectProfile(id: Int) {
+//        selectedProgram = programs[id]
+//        // TODO add selected program to broadcast
+//    }
 }
