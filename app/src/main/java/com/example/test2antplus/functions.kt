@@ -32,11 +32,10 @@ fun showDialog(activity: Activity, text: String): Dialog? {
  * Форматирует время в формат "0:00:00"
  */
 fun Long.formatToTime(): String {
-    val hours = TimeUnit.SECONDS.toHours(this)
     val minutes = TimeUnit.SECONDS.toMinutes(this) - (TimeUnit.SECONDS.toHours(this) * 60)
     val seconds = TimeUnit.SECONDS.toSeconds(this) - (TimeUnit.SECONDS.toMinutes(this) * 60)
 
-    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
+    return String.format("%2d:%02d", minutes, seconds)
 }
 
 fun <T> Single<T>.workInAsinc(): Single<T> =

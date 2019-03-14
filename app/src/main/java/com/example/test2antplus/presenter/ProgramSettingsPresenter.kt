@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
+import com.example.test2antplus.formatToTime
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
 import com.example.test2antplus.ui.view.ProgramSettingsInterface
 import com.example.test2antplus.workInAsinc
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.*
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
 import java.util.*
@@ -23,7 +22,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     @Inject
     lateinit var programsRepository: ProgramsRepository
 
-    private lateinit var program: LineDataSet
+    private lateinit var program: BarDataSet
 
     private var programName: String = ""
     private var powerTemp: Float = 0.0f
@@ -32,7 +31,8 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     private var restDuration: Float = 0.0f
     private var intervalCount = 0
     private var programType = 0
-    private var entries: ArrayList<Entry> = arrayListOf()
+    private var entries: ArrayList<BarEntry> = arrayListOf()
+    private var descriptors: ArrayList<String> = arrayListOf()
 
     init {
         MainApplication.graph.inject(this)
@@ -100,21 +100,14 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     private fun setInterval(duration: Float, power: Float) {
-        val lastPoint = if (entries.size == 0) {
-            0L
-        } else {
-            entries.last().x.toLong()
-        }
-
-        for (i in lastPoint until (lastPoint + duration.toLong())) {
-            entries.add(Entry(i.toFloat(), power))
-        }
+        entries.add(BarEntry(entries.size.toFloat(), power))
+        descriptors.add(duration.toLong().formatToTime())
     }
 
     private fun updateChart() {
-        program = LineDataSet(entries, programName)
-        program.setDrawFilled(true)
-        view.updateChart(LineData(program))
+        program = BarDataSet(entries, programName)
+        program.barBorderWidth = 1f
+        view.updateChart(BarData(program), descriptors)
         clearData()
         view.hideKeyboard()
         view.hideAddPowerFab()
@@ -146,6 +139,26 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     @SuppressLint("CheckResult")
     fun saveProgram() {
+        when (programType) {
+            SINGLE -> {
+                if (programName.isNotEmpty() || powerTemp != 0.0f || duration != 0.0f) {
+                    view.showToast("invalid data")
+                } else {
+                    prepareToSave()
+                }
+            }
+            INTERVAL -> {
+                if (programName.isNotEmpty() || powerTemp != 0.0f || duration != 0.0f || restDuration != 0.0f || restPowerTemp != 0.0f || intervalCount != 0) {
+                    view.showToast("invalid data")
+                } else {
+                    prepareToSave()
+                }
+            }
+        }
+    }
+
+    @SuppressLint("CheckResult")
+    private fun prepareToSave() {
         view.showLoading()
         var programValues = ""
         entries.forEach {

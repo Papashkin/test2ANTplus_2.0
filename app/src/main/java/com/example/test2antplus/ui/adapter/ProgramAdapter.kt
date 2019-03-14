@@ -1,17 +1,18 @@
 package com.example.test2antplus.ui.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.R
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.formatToTime
-import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import java.util.*
 
 class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
@@ -55,7 +56,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
         private val programName = view.findViewById<TextView>(R.id.textProgramName)
         private val avgPower = view.findViewById<TextView>(R.id.textAveragePower)
         private val duration = view.findViewById<TextView>(R.id.textDuration)
-        private val programChart = view.findViewById<LineChart>(R.id.chartProgram)
+        private val programChart = view.findViewById<BarChart>(R.id.chartProgram)
         private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
 
         fun bind(program: Program) {
@@ -69,6 +70,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             programChart.data = getChartData(programSource)
             programChart.axisRight.isEnabled = false
             programChart.xAxis.isEnabled = false
+            programChart.setTouchEnabled(false)
             programChart.description = null
             programChart.invalidate()
 
@@ -104,18 +106,20 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             return "Max power: $maxPower W"
         }
 
-        private fun getChartData(program: String): LineData {
-            val entries: ArrayList<Entry> = arrayListOf()
+        private fun getChartData(program: String): BarData {
+            val entries: ArrayList<BarEntry> = arrayListOf()
             program.split("|").forEach {
                 if (it.isNotEmpty()) {
                     val time = it.split("*").first().toFloat()
                     val power = it.split("*").last().toFloat()
-                    entries.add(Entry(time, power))
+                    entries.add(BarEntry(time, power))
                 }
             }
-            val chart = LineDataSet(entries, "")
-            chart.setDrawFilled(true)
-            return LineData(chart)
+            val chart = BarDataSet(entries, "")
+            chart.barBorderWidth = 1.3f
+            chart.barBorderColor = Color.RED
+            chart.barShadowColor = Color.RED
+            return BarData(chart)
         }
 
         private fun getDuration(program: String): CharSequence {

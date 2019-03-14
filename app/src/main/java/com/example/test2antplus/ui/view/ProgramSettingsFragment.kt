@@ -2,6 +2,7 @@ package com.example.test2antplus.ui.view
 
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,17 +15,16 @@ import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTING
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
 import com.example.test2antplus.R
-import com.example.test2antplus.formatToTime
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.example.test2antplus.showDialog
-import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_program_settings.*
 
 interface ProgramSettingsInterface {
-    fun updateChart(data: LineData)
+    fun updateChart(data: BarData, duration: ArrayList<String>)
     fun showAddPowerFab()
     fun hideAddPowerFab()
     fun showLoading()
@@ -43,206 +43,204 @@ interface ProgramSettingsInterface {
     fun closeScreen()
 }
 
- class ProgramSettingsFragment: Fragment(), ProgramSettingsInterface {
+class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
     companion object {
         const val NOTHING = 0
         const val SINGLE = 1
         const val INTERVAL = 2
     }
 
-     private lateinit var presenter: ProgramSettingsPresenter
+    private lateinit var presenter: ProgramSettingsPresenter
 
-     private var dialog: Dialog? = null
+    private var dialog: Dialog? = null
 
-     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-         MainApplication.graph.inject(this)
-         return inflater.inflate(R.layout.fragment_program_settings, container, false)
-     }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        MainApplication.graph.inject(this)
+        return inflater.inflate(R.layout.fragment_program_settings, container, false)
+    }
 
-     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-         presenter = ProgramSettingsPresenter(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        presenter = ProgramSettingsPresenter(this)
 
-         fabAddPower.hide()
+        fabAddPower.hide()
 
-         editProgramName.textWatcher {
-             afterTextChanged {
-                 if (!it.isNullOrEmpty()) {
-                     presenter.setProgramName(it.toString())
-                 } else {
-                     presenter.setProgramName("")
-                 }
-             }
-         }
+        editProgramName.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setProgramName(it.toString())
+                } else {
+                    presenter.setProgramName("")
+                }
+            }
+        }
 
-         editTargetPower.textWatcher {
-             afterTextChanged {
-                 if (!it.isNullOrEmpty()) {
-                     presenter.setTargetPower(it.toString().toFloat())
-                 } else {
-                     presenter.setTargetPower(0.0f)
-                 }
-             }
-         }
+        editTargetPower.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setTargetPower(it.toString().toFloat())
+                } else {
+                    presenter.setTargetPower(0.0f)
+                }
+            }
+        }
 
-         editDuration.textWatcher {
-             afterTextChanged {
-                 if (!it.isNullOrEmpty()) {
-                     presenter.setDuration(it.toString().toFloat())
-                 } else {
-                     presenter.setDuration(0.0f)
-                 }
-             }
-         }
+        editDuration.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setDuration(it.toString().toFloat())
+                } else {
+                    presenter.setDuration(0.0f)
+                }
+            }
+        }
 
-         editIntervalsCount.textWatcher {
-             afterTextChanged {
-                 if (!it.isNullOrEmpty()) {
-                     presenter.setIntervalCount(it.toString().toInt())
-                 } else {
-                     presenter.setIntervalCount(0)
-                 }
-             }
-         }
+        editIntervalsCount.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setIntervalCount(it.toString().toInt())
+                } else {
+                    presenter.setIntervalCount(0)
+                }
+            }
+        }
 
-         editRestDuration.textWatcher {
-             afterTextChanged {
-                 if (!it.isNullOrEmpty()) {
-                     presenter.setRestDuration(it.toString().toFloat())
-                 } else {
-                     presenter.setRestDuration(0.0f)
-                 }
-             }
-         }
+        editRestDuration.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setRestDuration(it.toString().toFloat())
+                } else {
+                    presenter.setRestDuration(0.0f)
+                }
+            }
+        }
 
-         editRestPower.textWatcher {
-             afterTextChanged {
-                 if (!it.isNullOrEmpty()) {
-                     presenter.setRestPower(it.toString().toFloat())
-                 } else {
-                     presenter.setRestPower(0.0f)
-                 }
-             }
-         }
+        editRestPower.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setRestPower(it.toString().toFloat())
+                } else {
+                    presenter.setRestPower(0.0f)
+                }
+            }
+        }
 
-         spinType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-             override fun onNothingSelected(parent: AdapterView<*>?) {
-                 presenter.setProgramType(NOTHING)
-             }
+        spinType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                presenter.setProgramType(NOTHING)
+            }
 
-             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                 presenter.setProgramType(id.toInt())
-             }
-         }
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                presenter.setProgramType(id.toInt())
+            }
+        }
 
-         fabAddPower.setOnClickListener {
-             presenter.onAddClick()
-         }
+        fabAddPower.setOnClickListener {
+            presenter.onAddClick()
+        }
 
-         fabCreateProgram.setOnClickListener {
-             presenter.saveProgram()
-         }
-     }
+        fabCreateProgram.setOnClickListener {
+            presenter.saveProgram()
+        }
+    }
 
-     override fun updateChart(data: LineData) {
-         var count = 0
-         chartProgram.data = data
-         chartProgram.xAxis.setValueFormatter { value, _ ->
-             count += 1
-             val time = value.toLong().formatToTime()
-             if (0 == count % 2) {
-                 time
-             } else {
-                 ""
-             }
-         }
-         chartProgram.setDrawGridBackground(false)
-         chartProgram.axisRight.isEnabled = false
-         chartProgram.description = null
-         chartProgram.setTouchEnabled(true)
-         chartProgram.invalidate()
-     }
+    override fun updateChart(data: BarData, duration: ArrayList<String>) {
+        data.barWidth = 1.3f
 
-     override fun showAddPowerFab() {
-         fabAddPower.show()
-     }
+        data.setValueFormatter { _, entry, _, _ ->
+            duration[entry.x.toInt()]
+        }
+        data.setValueTextSize(9f)
+        chartProgram.data = data
+        chartProgram.xAxis.setValueFormatter { _, _ -> "" }
+        chartProgram.axisRight.isEnabled = false
+        chartProgram.description = null
+        chartProgram.setBorderColor(Color.RED)
+        chartProgram.setTouchEnabled(true)
+        chartProgram.contentDescription = duration.last()
+        chartProgram.invalidate()
+    }
 
-     override fun hideAddPowerFab() {
-         fabAddPower.hide()
-     }
+    override fun showAddPowerFab() {
+        fabAddPower.show()
+    }
 
-     override fun hideLoading() {
-         dialog?.dismiss()
-     }
+    override fun hideAddPowerFab() {
+        fabAddPower.hide()
+    }
 
-     override fun showLoading() {
-         dialog = showDialog(requireActivity(), "Сохранение программы")
-     }
+    override fun hideLoading() {
+        dialog?.dismiss()
+    }
 
-     override fun clearTextFields() {
-         editDuration.setText("")
-         editTargetPower.setText("")
-         editIntervalsCount.setText("")
-         editRestDuration.setText("")
-         editRestPower.setText("")
-     }
+    override fun showLoading() {
+        dialog = showDialog(requireActivity(), "Сохранение программы")
+    }
 
-     override fun setViewsEnabled() {
-         editDuration.isEnabled = true
-         editTargetPower.isEnabled = true
-         editIntervalsCount.isEnabled = true
-         editRestDuration.isEnabled = true
-         editRestPower.isEnabled = true
-     }
+    override fun clearTextFields() {
+        editDuration.setText("")
+        editTargetPower.setText("")
+        editIntervalsCount.setText("")
+        editRestDuration.setText("")
+        editRestPower.setText("")
+    }
 
-     override fun setViewsDisabled() {
-         editDuration.isEnabled = false
-         editTargetPower.isEnabled = false
-         editIntervalsCount.isEnabled = false
-         editRestDuration.isEnabled = false
-         editRestPower.isEnabled = false
-     }
+    override fun setViewsEnabled() {
+        editDuration.isEnabled = true
+        editTargetPower.isEnabled = true
+        editIntervalsCount.isEnabled = true
+        editRestDuration.isEnabled = true
+        editRestPower.isEnabled = true
+    }
 
-     override fun setProgramType(type: Int) {
-         when (type) {
-             SINGLE -> {
-                 editIntervalsCount.visibility = View.INVISIBLE
-                 textIntervalsCount.visibility = View.INVISIBLE
-                 editRestDuration.visibility = View.INVISIBLE
-                 textRestDurationTime.visibility = View.INVISIBLE
-                 editRestPower.visibility = View.INVISIBLE
-                 textRestPower.visibility = View.INVISIBLE
-             }
-             INTERVAL -> {
-                 editIntervalsCount.visibility = View.VISIBLE
-                 textIntervalsCount.visibility = View.VISIBLE
-                 editRestDuration.visibility = View.VISIBLE
-                 textRestDurationTime.visibility = View.VISIBLE
-                 editRestPower.visibility = View.VISIBLE
-                 textRestPower.visibility = View.VISIBLE
-             }
-             NOTHING -> {
-                 setViewsDisabled()
-             }
-         }
-     }
+    override fun setViewsDisabled() {
+        editDuration.isEnabled = false
+        editTargetPower.isEnabled = false
+        editIntervalsCount.isEnabled = false
+        editRestDuration.isEnabled = false
+        editRestPower.isEnabled = false
+    }
 
-     override fun showToast(text: String) {
-         toast(text)
-     }
+    override fun setProgramType(type: Int) {
+        when (type) {
+            SINGLE -> {
+                editIntervalsCount.visibility = View.INVISIBLE
+                textIntervalsCount.visibility = View.INVISIBLE
+                editRestDuration.visibility = View.INVISIBLE
+                textRestDurationTime.visibility = View.INVISIBLE
+                editRestPower.visibility = View.INVISIBLE
+                textRestPower.visibility = View.INVISIBLE
+            }
+            INTERVAL -> {
+                editIntervalsCount.visibility = View.VISIBLE
+                textIntervalsCount.visibility = View.VISIBLE
+                editRestDuration.visibility = View.VISIBLE
+                textRestDurationTime.visibility = View.VISIBLE
+                editRestPower.visibility = View.VISIBLE
+                textRestPower.visibility = View.VISIBLE
+            }
+            NOTHING -> {
+                setViewsDisabled()
+            }
+        }
+    }
 
-     override fun showKeyboard() {
-         val inputMethodManager = activity?.inputMethodManager
-         inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
-     }
+    override fun showToast(text: String) {
+        toast(text)
+    }
 
-     override fun hideKeyboard() {
-         val inputMethodManager = activity?.inputMethodManager
-         inputMethodManager?.hideSoftInputFromWindow(view?.windowToken, 0)
-     }
+    override fun showKeyboard() {
+        val inputMethodManager = activity?.inputMethodManager
+        inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    }
 
-     override fun closeScreen() {
-         activity?.sendBroadcast(Intent(ACTION_PROGRAM_SETTINGS).apply {
-             this.putExtra(UPD_PROGRAMS_LIST, ARGS_PROGRAM)
-         })
-     }
- }
+    override fun hideKeyboard() {
+        val inputMethodManager = activity?.inputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(view?.windowToken, 0)
+    }
+
+    override fun closeScreen() {
+        activity?.sendBroadcast(Intent(ACTION_PROGRAM_SETTINGS).apply {
+            this.putExtra(UPD_PROGRAMS_LIST, ARGS_PROGRAM)
+        })
+    }
+}
