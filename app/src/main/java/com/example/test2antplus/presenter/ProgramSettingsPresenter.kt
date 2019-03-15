@@ -1,15 +1,15 @@
 package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
-import com.example.test2antplus.MainApplication
+import android.graphics.Bitmap
+import com.example.test2antplus.*
+import com.example.test2antplus.MainApplication.Companion.CHART_IMAGE_GALLERY
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
-import com.example.test2antplus.fullTimeFormat
-import com.example.test2antplus.timeFormat
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
 import com.example.test2antplus.ui.view.ProgramSettingsInterface
-import com.example.test2antplus.workInAsinc
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -17,6 +17,7 @@ import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
+@SuppressLint("CheckResult")
 class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     @Inject
@@ -25,6 +26,8 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     lateinit var programsRepository: ProgramsRepository
 
     private lateinit var program: BarDataSet
+    private lateinit var programChart: BarChart
+    private lateinit var programImagePath: String
 
     private var programName: String = ""
     private var powerTemp: Float = 0.0f
@@ -164,18 +167,32 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
                 view.showToast("The program with the same name is exist in database")
                 view.hideLoading()
             }, {
-                insertToDb(programValues)
+                view.getChart()
+                saveImage(programValues)
+//                insertToDb(programValues)
             })
     }
 
-    @SuppressLint("CheckResult")
+    private fun saveImage(programValues: String) {
+        Observable.fromCallable {
+            programChart.saveToGallery(programImagePath, CHART_IMAGE_GALLERY, "", Bitmap.CompressFormat.PNG, 75)
+        }.compose {
+            it.workInAsinc()
+        }.subscribe({
+            insertToDb(values = programValues)
+        },{
+            it.printStackTrace()
+        })
+    }
+
     private fun insertToDb(values: String) {
         Observable.fromCallable {
             programsRepository.insertProgram(
                 Program(
                     id = 0,
                     name = programName,
-                    program = values
+                    program = values,
+                    imagePath = programImagePath
                 )
             )
         }.compose {
@@ -185,5 +202,10 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
             view.closeScreen()
             router.exit()
         }
+    }
+
+    fun getChart(chart: BarChart) {
+        programChart = chart
+        programImagePath = "Program_${programName.convertToLatinScript()}"
     }
 }

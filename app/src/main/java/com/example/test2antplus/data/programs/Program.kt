@@ -19,11 +19,15 @@ class Program @Inject constructor(
     private var name: String,
 
     @ColumnInfo(name = "program")
-    private var program: String
+    private var program: String,
+
+    @ColumnInfo(name = "image_path")
+    private var imagePath: String
 ) {
     fun getId() = this.id
     fun getName() = this.name
     fun getProgram() = this.program
+    fun getImagePath() = this.imagePath
 
     fun setName(newName: String) {
         this.name = newName
@@ -31,5 +35,9 @@ class Program @Inject constructor(
 
     fun setProgram(newProgram: String) {
         this.program = newProgram
+    }
+
+    fun setImagePath(path: String) {
+        this.imagePath = path
     }
 }

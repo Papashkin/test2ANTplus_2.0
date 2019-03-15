@@ -1,18 +1,24 @@
 package com.example.test2antplus.ui.adapter
 
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.test2antplus.MainApplication.Companion.CHART_IMAGE_GALLERY
 import com.example.test2antplus.R
+import com.example.test2antplus.convertToLatinScript
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
-import com.example.test2antplus.setCommonParams
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
+//import com.example.test2antplus.setCommonParams
+//import com.github.mikephil.charting.charts.BarChart
+//import com.github.mikephil.charting.data.BarData
+//import com.github.mikephil.charting.data.BarDataSet
+//import com.github.mikephil.charting.data.BarEntry
+import com.squareup.picasso.Picasso
+import java.io.File
 import java.util.*
 
 class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
@@ -56,7 +62,8 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
         private val programName = view.findViewById<TextView>(R.id.textProgramName)
         private val avgPower = view.findViewById<TextView>(R.id.textAveragePower)
         private val duration = view.findViewById<TextView>(R.id.textDuration)
-        private val programChart = view.findViewById<BarChart>(R.id.chartProgram)
+//        private val programChart = view.findViewById<BarChart>(R.id.chartProgram)
+        private val programImage = view.findViewById<ImageView>(R.id.imageProgram)
         private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
 
         fun bind(program: Program) {
@@ -67,10 +74,14 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             maxPower.text = getMaxPower(programSource)
             duration.text = getDuration(programSource)
 
-            programChart.setCommonParams(getChartData(programSource))
-            programChart.setTouchEnabled(false)
-            programChart.invalidate()
+//            programChart.setCommonParams(getChartData(programSource))
+//            programChart.setTouchEnabled(false)
+//            programChart.invalidate()
 
+            Picasso.get()
+                .load(File("${Environment.getExternalStorageDirectory().absolutePath}/DCIM/$CHART_IMAGE_GALLERY/Program_${program.getName().convertToLatinScript()}.png"))
+                .fit()
+                .into(programImage)
         }
 
         /**
@@ -103,23 +114,23 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             return "Max power: $maxPower W"
         }
 
-        private fun getChartData(program: String): BarData {
-            var count = 0
-            val entries: ArrayList<BarEntry> = arrayListOf()
-            program.split("|").forEach {
-                if (it.isNotEmpty()) {
-                    val power = it.split("*").last().toFloat()
-                    entries.add(BarEntry(count.toFloat(), power))
-                    count += 1
-                }
-            }
-            val chart = BarDataSet(entries, "")
-            chart.barBorderWidth = 0f
-            chart.setValueFormatter { _, _, _, _ ->
-                ""
-            }
-            return BarData(chart)
-        }
+//        private fun getChartData(program: String): BarData {
+//            var count = 0
+//            val entries: ArrayList<BarEntry> = arrayListOf()
+//            program.split("|").forEach {
+//                if (it.isNotEmpty()) {
+//                    val power = it.split("*").last().toFloat()
+//                    entries.add(BarEntry(count.toFloat(), power))
+//                    count += 1
+//                }
+//            }
+//            val chart = BarDataSet(entries, "")
+//            chart.barBorderWidth = 0f
+//            chart.setValueFormatter { _, _, _, _ ->
+//                ""
+//            }
+//            return BarData(chart)
+//        }
 
         private fun getDuration(program: String): CharSequence {
             var count = 0.0f

@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import androidx.fragment.app.Fragment
-import com.example.test2antplus.*
+import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
+import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
+import com.example.test2antplus.setCommonParams
+import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
@@ -38,6 +41,8 @@ interface ProgramSettingsInterface {
     fun hideKeyboard()
 
     fun closeScreen()
+
+    fun getChart()
 }
 
 class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
@@ -136,6 +141,7 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
         }
 
         fabCreateProgram.setOnClickListener {
+
             presenter.saveProgram()
         }
     }
@@ -228,5 +234,9 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
         activity?.sendBroadcast(Intent(ACTION_PROGRAM_SETTINGS).apply {
             this.putExtra(UPD_PROGRAMS_LIST, ARGS_PROGRAM)
         })
+    }
+
+    override fun getChart() {
+        presenter.getChart(chartProgram)
     }
 }

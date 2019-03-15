@@ -20,6 +20,8 @@ class MainApplication: Application() {
         const val ARGS_PROFILE = "selected profile"
         const val ARGS_PROGRAM = "selected program"
 
+        const val CHART_IMAGE_GALLERY = "chart_image_gallery"
+
     }
 
     override fun onCreate() {

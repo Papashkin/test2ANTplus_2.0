@@ -11,6 +11,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_program.view.*
+import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 /**
@@ -34,7 +35,6 @@ fun showDialog(activity: Activity, text: String): Dialog? {
  * Время в формате "00:00"
  */
 fun Long.timeFormat(): String {
-    val hours = TimeUnit.SECONDS.toHours(this)
     val minutes = TimeUnit.SECONDS.toMinutes(this) - (TimeUnit.SECONDS.toHours(this) * 60)
     val seconds = TimeUnit.SECONDS.toSeconds(this) - (TimeUnit.SECONDS.toMinutes(this) * 60)
 
@@ -70,5 +70,21 @@ fun BarChart.setCommonParams(data: BarData) = this.also {
     it.xAxis.isEnabled = false
     it.axisRight.isEnabled = false
     it.description = null
+    it.setScaleEnabled(false)
     it.setTouchEnabled(true)
+}
+
+fun String.convertToLatinScript(): String {
+    val russianScript = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split(" ")
+    val latinScript = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch \" y ' e yu ya".split(" ")
+    var convertedText = ""
+
+    return try {
+        for (i in this) {
+            convertedText += latinScript[russianScript.indexOf(i.toString())]
+        }
+        convertedText
+    } catch (ex: Exception) {
+        this
+    }
 }

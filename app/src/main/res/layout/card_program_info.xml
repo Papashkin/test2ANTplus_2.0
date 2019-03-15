@@ -51,16 +51,24 @@
                 app:layout_constraintTop_toBottomOf="@id/textAveragePower"
                 app:layout_constraintStart_toStartOf="parent"/>
 
-        <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chartProgram"
-                android:layout_width="match_parent"
-                android:layout_height="120dp"
+        <ImageView
+                android:id="@+id/imageProgram"
                 android:layout_margin="2dp"
-                android:background="#ffffff"
                 app:layout_constraintTop_toBottomOf="@id/textDuration"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
 
+        <!--<com.github.mikephil.charting.charts.BarChart-->
+                <!--android:id="@+id/chartProgram"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="120dp"-->
+                <!--android:layout_margin="2dp"-->
+                <!--android:background="#ffffff"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/textDuration"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
