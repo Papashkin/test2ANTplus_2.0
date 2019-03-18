@@ -2,6 +2,7 @@ package com.example.test2antplus
 
 import android.app.Activity
 import android.app.Dialog
+import android.graphics.Bitmap
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.github.mikephil.charting.charts.BarChart
@@ -11,7 +12,8 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_program.view.*
-import java.lang.Exception
+import java.io.File
+import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
 
 /**
@@ -88,3 +90,37 @@ fun String.convertToLatinScript(): String {
         this
     }
 }
+
+fun BarChart.saveToImage(name: String, path: String?): Boolean {
+    val file = if (path != null) {
+        File(path)
+    } else {
+        File("/test2antplus/programs")
+    }
+    if (!file.exists()) {
+        if (!file.mkdirs()) {
+            return false
+        }
+    }
+
+    this.isDrawingCacheEnabled = true
+    val bitmap = Bitmap.createBitmap(this.drawingCache)
+    this.isDrawingCacheEnabled = false
+
+    val fos = FileOutputStream("$file/$name.png")
+//    val bitmap = getBitmap(this.width, this.height, this.background)
+
+    bitmap.compress(Bitmap.CompressFormat.PNG, 80, fos)
+
+    fos.flush()
+    fos.close()
+
+    return true
+}
+
+//private fun getBitmap(width: Int, height: Int, background: Drawable): Bitmap {
+//    val returnedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+//    val canvas = Canvas(returnedBitmap)
+//    background.draw(canvas)
+//    return returnedBitmap
+//}

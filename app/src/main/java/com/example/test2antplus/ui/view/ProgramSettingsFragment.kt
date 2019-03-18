@@ -64,7 +64,7 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = ProgramSettingsPresenter(this)
 
-        toolbarProgramSettings.setNavigationIcon(R.drawable.ic_arrow_back)
+        toolbarProgramSettings.setNavigationIcon(R.drawable.ic_arrow_back_32)
         toolbarProgramSettings.setNavigationOnClickListener {
             presenter.onBackPressed()
         }
@@ -146,7 +146,6 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
         }
 
         fabCreateProgram.setOnClickListener {
-
             presenter.saveProgram()
         }
     }

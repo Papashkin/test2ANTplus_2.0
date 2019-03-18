@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:src="@drawable/ic_arrow_forward"
-            app:backgroundTint="@color/colorAccent"
+            app:backgroundTint="@color/red_700"
             app:fabSize="normal"
             android:layout_margin="16dp"
             app:layout_constraintEnd_toEndOf="parent"

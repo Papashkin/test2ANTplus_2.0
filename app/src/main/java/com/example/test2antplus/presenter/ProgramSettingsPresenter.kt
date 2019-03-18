@@ -2,6 +2,7 @@ package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
 import com.example.test2antplus.*
+import com.example.test2antplus.MainApplication.Companion.APP_FOLDER_PATH
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
@@ -171,8 +172,9 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     private fun saveImage(programValues: String) {
+        val path = APP_FOLDER_PATH
         Observable.fromCallable {
-            programChart.saveToGallery(programImagePath, 80)
+            programChart.saveToImage(name = programImagePath, path = path)
 //            programChart.saveToGallery(programImagePath, CHART_IMAGE_GALLERY, "", Bitmap.CompressFormat.PNG, 75)
         }.compose {
             it.workInAsinc()

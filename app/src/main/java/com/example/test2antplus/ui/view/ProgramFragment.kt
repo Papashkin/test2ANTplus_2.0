@@ -1,6 +1,5 @@
 package com.example.test2antplus.ui.view
 
-import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -15,9 +14,10 @@ import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTING
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramPresenter
-import com.example.test2antplus.showDialog
 import com.example.test2antplus.ui.adapter.ProgramAdapter
-import kotlinx.android.synthetic.main.fragment_program.*
+import com.pawegio.kandroid.hide
+import com.pawegio.kandroid.show
+import kotlinx.android.synthetic.main.fragment_programs.*
 
 
 interface ProgramInterface {
@@ -40,7 +40,7 @@ class ProgramFragment : Fragment(), ProgramInterface {
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
 
-    private var dialog: Dialog? = null
+//    private var dialog: Dialog? = null
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -55,14 +55,14 @@ class ProgramFragment : Fragment(), ProgramInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
-        return inflater.inflate(R.layout.fragment_program, container, false)
+        return inflater.inflate(R.layout.fragment_programs, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         showLoading()
         presenter = ProgramPresenter(this)
 
-        toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back)
+        toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back_32)
         toolbarPrograms.setNavigationOnClickListener {
             presenter.onBackPressed()
         }
@@ -70,7 +70,7 @@ class ProgramFragment : Fragment(), ProgramInterface {
         programAdapter = ProgramAdapter()
         listPrograms.adapter = programAdapter
 
-        fabAddProgram.setOnClickListener {
+        buttonAddProgram.setOnClickListener {
             presenter.addProgram()
         }
 
@@ -87,13 +87,15 @@ class ProgramFragment : Fragment(), ProgramInterface {
     }
 
     override fun showLoading() {
-        hideEmptyProgramsList()
-        hideProgramsList()
-        dialog = showDialog(requireActivity(), "Идет загрузка, подождите ...")
+        pbPrograms.show()
+//        hideEmptyProgramsList()
+//        hideProgramsList()
+//        dialog = showDialog(requireActivity(), "Идет загрузка, подождите ...")
     }
 
     override fun hideLoading() {
-        dialog?.dismiss()
+        pbPrograms.hide()
+//        dialog?.dismiss()
     }
 
     override fun hideEmptyProgramsList() {

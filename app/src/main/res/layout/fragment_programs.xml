@@ -4,51 +4,60 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:clickable="true">
 
     <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarProfiles"
+            android:id="@+id/toolbarPrograms"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             style="@style/MainToolbar"
-            app:title="@string/profiles_text"
+            app:title="@string/programs_text"
             app:titleTextColor="@color/pure_white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageButton
-            android:id="@+id/buttonAddProfile"
+            android:id="@+id/buttonAddProgram"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="11dp"
             android:background="@drawable/ic_add_white_32"
             android:layout_marginEnd="10dp"
-            app:layout_constraintEnd_toEndOf="@id/toolbarProfiles"
-            app:layout_constraintTop_toTopOf="@id/toolbarProfiles"
-            app:layout_constraintBottom_toBottomOf="@id/toolbarProfiles"/>
+            app:layout_constraintEnd_toEndOf="@id/toolbarPrograms"
+            app:layout_constraintTop_toTopOf="@id/toolbarPrograms"
+            app:layout_constraintBottom_toBottomOf="@id/toolbarPrograms"/>
 
     <ProgressBar
-            android:id="@+id/pbProfiles"
+            android:id="@+id/pbPrograms"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:elevation="10dp"
             android:layout_marginEnd="10dp"
             android:indeterminateTint="@color/pure_white"
-            app:layout_constraintEnd_toStartOf="@id/buttonAddProfile"
-            app:layout_constraintTop_toTopOf="@id/toolbarProfiles"
-            app:layout_constraintBottom_toBottomOf="@id/toolbarProfiles"/>
+            app:layout_constraintEnd_toStartOf="@id/buttonAddProgram"
+            app:layout_constraintTop_toTopOf="@id/toolbarPrograms"
+            app:layout_constraintBottom_toBottomOf="@id/toolbarPrograms"/>
 
-    <ListView
-            android:id="@+id/listProfiles"
+    <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/toolbarProfiles"
+            app:layout_constraintTop_toBottomOf="@id/toolbarPrograms"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/listPrograms"
+                    android:elevation="4dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    </ScrollView>
 
     <TextView
-            android:id="@+id/emptyListProfiles"
+            android:id="@+id/emptyListPrograms"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textSize="20sp"

@@ -25,6 +25,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         MainApplication.graph.inject(this)
 
+        MainApplication.APP_FOLDER_PATH = this.filesDir.absolutePath
+
         router.newRootScreen(FragmentScreens.StartScreen())
     }
 

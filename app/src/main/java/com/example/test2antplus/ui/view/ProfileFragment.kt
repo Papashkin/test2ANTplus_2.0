@@ -41,7 +41,7 @@ class ProfileFragment : Fragment(), ProfileInterface {
         owner = LifecycleOwner { lifecycle }
         presenter = ProfilePresenter(this, owner)
 
-        toolbarProfiles.setNavigationIcon(R.drawable.ic_arrow_back)
+        toolbarProfiles.setNavigationIcon(R.drawable.ic_arrow_back_32)
         toolbarProfiles.setNavigationOnClickListener {
             presenter.onBackPressed()
         }
@@ -51,7 +51,7 @@ class ProfileFragment : Fragment(), ProfileInterface {
             listProfiles.adapter = profilesAdapter
         }
 
-        fabCreate.setOnClickListener {
+        buttonAddProfile.setOnClickListener {
             presenter.onCreateProfileClick()
         }
 

@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">test2ANTplus</string>
+    <string name="main_programs">PROGRAMS</string>
+    <string name="main_profiles">PROFILES</string>
     <string name="main_connect">Connect</string>
     <string name="main_search">SEARCH</string>
     <string name="main_text1">FIND AN ANT+ DEVICE</string>
@@ -21,16 +23,14 @@
     <string name="setting_height">Height:</string>
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
-    <string name="profiles_text">Profiles:</string>
-    <string name="profiles_empty_list">There is no profiles in DB</string>
-    <string name="settings_create">CREATE</string>
-    <string name="settings_cancel">CANCEL</string>
+    <string name="profiles_text">Profiles</string>
+    <string name="profiles_empty_list">There are no profiles in DB</string>
     <string name="program_name">Program Name:</string>
     <string name="program_name_hint">program name</string>
     <string name="program_duration">Duration (min):</string>
     <string name="program_power">Power (W):</string>
-    <string name="programs_text">Programs:</string>
-    <string name="programs_empty_list">There is no programs in DB</string>
+    <string name="programs_text">Programs</string>
+    <string name="programs_empty_list">There are no programs in DB</string>
     <string name="program_count">Count:</string>
     <string name="program_rest_power">Rest power (W):</string>
 

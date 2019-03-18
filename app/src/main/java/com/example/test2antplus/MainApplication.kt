@@ -22,6 +22,8 @@ class MainApplication: Application() {
 
         const val CHART_IMAGE_GALLERY = "chart_image_gallery"
 
+        var APP_FOLDER_PATH: String? = null
+
     }
 
     override fun onCreate() {

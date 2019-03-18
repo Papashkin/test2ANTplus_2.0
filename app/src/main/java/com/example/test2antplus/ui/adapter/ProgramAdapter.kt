@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
-import com.example.test2antplus.convertToLatinScript
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
 import com.squareup.picasso.Picasso
@@ -66,8 +66,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             duration.text = getDuration(programSource)
 
             Picasso.get()
-                .load("Program_${program.getName().convertToLatinScript()}")
-                .fit()
+                .load("${MainApplication.APP_FOLDER_PATH}/${program.getImagePath()}.png")
                 .into(programImage)
         }
 
