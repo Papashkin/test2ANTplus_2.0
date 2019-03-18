@@ -54,6 +54,10 @@ class ProgramPresenter(private val view: ProgramInterface) {
             })
     }
 
+    fun onBackPressed() {
+        router.exit()
+    }
+
 //    fun selectProfile(id: Int) {
 //        selectedProgram = programs[id]
 //        // TODO add selected program to broadcast

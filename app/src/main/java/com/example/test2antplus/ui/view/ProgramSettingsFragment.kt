@@ -64,6 +64,11 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = ProgramSettingsPresenter(this)
 
+        toolbarProgramSettings.setNavigationIcon(R.drawable.ic_arrow_back)
+        toolbarProgramSettings.setNavigationOnClickListener {
+            presenter.onBackPressed()
+        }
+
         fabAddPower.hide()
 
         editProgramName.textWatcher {

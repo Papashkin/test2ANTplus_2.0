@@ -56,4 +56,8 @@ class ProfilePresenter(private val view: ProfileFragment, owner: LifecycleOwner)
     fun onCreateProfileClick() {
         router.navigateTo(FragmentScreens.SettingScreen())
     }
+
+    fun onBackPressed() {
+        router.exit()
+    }
 }

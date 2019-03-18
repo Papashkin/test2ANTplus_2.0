@@ -1,9 +1,7 @@
 package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import com.example.test2antplus.*
-import com.example.test2antplus.MainApplication.Companion.CHART_IMAGE_GALLERY
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
@@ -169,13 +167,13 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
             }, {
                 view.getChart()
                 saveImage(programValues)
-//                insertToDb(programValues)
             })
     }
 
     private fun saveImage(programValues: String) {
         Observable.fromCallable {
-            programChart.saveToGallery(programImagePath, CHART_IMAGE_GALLERY, "", Bitmap.CompressFormat.PNG, 75)
+            programChart.saveToGallery(programImagePath, 80)
+//            programChart.saveToGallery(programImagePath, CHART_IMAGE_GALLERY, "", Bitmap.CompressFormat.PNG, 75)
         }.compose {
             it.workInAsinc()
         }.subscribe({
@@ -207,5 +205,9 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     fun getChart(chart: BarChart) {
         programChart = chart
         programImagePath = "Program_${programName.convertToLatinScript()}"
+    }
+
+    fun onBackPressed() {
+        router.exit()
     }
 }

@@ -62,6 +62,11 @@ class ProgramFragment : Fragment(), ProgramInterface {
         showLoading()
         presenter = ProgramPresenter(this)
 
+        toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back)
+        toolbarPrograms.setNavigationOnClickListener {
+            presenter.onBackPressed()
+        }
+
         programAdapter = ProgramAdapter()
         listPrograms.adapter = programAdapter
 

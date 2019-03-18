@@ -41,6 +41,11 @@ class ProfileFragment : Fragment(), ProfileInterface {
         owner = LifecycleOwner { lifecycle }
         presenter = ProfilePresenter(this, owner)
 
+        toolbarProfiles.setNavigationIcon(R.drawable.ic_arrow_back)
+        toolbarProfiles.setNavigationOnClickListener {
+            presenter.onBackPressed()
+        }
+
         activity?.let {
             profilesAdapter = ArrayAdapter(it.applicationContext, R.layout.card_profile_info, profiles)
             listProfiles.adapter = profilesAdapter
