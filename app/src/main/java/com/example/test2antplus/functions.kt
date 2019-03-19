@@ -9,6 +9,7 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -57,6 +58,10 @@ fun Long.fullTimeFormat(): String {
 }
 
 fun <T> Single<T>.workInAsinc(): Single<T> =
+    this.observeOn(AndroidSchedulers.mainThread())
+        .subscribeOn(Schedulers.io())
+
+fun <T> Flowable<T>.workInAsinc(): Flowable<T> =
     this.observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
 
