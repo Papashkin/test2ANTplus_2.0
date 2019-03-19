@@ -3,6 +3,8 @@ package com.example.test2antplus
 import android.app.Activity
 import android.app.Dialog
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.github.mikephil.charting.charts.BarChart
@@ -91,36 +93,34 @@ fun String.convertToLatinScript(): String {
     }
 }
 
-fun BarChart.saveToImage(name: String, path: String?): Boolean {
-    val file = if (path != null) {
-        File(path)
-    } else {
-        File("/test2antplus/programs")
-    }
-    if (!file.exists()) {
-        if (!file.mkdirs()) {
-            return false
+fun BarChart.saveProgramAsImage(name: String): Boolean {
+    try {
+        val fos = FileOutputStream(name)
+
+        val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.RGB_565)
+        val canvas = Canvas(bitmap)
+        val drawable = this.background
+        if (drawable != null) {
+            drawable.draw(canvas)
+        } else {
+            canvas.drawColor(Color.WHITE)
         }
+        draw(canvas)
+
+        bitmap.compress(Bitmap.CompressFormat.PNG, 80, fos)
+
+        fos.flush()
+        fos.close()
+
+        val size = File(name).length()
+        return if (size > 0) {
+            bitmap.recycle()
+            true
+        } else {
+            false
+        }
+    } catch (ex: java.lang.Exception) {
+        ex.printStackTrace()
+        return false
     }
-
-    this.isDrawingCacheEnabled = true
-    val bitmap = Bitmap.createBitmap(this.drawingCache)
-    this.isDrawingCacheEnabled = false
-
-    val fos = FileOutputStream("$file/$name.png")
-//    val bitmap = getBitmap(this.width, this.height, this.background)
-
-    bitmap.compress(Bitmap.CompressFormat.PNG, 80, fos)
-
-    fos.flush()
-    fos.close()
-
-    return true
 }
-
-//private fun getBitmap(width: Int, height: Int, background: Drawable): Bitmap {
-//    val returnedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
-//    val canvas = Canvas(returnedBitmap)
-//    background.draw(canvas)
-//    return returnedBitmap
-//}

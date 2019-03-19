@@ -2,7 +2,7 @@ package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
 import com.example.test2antplus.*
-import com.example.test2antplus.MainApplication.Companion.APP_FOLDER_PATH
+import com.example.test2antplus.MainApplication.Companion.PROGRAM_IMAGES_PATH
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
+import java.io.File
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
@@ -172,10 +173,8 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
     }
 
     private fun saveImage(programValues: String) {
-        val path = APP_FOLDER_PATH
         Observable.fromCallable {
-            programChart.saveToImage(name = programImagePath, path = path)
-//            programChart.saveToGallery(programImagePath, CHART_IMAGE_GALLERY, "", Bitmap.CompressFormat.PNG, 75)
+            programChart.saveProgramAsImage(name = programImagePath)
         }.compose {
             it.workInAsinc()
         }.subscribe({
@@ -204,9 +203,11 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
         }
     }
 
-    fun getChart(chart: BarChart) {
-        programChart = chart
-        programImagePath = "Program_${programName.convertToLatinScript()}"
+    fun getProgramImagePath() {
+        val file = File(PROGRAM_IMAGES_PATH)
+        if (!file.exists()) file.mkdirs()
+
+        programImagePath = "${file.absolutePath}/${programName.convertToLatinScript()}.png"
     }
 
     fun onBackPressed() {

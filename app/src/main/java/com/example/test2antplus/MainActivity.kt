@@ -2,6 +2,7 @@ package com.example.test2antplus
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test2antplus.MainApplication.Companion.PROGRAM_IMAGES_PATH
 import com.example.test2antplus.navigation.FragmentScreens
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         MainApplication.graph.inject(this)
 
-        MainApplication.APP_FOLDER_PATH = this.filesDir.absolutePath
+        PROGRAM_IMAGES_PATH = "${applicationInfo.dataDir}/programs"
 
         router.newRootScreen(FragmentScreens.StartScreen())
     }

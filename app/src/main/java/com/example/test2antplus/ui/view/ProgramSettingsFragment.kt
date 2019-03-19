@@ -241,6 +241,6 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
     }
 
     override fun getChart() {
-        presenter.getChart(chartProgram)
+        presenter.getProgramImagePath()
     }
 }

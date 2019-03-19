@@ -6,11 +6,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
 import com.squareup.picasso.Picasso
+import java.io.File
 import java.util.*
 
 class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
@@ -56,6 +56,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
         private val duration = view.findViewById<TextView>(R.id.textDuration)
         private val programImage = view.findViewById<ImageView>(R.id.imageProgram)
         private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
+        private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProgram)
 
         fun bind(program: Program) {
 
@@ -66,8 +67,14 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
             duration.text = getDuration(programSource)
 
             Picasso.get()
-                .load("${MainApplication.APP_FOLDER_PATH}/${program.getImagePath()}.png")
+                .load(File(program.getImagePath()))
+                .resize(1000, 700)
+                .centerCrop()
                 .into(programImage)
+
+            btnDelete.setOnClickListener {
+                
+            }
         }
 
         /**

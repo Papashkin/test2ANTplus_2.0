@@ -88,14 +88,10 @@ class ProgramFragment : Fragment(), ProgramInterface {
 
     override fun showLoading() {
         pbPrograms.show()
-//        hideEmptyProgramsList()
-//        hideProgramsList()
-//        dialog = showDialog(requireActivity(), "Идет загрузка, подождите ...")
     }
 
     override fun hideLoading() {
         pbPrograms.hide()
-//        dialog?.dismiss()
     }
 
     override fun hideEmptyProgramsList() {

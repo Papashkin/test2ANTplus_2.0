@@ -12,18 +12,17 @@ class MainApplication: Application() {
         lateinit var graph: AppComponent
 
         const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.ui.view.ProgramFragment"
-        const val ACTION_PROFILE_SETTINGS = "com.example.test2antplus.ui.view.ProfileFragment"
+//        const val ACTION_PROFILE_SETTINGS = "com.example.test2antplus.ui.view.ProfileFragment"
 
         const val UPD_PROGRAMS_LIST = "programs list"
-        const val UPD_PROFILES_LIST = "profiles list"
+//        const val UPD_PROFILES_LIST = "profiles list"
 
-        const val ARGS_PROFILE = "selected profile"
+//        const val ARGS_PROFILE = "selected profile"
         const val ARGS_PROGRAM = "selected program"
 
-        const val CHART_IMAGE_GALLERY = "chart_image_gallery"
+//        const val CHART_IMAGE_GALLERY = "programs_gallery"
 
-        var APP_FOLDER_PATH: String? = null
-
+        var PROGRAM_IMAGES_PATH: String? = null
     }
 
     override fun onCreate() {
