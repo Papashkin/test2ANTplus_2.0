@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
@@ -13,8 +14,15 @@ import com.squareup.picasso.Picasso
 import java.io.File
 import java.util.*
 
-class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
+class ProgramAdapter(
+    private val onEditClick: (id: Int)  -> Unit,
+    private val onDeleteClick: (id: Int) -> Unit
+) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
     private var programs: ArrayList<Program> = arrayListOf()
+    private var swipeHolder= ViewBinderHelper()
+    init {
+        swipeHolder.setOpenOnlyOne(true)
+    }
 //    private lateinit var programsDiffUtil: ProgramCallback
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramAdapter.ProgramViewHolder {
@@ -69,16 +77,15 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
 
             Picasso.get()
                 .load(File(program.getImagePath()))
-                .resize(1000, 700)
-                .centerCrop()
+                .resize(800, 500)
                 .into(programImage)
 
             btnDelete.setOnClickListener {
-
+                onDeleteClick.invoke(program.getId())
             }
 
             btnEdit.setOnClickListener {
-
+                onEditClick.invoke(program.getId())
             }
         }
 

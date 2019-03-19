@@ -58,6 +58,14 @@ class ProgramPresenter(private val view: ProgramInterface) {
         router.exit()
     }
 
+    fun onDeleteClick(id: Int) {
+
+    }
+
+    fun onEditeClick(id: Int) {
+
+    }
+
 //    fun selectProfile(id: Int) {
 //        selectedProgram = programs[id]
 //        // TODO add selected program to broadcast

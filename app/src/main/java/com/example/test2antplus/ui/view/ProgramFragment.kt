@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
@@ -67,7 +68,25 @@ class ProgramFragment : Fragment(), ProgramInterface {
             presenter.onBackPressed()
         }
 
-        programAdapter = ProgramAdapter()
+        programAdapter = ProgramAdapter(
+            onDeleteClick = {
+                AlertDialog.Builder(context!!)
+                    .setTitle("Attention!")
+                    .setMessage("Are you sure?")
+                    .setPositiveButton("Yes") { dialog, _ ->
+                        presenter.onDeleteClick(it)
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("No") { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            },
+            onEditClick = {
+                presenter.onEditeClick(it)
+            }
+        )
         listPrograms.adapter = programAdapter
 
         buttonAddProgram.setOnClickListener {
@@ -95,7 +114,7 @@ class ProgramFragment : Fragment(), ProgramInterface {
     }
 
     override fun hideEmptyProgramsList() {
-        emptyListPrograms.visibility = View.INVISIBLE
+        emptyListPrograms.visibility = View.GONE
     }
 
     override fun showEmptyProgramsList() {

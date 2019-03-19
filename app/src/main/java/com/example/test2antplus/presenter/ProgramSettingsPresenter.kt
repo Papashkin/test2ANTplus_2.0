@@ -18,7 +18,7 @@ import java.io.File
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
-class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
+class ProgramSettingsPresenter (private val view: ProgramSettingsInterface) {
 
     @Inject
     lateinit var router: Router
@@ -174,7 +174,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
 
     private fun saveImage(programValues: String) {
         Observable.fromCallable {
-            programChart.saveProgramAsImage(name = programImagePath)
+            programChart.saveProgramAsImage(programImagePath)
         }.compose {
             it.workInAsinc()
         }.subscribe({
@@ -203,7 +203,8 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsInterface) {
         }
     }
 
-    fun getProgramImagePath() {
+    fun getProgramImagePath(chart: BarChart) {
+        programChart = chart
         val file = File(PROGRAM_IMAGES_PATH)
         if (!file.exists()) file.mkdirs()
 
