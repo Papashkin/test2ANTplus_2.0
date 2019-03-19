@@ -57,6 +57,7 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
         private val programImage = view.findViewById<ImageView>(R.id.imageProgram)
         private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
         private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProgram)
+        private val btnEdit = view.findViewById<ImageView>(R.id.btnEditProgram)
 
         fun bind(program: Program) {
 
@@ -73,7 +74,11 @@ class ProgramAdapter : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() 
                 .into(programImage)
 
             btnDelete.setOnClickListener {
-                
+
+            }
+
+            btnEdit.setOnClickListener {
+
             }
         }
 
