@@ -77,7 +77,7 @@ class ProgramAdapter(
 
             Picasso.get()
                 .load(File(program.getImagePath()))
-                .resize(800, 500)
+                .fit()
                 .into(programImage)
 
             btnDelete.setOnClickListener {
