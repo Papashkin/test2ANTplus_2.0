@@ -32,8 +32,8 @@ interface ProgramInterface {
 
     fun showProgramsList()
     fun hideProgramsList()
-    fun showEmptyProgramsList()
-    fun hideEmptyProgramsList()
+
+    fun updateProgramsList(id: Int)
 }
 
 class ProgramFragment : Fragment(), ProgramInterface {
@@ -84,7 +84,7 @@ class ProgramFragment : Fragment(), ProgramInterface {
                     .show()
             },
             onEditClick = {
-                presenter.onEditeClick(it)
+                presenter.onEditClick(it)
             }
         )
         listPrograms.adapter = programAdapter
@@ -113,24 +113,22 @@ class ProgramFragment : Fragment(), ProgramInterface {
         pbPrograms.hide()
     }
 
-    override fun hideEmptyProgramsList() {
-        emptyListPrograms.visibility = View.GONE
-    }
-
-    override fun showEmptyProgramsList() {
-        emptyListPrograms.visibility = View.VISIBLE
-    }
-
     override fun hideProgramsList() {
-        listPrograms.visibility = View.INVISIBLE
+        emptyListPrograms.visibility = View.VISIBLE
+        listPrograms.visibility = View.GONE
     }
 
     override fun showProgramsList() {
+        emptyListPrograms.visibility = View.GONE
         listPrograms.visibility = View.VISIBLE
     }
 
     override fun setProgramsList(programsList: ArrayList<Program>) {
         programAdapter.setProgramList(programsList)
         hideLoading()
+    }
+
+    override fun updateProgramsList(id: Int) {
+        programAdapter.removeItem(id)
     }
 }

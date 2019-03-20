@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.chauthai.swipereveallayout.ViewBinderHelper
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
@@ -19,11 +18,6 @@ class ProgramAdapter(
     private val onDeleteClick: (id: Int) -> Unit
 ) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
     private var programs: ArrayList<Program> = arrayListOf()
-    private var swipeHolder= ViewBinderHelper()
-    init {
-        swipeHolder.setOpenOnlyOne(true)
-    }
-//    private lateinit var programsDiffUtil: ProgramCallback
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramAdapter.ProgramViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
@@ -44,6 +38,12 @@ class ProgramAdapter(
 //    fun getSelectedPrograms(): Program = selectedProgram
 
 //    fun getAllData() = programs
+
+    fun removeItem(id: Int) {
+        val position = programs.indexOf(programs.first { it.getId() == id })
+        programs.removeAt(position)
+        notifyItemRemoved(position)
+    }
 
     override fun getItemCount(): Int = programs.size
 
