@@ -14,4 +14,12 @@
         <item name="android:elevation">10dp</item>
     </style>
 
+    <style name="ProfileList" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:background">@color/pure_white</item>
+        <item name="android:textColor">@color/full_black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">start</item>
+    </style>
+
 </resources>

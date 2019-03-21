@@ -71,7 +71,6 @@ class ProgramFragment : Fragment(), ProgramInterface {
         programAdapter = ProgramAdapter(
             onDeleteClick = {
                 AlertDialog.Builder(context!!)
-                    .setTitle("Attention!")
                     .setMessage("Are you sure?")
                     .setPositiveButton("Yes") { dialog, _ ->
                         presenter.onDeleteClick(it)

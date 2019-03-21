@@ -23,8 +23,6 @@ interface AppComponent {
     fun inject(scanPresenter: ScanPresenter)
     fun inject(workFragment: WorkFragment)
     fun inject(workPresenter: WorkPresenter)
-    fun inject(settingsFragment: ProfileSettingsFragment)
-    fun inject(settingPresenter: SettingPresenter)
     fun inject(profileFragment: ProfileFragment)
     fun inject(profilePresenter: ProfilePresenter)
     fun inject(programSettingsFragment: ProgramSettingsFragment)
@@ -33,5 +31,6 @@ interface AppComponent {
     fun inject(startPresenter: StartPresenter)
     fun inject(programFragment: ProgramFragment)
     fun inject(programPresenter: ProgramPresenter)
+    fun inject(newProfileDialog: NewProfileDialog)
 
 }

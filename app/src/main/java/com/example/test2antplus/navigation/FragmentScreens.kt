@@ -22,11 +22,6 @@ class FragmentScreens {
         override fun getScreenKey(): String = "program_settings_fragment".hashCode().toString()
     }
 
-    class SettingScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProfileSettingsFragment()
-        override fun getScreenKey(): String = "profile_settings_fragment".hashCode().toString()
-    }
-
     class StartScreen : SupportAppScreen() {
         override fun getFragment(): Fragment = StartFragment()
         override fun getScreenKey(): String = "start_fragment".hashCode().toString()
