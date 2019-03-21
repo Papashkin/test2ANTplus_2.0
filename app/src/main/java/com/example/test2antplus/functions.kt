@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import com.example.test2antplus.data.profiles.Profile
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import io.reactivex.Flowable
@@ -129,3 +130,5 @@ fun BarChart.saveProgramAsImage(name: String): Boolean {
         return false
     }
 }
+
+fun Profile.isFilled(): Boolean = this.getName().isNotEmpty() && this.getAge() != 0 && this.getWeight() != 0.0F

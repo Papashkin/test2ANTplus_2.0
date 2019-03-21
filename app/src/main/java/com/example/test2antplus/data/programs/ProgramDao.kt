@@ -1,9 +1,6 @@
 package com.example.test2antplus.data.programs
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.Single
 
 @Dao
@@ -16,6 +13,9 @@ interface ProgramDao {
 
     @Insert
     fun addProgram(profile: Program)
+
+    @Update
+    fun updateProgram(program: Program)
 
     @Delete
     fun deleteProgram(profile: Program)

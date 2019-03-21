@@ -62,7 +62,7 @@ class ScanFragment : Fragment(), ScanInterface {
 
         fabContinue.setOnClickListener {
             if (newDeviceAdapter.getSelectedData().isEmpty()) {
-                showToast("There are no selected devices")
+                showToast(getString(R.string.scan_no_selected_devices))
             } else {
                 presenter.connectToSelectedDevices()
             }

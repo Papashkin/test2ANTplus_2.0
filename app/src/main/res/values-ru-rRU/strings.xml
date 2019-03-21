@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ====== Общие текстовые переменные ====== -->
+    <string name="app_name">test2ANTplus</string>
+    <string name="start">Старт</string>
+    <string name="programs">Программы</string>
+
+    <!-- ====== Работа с каналами ANT+ ====== -->
+    <string name="channel_not_available">Канал недоступен</string>
+    <string name="channel_search_timeout">Время ожидания истекло</string>
+    <string name="channel_other_failure">Другая причина</string>
+    <string name="channel_scan_stop">Поиск прекращён</string>
+    <string name="channel_unknown">Неизвестная причина</string>
+
+    <!-- ====== Поиск датчиков / утройств ====== -->
+    <string name="scan_start">Поиск …</string>
+    <string name="scan_no_selected_devices">Ни одного устройства не выбрано</string>
+
+    <!-- ====== Рабочий (Work) модуль ====== -->
+    <string name="text_heartrate">Пульс</string>
+    <string name="text_cadence">Каденс, об/мин</string>
+    <string name="text_speed">Скорость, км/ч</string>
+    <string name="text_power">Мощность, Вт</string>
+    <string name="text_distance">Расстояние, км</string>
+    <string name="text_null_value">---</string>
+
+    <!-- ====== Настройки профиля ====== -->
+    <string name="profile_setting_age">Возраст:</string>
+    <string name="profile_setting_name">Имя:</string>
+    <string name="profile_setting_gender">Пол:</string>
+    <string name="profile_setting_weight">Вес:</string>
+    <string name="profile_setting_height">Рост:</string>
+    <string name="profile_setting_gender_male">Муж.</string>
+    <string name="profile_setting_gender_female">Жен.</string>
+
+    <!-- ====== Список профилей ====== -->
+    <string name="profiles_empty_list">Нет ни одного профиля.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
+
+    <!-- ====== Настройки программы ====== -->
+    <string name="program_settings_name">Название программы:</string>
+    <string name="program_settings_name_hint">название программы</string>
+    <string name="program_settings_duration">Время (мин):</string>
+    <string name="program_settings_power">Мощность (Вт):</string>
+    <string name="program_settings_count">Кол-во:</string>
+    <string name="program_settings_rest_power">Отдых (Вт):</string>
+    <string name="program_settings_max_power">Макс. Мощность (Вт):</string>
+    <string name="program_settings_min_power">Мин. Мощность (Вт):</string>
+    <string-array name="program_settings_types">
+        <item> </item>
+        <item>Сегмент</item>
+        <item>Интервалы</item>
+        <item>\"Лесенка\"</item>
+    </string-array>
+
+    <!-- ====== Список программ ====== -->
+    <string name="programs_empty_list">Нет ни одной программы.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
+
+    <!-- ====== Тулбары ====== -->
+    <string name="toolbar_programs">Программы</string>
+    <string name="toolbar_select_profile">Выберите профиль</string>
+    <string name="toolbar_new_profile">Создание нового профиля</string>
+    <string name="toolbar_devices">Устройства:</string>
+
+    <!-- ====== Сохранение данных ====== -->
+    <string name="invalid_data">Некорректные данные</string>
+    <string name="program_settings_this_program_is_existed">Программа с таким названием уже существует</string>
+    <string name="new_profile_existed">Профиль с таким именем уже существует</string>
+    <string name="new_profile_failed_to_update">Ошибка при обновлении программы. Попробуйте ещё раз</string>
+    <string name="new_profile_failed_to_create">Ошибка при сохранении пограммы. Попробуйте ещё раз</string>
+
+</resources>

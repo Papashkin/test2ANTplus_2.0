@@ -68,7 +68,7 @@ class ScanPresenter(private val view: ScanInterface) {
         }
 
         override fun onSearchStarted(rssiSupport: MultiDeviceSearch.RssiSupport) {
-            view.showToast("Searching starting...")
+            view.showToast(context.getString(R.string.scan_start))
         }
 
         override fun onDeviceFound(device: MultiDeviceSearchResult) {

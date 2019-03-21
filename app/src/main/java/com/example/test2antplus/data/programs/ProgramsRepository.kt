@@ -15,6 +15,10 @@ class ProgramsRepository @Inject constructor(private val programDao: ProgramDao)
         programDao.addProgram(program)
     }
 
+    fun updateProgram(program: Program) {
+        programDao.updateProgram(program)
+    }
+
     fun removeProgram(program: Program) {
         programDao.deleteProgram(program)
     }

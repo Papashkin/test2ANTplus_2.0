@@ -10,6 +10,7 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.data.profiles.ProfilesRepository
+import com.example.test2antplus.isFilled
 import com.example.test2antplus.workInAsinc
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,10 +19,10 @@ import com.pawegio.kandroid.toast
 import io.reactivex.Observable
 import javax.inject.Inject
 
+@SuppressLint("CheckResult")
 class NewProfileDialog : BottomSheetDialogFragment() {
 
     private var newProfile: Profile = Profile(0, "", 0, "", 0.0f, 0.0f)
-    private lateinit var oldProfile: Profile
     private var isNewProfile = true
 
     @Inject
@@ -118,7 +119,7 @@ class NewProfileDialog : BottomSheetDialogFragment() {
 
         createButton.setOnClickListener {
             if (isNewProfile) {
-                createProfile()
+                checkTheProfiles()
             } else {
                 updateProfile()
             }
@@ -130,9 +131,20 @@ class NewProfileDialog : BottomSheetDialogFragment() {
 
     }
 
-    @SuppressLint("CheckResult")
+    private fun checkTheProfiles() {
+        Observable.fromCallable {
+            profilesRepository.getProfileByName(newProfile.getName())
+        }.compose {
+                it.workInAsinc()
+            }.subscribe({
+                toast(R.string.new_profile_existed)
+            }, {
+                createProfile()
+            })
+    }
+
     private fun createProfile() {
-        if (newProfile.getName().isNotEmpty() && newProfile.getAge() != 0 && newProfile.getWeight() != 0.0F) {
+        if (newProfile.isFilled()) {
             Observable.fromCallable {
                 profilesRepository.insertProfile(newProfile)
             }.compose {
@@ -140,18 +152,17 @@ class NewProfileDialog : BottomSheetDialogFragment() {
             }.subscribe({
                 this.dismiss()
             }, {
-                toast("New profile creating failed. Please try it again")
+                toast(R.string.new_profile_failed_to_create)
                 it.printStackTrace()
             })
         } else {
-            toast("Invalid data")
+            toast(R.string.invalid_data)
         }
     }
 
 
-    @SuppressLint("CheckResult")
     private fun updateProfile() {
-        if (newProfile.getName().isNotEmpty() && newProfile.getAge() != 0 && newProfile.getWeight() != 0.0F) {
+        if (newProfile.isFilled()) {
             Observable.fromCallable {
                 profilesRepository.updateProfile(newProfile)
             }.compose {
@@ -159,11 +170,11 @@ class NewProfileDialog : BottomSheetDialogFragment() {
             }.subscribe({
                 this.dismiss()
             }, {
-                toast("New profile creating failed. Please try it again")
+                toast(R.string.new_profile_failed_to_update)
                 it.printStackTrace()
             })
         } else {
-            toast("Invalid data")
+            toast(R.string.invalid_data)
         }
     }
 }

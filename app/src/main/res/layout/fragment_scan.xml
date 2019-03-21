@@ -12,7 +12,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             style="@style/MainToolbar"
-            app:title="Devices"
+            app:title="@string/toolbar_devices"
             app:titleTextColor="@color/pure_white"/>
 
     <FrameLayout

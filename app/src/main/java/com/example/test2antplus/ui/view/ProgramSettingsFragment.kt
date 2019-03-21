@@ -21,6 +21,7 @@ import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
 import com.pawegio.kandroid.toast
+import kotlinx.android.synthetic.main.card_program_info.*
 import kotlinx.android.synthetic.main.fragment_program_settings.*
 
 interface ProgramSettingsInterface {
@@ -36,6 +37,7 @@ interface ProgramSettingsInterface {
     fun setProgramType(type: Int)
 
     fun showToast(text: String)
+    fun showToast(id: Int)
 
     fun showKeyboard()
     fun hideKeyboard()
@@ -50,6 +52,7 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
         const val NOTHING = 0
         const val SINGLE = 1
         const val INTERVAL = 2
+        const val STAIRS = 3
     }
 
     private lateinit var presenter: ProgramSettingsPresenter
@@ -199,20 +202,27 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
     override fun setProgramType(type: Int) {
         when (type) {
             SINGLE -> {
-                editIntervalsCount.visibility = View.INVISIBLE
-                textIntervalsCount.visibility = View.INVISIBLE
-                editRestDuration.visibility = View.INVISIBLE
-                textRestDurationTime.visibility = View.INVISIBLE
-                editRestPower.visibility = View.INVISIBLE
-                textRestPower.visibility = View.INVISIBLE
+                layoutIntervalsCount.visibility = View.INVISIBLE
+                layoutRestDurationTime.visibility = View.INVISIBLE
+                layoutRestPower.visibility = View.INVISIBLE
+                textTargetPower.text = getString(R.string.program_settings_power)
+                textRestPower.text = getString(R.string.program_settings_rest_power)
+                textDurationTime.text = getString(R.string.program_settings_duration)
             }
             INTERVAL -> {
-                editIntervalsCount.visibility = View.VISIBLE
-                textIntervalsCount.visibility = View.VISIBLE
-                editRestDuration.visibility = View.VISIBLE
-                textRestDurationTime.visibility = View.VISIBLE
-                editRestPower.visibility = View.VISIBLE
-                textRestPower.visibility = View.VISIBLE
+                layoutIntervalsCount.visibility = View.VISIBLE
+                layoutRestDurationTime.visibility = View.VISIBLE
+                layoutRestPower.visibility = View.VISIBLE
+                textTargetPower.text = getString(R.string.program_settings_power)
+                textRestPower.text = getString(R.string.program_settings_rest_power)
+                textDurationTime.text = getString(R.string.program_settings_duration)
+            }
+            STAIRS -> {
+                layoutIntervalsCount.visibility = View.INVISIBLE
+                layoutRestDurationTime.visibility = View.INVISIBLE
+                layoutRestPower.visibility = View.VISIBLE
+                textTargetPower.text = getString(R.string.program_settings_max_power)
+                textRestPower.text = getString(R.string.program_settings_min_power)
             }
             NOTHING -> {
                 setViewsDisabled()
@@ -222,6 +232,10 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
 
     override fun showToast(text: String) {
         toast(text)
+    }
+
+    override fun showToast(id: Int) {
+        toast(id)
     }
 
     override fun showKeyboard() {

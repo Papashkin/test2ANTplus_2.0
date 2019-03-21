@@ -17,7 +17,7 @@
 
         <TextView
                 android:id="@+id/textName"
-                android:text="@string/setting_name"
+                android:text="@string/profile_setting_name"
                 android:textSize="20sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
@@ -46,7 +46,7 @@
 
         <TextView
                 android:id="@+id/textAge"
-                android:text="@string/setting_age"
+                android:text="@string/profile_setting_age"
                 android:textSize="20sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
@@ -75,7 +75,7 @@
 
         <TextView
                 android:id="@+id/textGender"
-                android:text="@string/setting_gender"
+                android:text="@string/profile_setting_gender"
                 android:textSize="20sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="20dp"
@@ -91,7 +91,7 @@
 
             <RadioButton
                     android:id="@+id/radioMale"
-                    android:text="@string/gender_male"
+                    android:text="@string/profile_setting_gender_male"
                     android:textSize="16sp"
                     android:padding="8dp"
                     android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
                     android:id="@+id/radioFemale"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/gender_female"
+                    android:text="@string/profile_setting_gender_female"
                     android:padding="8dp"
                     android:textSize="16sp"/>
 
@@ -120,7 +120,7 @@
 
         <TextView
                 android:id="@+id/textWeight"
-                android:text="@string/setting_weight"
+                android:text="@string/profile_setting_weight"
                 android:textSize="20sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"
@@ -149,7 +149,7 @@
 
         <TextView
                 android:id="@+id/textHeight"
-                android:text="@string/setting_height"
+                android:text="@string/profile_setting_height"
                 android:textSize="20sp"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="20dp"

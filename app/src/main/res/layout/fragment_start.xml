@@ -27,7 +27,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/shape_start_buttons"
-            android:text="@string/profiles_text"
+            android:text="@string/start"
             android:textColor="@color/pure_white"/>
 
     <Button
@@ -40,7 +40,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:background="@drawable/shape_start_buttons"
-            android:text="@string/programs_text"
+            android:text="@string/programs"
             android:textColor="@color/pure_white"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

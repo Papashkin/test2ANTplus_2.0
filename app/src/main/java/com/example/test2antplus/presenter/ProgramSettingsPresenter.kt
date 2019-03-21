@@ -143,16 +143,14 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsInterface) {
         view.clearTextFields()
     }
 
-    @SuppressLint("CheckResult")
     fun saveProgram() {
         if (programName.isEmpty() || entries.isEmpty()) {
-            view.showToast("invalid data")
+            view.showToast(R.string.invalid_data)
         } else {
             prepareToSave()
         }
     }
 
-    @SuppressLint("CheckResult")
     private fun prepareToSave() {
         view.showLoading()
         var programValues = ""
@@ -164,7 +162,7 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsInterface) {
             .compose {
                 it.workInAsinc()
             }.subscribe({
-                view.showToast("The program with the same name is exist in database")
+                view.showToast(R.string.program_settings_this_program_is_existed)
                 view.hideLoading()
             }, {
                 view.getChart()

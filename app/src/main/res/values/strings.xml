@@ -1,42 +1,72 @@
 <resources>
+
+    <!-- ====== Common ====== -->
     <string name="app_name">test2ANTplus</string>
-    <string name="main_programs">PROGRAMS</string>
-    <string name="main_profiles">PROFILES</string>
-    <string name="main_connect">Connect</string>
-    <string name="main_search">SEARCH</string>
+    <string name="programs">Programs</string>
+    <string name="start">Start</string>
+
+    <!-- ====== Работа с каналами ANT+ ====== -->
     <string name="channel_not_available">Channel not available</string>
     <string name="channel_other_failure">Other failure</string>
     <string name="channel_search_timeout">Search timeout</string>
     <string name="channel_scan_stop">Searching stopped</string>
     <string name="channel_unknown">Unknown reason</string>
+
+    <!-- ====== Sensors / devices scan ====== -->
+    <string name="scan_start">Searching starting …</string>
+    <string name="scan_no_selected_devices">There are no selected devices</string>
+
+    <!-- ====== Work module ====== -->
     <string name="text_heartrate">Heartrate, BPM</string>
     <string name="text_cadence">Cadence, RPM</string>
     <string name="text_speed">Speed, km/h</string>
     <string name="text_power">Power, W</string>
     <string name="text_distance">Distance, km</string>
     <string name="text_null_value">---</string>
-    <string name="setting_age">Age:</string>
-    <string name="setting_name">Name:</string>
-    <string name="setting_gender">Gender:</string>
-    <string name="setting_weight">Weight:</string>
-    <string name="setting_height">Height:</string>
-    <string name="gender_male">Male</string>
-    <string name="gender_female">Female</string>
-    <string name="profiles_text">Profiles</string>
-    <string name="profiles_empty_list">There are no profiles in DB</string>
-    <string name="program_name">Program Name:</string>
-    <string name="program_name_hint">program name</string>
-    <string name="program_duration">Duration (min):</string>
-    <string name="program_power">Power (W):</string>
-    <string name="programs_text">Programs</string>
-    <string name="programs_empty_list">There are no programs in DB</string>
-    <string name="program_count">Count:</string>
-    <string name="program_rest_power">Rest power (W):</string>
 
-    <string-array name="programType">
+    <!-- ====== Profile settings ====== -->
+    <string name="profile_setting_age">Age:</string>
+    <string name="profile_setting_name">Name:</string>
+    <string name="profile_setting_gender">Gender:</string>
+    <string name="profile_setting_weight">Weight:</string>
+    <string name="profile_setting_height">Height:</string>
+    <string name="profile_setting_gender_male">Male</string>
+    <string name="profile_setting_gender_female">Female</string>
+
+    <!-- ====== Profiles list ====== -->
+    <string name="profiles_empty_list">There are no profiles.\nPlease click the \"plus\" in top of the screen to create one.</string>
+
+    <!-- ====== Program settings ====== -->
+    <string name="program_settings_name">Program Name:</string>
+    <string name="program_settings_name_hint">program name</string>
+    <string name="program_settings_duration">Duration (min):</string>
+    <string name="program_settings_power">Power (W):</string>
+    <string name="program_settings_count">Count:</string>
+    <string name="program_settings_rest_power">Rest power (W):</string>
+    <string name="program_settings_max_power">Max. Power (W):</string>
+    <string name="program_settings_min_power">Min. Power (W):</string>
+    <string-array name="program_settings_types">
         <item> </item>
         <item>Single</item>
         <item>Intervals</item>
+        <item>\"Stairs\"</item>
     </string-array>
+
+    <!-- ====== Programs list ====== -->
+    <string name="programs_empty_list">There are no programs.\nPlease click the \"plus\" in top of the screen to create one.</string>
+
+    <!-- ====== Toolbars ====== -->
+    <string name="toolbar_select_profile">Choose the profile</string>
+    <string name="toolbar_programs">Programs</string>
+    <string name="toolbar_new_profile">New profile settings</string>
+    <string name="toolbar_devices">Devices:</string>
+
+    <!-- ====== Data saving ====== -->
+    <string name="invalid_data">invalid data</string>
+    <string name="program_settings_this_program_is_existed">Program with the same name is exist in database</string>
+    <string name="new_profile_failed_to_update">Update of the profile failed. Please try it again</string>
+    <string name="new_profile_failed_to_create">New profile creating failed. Please try it again</string>
+    <string name="new_profile_existed">Profile with the same name is existed</string>
+
 
 </resources>
