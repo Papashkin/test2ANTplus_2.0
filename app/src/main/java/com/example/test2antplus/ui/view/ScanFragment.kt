@@ -27,7 +27,7 @@ interface ScanInterface {
 
 class ScanFragment : Fragment(), ScanInterface {
     companion object {
-        const val SCAN_LIST = "scan list"
+//        const val SCAN_LIST = "scan list"
     }
 
     private lateinit var presenter: ScanPresenter
@@ -56,7 +56,7 @@ class ScanFragment : Fragment(), ScanInterface {
 
         rvDevices.adapter = newDeviceAdapter
 
-        bStartScan.setOnClickListener {
+        btnScan.setOnClickListener {
             presenter.startScan()
         }
 
@@ -80,14 +80,12 @@ class ScanFragment : Fragment(), ScanInterface {
 
     override fun startScan() {
         pbScan.visibility = View.VISIBLE
-        bStartScan.alpha = 0.6f
-        bStartScan.isClickable = false
+        btnScan.visibility = View.GONE
     }
 
     override fun stopScan() {
         pbScan.visibility = View.GONE
-        bStartScan.alpha = 1f
-        bStartScan.isClickable = true
+        btnScan.visibility = View.VISIBLE
     }
 
     override fun showToast(id: Int) {

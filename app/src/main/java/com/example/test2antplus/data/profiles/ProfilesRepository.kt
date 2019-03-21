@@ -15,6 +15,10 @@ class ProfilesRepository @Inject constructor(private val profileDao: ProfileDao)
         profileDao.addProfile(profile)
     }
 
+    fun updateProfile(profile: Profile) {
+        profileDao.updateProfile(profile)
+    }
+
     fun removeProfile(profile: Profile) {
         profileDao.deleteProfile(profile)
     }

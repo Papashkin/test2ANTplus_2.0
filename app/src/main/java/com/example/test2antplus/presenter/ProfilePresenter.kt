@@ -1,6 +1,7 @@
 package com.example.test2antplus.presenter
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.data.profiles.ProfilesRepository
@@ -85,6 +86,17 @@ class ProfilePresenter(private val view: ProfileFragment) {
     }
 
     fun editSelectedProfile(id: Int) {
+        val bundle = Bundle()
+        val profileToEdit = profiles.first { it.getId() ==id }
+        view.editProfile(profiles.first { it.getId() ==id })
+        bundle.putInt("profileName", profileToEdit.getId())
+        bundle.putString("profileName", profileToEdit.getName())
+        bundle.putInt("profileAge", profileToEdit.getAge())
+        bundle.putString("profileGender", profileToEdit.getGender())
+        bundle.putFloat("profileWeight", profileToEdit.getWeight())
+        bundle.putFloat("profileHeight", profileToEdit.getHeight())
+
+
 
     }
 }

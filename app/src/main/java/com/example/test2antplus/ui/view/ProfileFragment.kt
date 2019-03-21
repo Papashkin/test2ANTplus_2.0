@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
+import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.presenter.ProfilePresenter
 import com.example.test2antplus.ui.adapter.ProfileAdapter
 import com.pawegio.kandroid.toast
@@ -22,6 +23,8 @@ interface ProfileInterface {
     fun hideLoading()
 
     fun deleteSelectedProfile(id: Int)
+
+    fun editProfile(profile: Profile)
 }
 
 class ProfileFragment : Fragment(), ProfileInterface {
@@ -105,5 +108,18 @@ class ProfileFragment : Fragment(), ProfileInterface {
 
     override fun deleteSelectedProfile(id: Int) {
         profilesAdapter.removeItem(id)
+    }
+
+    override fun editProfile(profile: Profile) {
+        val bundle = Bundle()
+        bundle.putInt("profileId", profile.getId())
+        bundle.putString("profileName", profile.getName())
+        bundle.putInt("profileAge", profile.getAge())
+        bundle.putString("profileGender", profile.getGender())
+        bundle.putFloat("profileWeight", profile.getWeight())
+        bundle.putFloat("profileHeight", profile.getHeight())
+        val profileDialog = NewProfileDialog()
+        profileDialog.arguments = bundle
+        profileDialog.show(fragmentManager, profileDialog.tag)
     }
 }

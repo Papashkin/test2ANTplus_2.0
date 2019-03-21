@@ -20,18 +20,31 @@ import javax.inject.Inject
 
 class NewProfileDialog : BottomSheetDialogFragment() {
 
-    private val newProfile: Profile = Profile(0, "", 0, "", 0.0f, 0.0f)
+    private var newProfile: Profile = Profile(0, "", 0, "", 0.0f, 0.0f)
+    private lateinit var oldProfile: Profile
+    private var isNewProfile = true
 
     @Inject
     lateinit var profilesRepository: ProfilesRepository
 
     override fun onAttach(context: Context?) {
         MainApplication.graph.inject(this)
+        val bundle = arguments
+        bundle?.apply {
+            isNewProfile = false
+            newProfile = Profile(
+                id = this.getInt("profileId"),
+                name = this.getString("profileName") ?: "",
+                age = this.getInt("profileAge"),
+                gender = this.getString("profileGender") ?: "",
+                weight = this.getFloat("profileWeight"),
+                height = this.getFloat("profileHeight")
+            )
+        }
         super.onAttach(context)
     }
 
     override fun setupDialog(dialog: Dialog?, style: Int) {
-//        MainApplication.graph.inject(this)
         val contentView = View.inflate(context, R.layout.dialog_new_profile_bottom, null)
         dialog?.setContentView(contentView)
 
@@ -43,6 +56,17 @@ class NewProfileDialog : BottomSheetDialogFragment() {
         val femaleRadioEditor = contentView.findViewById<RadioButton>(R.id.radioFemale)
         val weightEditor = contentView.findViewById<EditText>(R.id.editWeight)
         val heightEditor = contentView.findViewById<EditText>(R.id.editHeight)
+
+        if (newProfile.getName() != "") {
+            nameEditor.editableText.append(newProfile.getName())
+            ageEditor.editableText.append(newProfile.getAge().toString())
+            weightEditor.editableText.append(newProfile.getWeight().toString())
+            heightEditor.editableText.append(newProfile.getHeight().toString())
+            when (newProfile.getGender()) {
+                "M" -> maleRadioEditor.toggle()
+                "F" -> femaleRadioEditor.toggle()
+            }
+        }
 
         nameEditor.textWatcher {
             afterTextChanged {
@@ -93,7 +117,11 @@ class NewProfileDialog : BottomSheetDialogFragment() {
         }
 
         createButton.setOnClickListener {
-            createProfile()
+            if (isNewProfile) {
+                createProfile()
+            } else {
+                updateProfile()
+            }
         }
 
         cancelButton.setOnClickListener {
@@ -109,9 +137,28 @@ class NewProfileDialog : BottomSheetDialogFragment() {
                 profilesRepository.insertProfile(newProfile)
             }.compose {
                 it.workInAsinc()
-            }.subscribe ({
+            }.subscribe({
                 this.dismiss()
-            },{
+            }, {
+                toast("New profile creating failed. Please try it again")
+                it.printStackTrace()
+            })
+        } else {
+            toast("Invalid data")
+        }
+    }
+
+
+    @SuppressLint("CheckResult")
+    private fun updateProfile() {
+        if (newProfile.getName().isNotEmpty() && newProfile.getAge() != 0 && newProfile.getWeight() != 0.0F) {
+            Observable.fromCallable {
+                profilesRepository.updateProfile(newProfile)
+            }.compose {
+                it.workInAsinc()
+            }.subscribe({
+                this.dismiss()
+            }, {
                 toast("New profile creating failed. Please try it again")
                 it.printStackTrace()
             })

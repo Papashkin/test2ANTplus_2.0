@@ -1,9 +1,6 @@
 package com.example.test2antplus.data.profiles
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import io.reactivex.Flowable
 import io.reactivex.Single
 
@@ -18,6 +15,9 @@ interface ProfileDao {
 
     @Insert
     fun addProfile(profile: Profile)
+
+    @Update
+    fun updateProfile(profile: Profile)
 
     @Delete
     fun deleteProfile(profile: Profile)
