@@ -5,14 +5,14 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.navigation.FragmentScreens
-import com.example.test2antplus.ui.view.ProgramInterface
+import com.example.test2antplus.ui.view.ProgramFragment
 import com.example.test2antplus.workInAsinc
 import io.reactivex.Single
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
-class ProgramPresenter(private val view: ProgramInterface) {
+class ProgramPresenter(private val view: ProgramFragment) {
 
     @Inject
     lateinit var router: Router

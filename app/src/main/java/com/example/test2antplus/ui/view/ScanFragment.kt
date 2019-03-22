@@ -4,28 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.presenter.ScanPresenter
 import com.example.test2antplus.ui.adapter.NewDeviceAdapter
 import com.pawegio.kandroid.putParcelableCollection
-import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_scan.*
 
 interface ScanInterface {
     fun startScan()
     fun stopScan()
     fun addNewDevice(device: SelectedDevice)
-    fun showToast(id: Int)
-    fun showToast(text: String)
     fun showButtonConnect()
     fun hideButtonConnect()
     fun saveSearchedDevices()
 }
 
-class ScanFragment : Fragment(), ScanInterface {
+class ScanFragment : BaseFragment(), ScanInterface {
     companion object {
 //        const val SCAN_LIST = "scan list"
     }
@@ -47,6 +43,11 @@ class ScanFragment : Fragment(), ScanInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = ScanPresenter(this)
+
+        toolbarScan.setNavigationIcon(R.drawable.ic_arrow_back_32)
+        toolbarScan.setNavigationOnClickListener {
+            presenter.onBackPressed()
+        }
 
         newDeviceAdapter = NewDeviceAdapter(
             onItemClick = { position ->
@@ -86,14 +87,6 @@ class ScanFragment : Fragment(), ScanInterface {
     override fun stopScan() {
         pbScan.visibility = View.GONE
         btnScan.visibility = View.VISIBLE
-    }
-
-    override fun showToast(id: Int) {
-        toast(id)
-    }
-
-    override fun showToast(text: String) {
-        toast(text)
     }
 
     override fun hideButtonConnect() {

@@ -12,14 +12,14 @@ import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.ant.service.AntRadioServiceConnection
 import com.example.test2antplus.navigation.FragmentScreens
-import com.example.test2antplus.ui.view.ScanInterface
+import com.example.test2antplus.ui.view.ScanFragment
 import com.pawegio.kandroid.runDelayed
 import com.pawegio.kandroid.runOnUiThread
 import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
 
-class ScanPresenter(private val view: ScanInterface) {
+class ScanPresenter(private val view: ScanFragment) {
     companion object {
         const val SCAN_DELAY = 15000L
         const val TAG = "test2antplus"
@@ -127,5 +127,9 @@ class ScanPresenter(private val view: ScanInterface) {
         }.map {
             it.device
         } as ArrayList<MultiDeviceSearchResult>))
+    }
+
+    fun onBackPressed() {
+        router.exit()
     }
 }

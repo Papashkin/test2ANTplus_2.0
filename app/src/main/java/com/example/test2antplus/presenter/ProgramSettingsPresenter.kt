@@ -8,6 +8,7 @@ import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.ui.view.ProgramSettingsFragment
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
+import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.STAIRS
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -101,6 +102,15 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
                 }
                 updateChart()
             }
+            STAIRS -> {
+                val middlePower = restPowerTemp + (powerTemp - restPowerTemp) / 2
+                val steps = floatArrayOf(restPowerTemp, middlePower, powerTemp)
+                val durationForEachStep = duration / 3
+                for (i in steps) {
+                    setInterval(durationForEachStep, i)
+                }
+                updateChart()
+            }
         }
     }
 
@@ -128,6 +138,11 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
             }
             INTERVAL -> {
                 if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f && restDuration != 0.0f && restPowerTemp != 0.0f && intervalCount != 0) {
+                    view.showAddPowerFab()
+                }
+            }
+            STAIRS -> {
+                if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f) {
                     view.showAddPowerFab()
                 }
             }

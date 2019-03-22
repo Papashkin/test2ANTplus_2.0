@@ -196,7 +196,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 layoutRestPower.visibility = View.INVISIBLE
                 textTargetPower.text = getString(R.string.program_settings_power)
                 textRestPower.text = getString(R.string.program_settings_rest_power)
-                textDurationTime.text = getString(R.string.program_settings_duration)
+                textDurationTime.text = getString(R.string.program_settings_time)
             }
             INTERVAL -> {
                 layoutIntervalsCount.visibility = View.VISIBLE
@@ -204,7 +204,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 layoutRestPower.visibility = View.VISIBLE
                 textTargetPower.text = getString(R.string.program_settings_power)
                 textRestPower.text = getString(R.string.program_settings_rest_power)
-                textDurationTime.text = getString(R.string.program_settings_duration)
+                textDurationTime.text = getString(R.string.program_settings_time)
             }
             STAIRS -> {
                 layoutIntervalsCount.visibility = View.INVISIBLE
@@ -212,6 +212,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 layoutRestPower.visibility = View.VISIBLE
                 textTargetPower.text = getString(R.string.program_settings_max_power)
                 textRestPower.text = getString(R.string.program_settings_min_power)
+                textDurationTime.text = getString(R.string.program_setting_common_time)
             }
             NOTHING -> {
                 setViewsDisabled()

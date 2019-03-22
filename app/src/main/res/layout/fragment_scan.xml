@@ -7,7 +7,7 @@
         android:background="#ffffff">
 
     <androidx.appcompat.widget.Toolbar
-            android:id="@+id/scanToolbar"
+            android:id="@+id/toolbarScan"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
@@ -20,8 +20,8 @@
             android:layout_height="30dp"
             android:layout_marginEnd="15dp"
             android:elevation="9dp"
-            app:layout_constraintTop_toTopOf="@id/scanToolbar"
-            app:layout_constraintBottom_toBottomOf="@id/scanToolbar"
+            app:layout_constraintTop_toTopOf="@id/toolbarScan"
+            app:layout_constraintBottom_toBottomOf="@id/toolbarScan"
             app:layout_constraintEnd_toEndOf="parent">
 
         <ProgressBar
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/scanToolbar">
+                app:layout_constraintTop_toBottomOf="@id/toolbarScan">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDevices"

@@ -13,7 +13,7 @@
     <string name="channel_unknown">Неизвестная причина</string>
 
     <!-- ====== Поиск датчиков / утройств ====== -->
-    <string name="scan_start">Поиск …</string>
+    <string name="scan_start">Поиск устройств …</string>
     <string name="scan_no_selected_devices">Ни одного устройства не выбрано</string>
 
     <!-- ====== Рабочий (Work) модуль ====== -->
@@ -39,24 +39,26 @@
     <!-- ====== Настройки программы ====== -->
     <string name="program_settings_name">Название программы:</string>
     <string name="program_settings_name_hint">название программы</string>
-    <string name="program_settings_duration">Время (мин):</string>
+    <string name="program_settings_time">Время (мин):</string>
     <string name="program_settings_power">Мощность (Вт):</string>
     <string name="program_settings_count">Кол-во:</string>
     <string name="program_settings_rest_power">Отдых (Вт):</string>
     <string name="program_settings_max_power">Макс. Мощность (Вт):</string>
     <string name="program_settings_min_power">Мин. Мощность (Вт):</string>
+    <string name="program_setting_common_time">Общее время (мин):</string>
     <string-array name="program_settings_types">
         <item> </item>
         <item>Сегмент</item>
         <item>Интервалы</item>
-        <item>\"Лесенка\"</item>
+        <item>\"Три ступеньки\"</item>
     </string-array>
 
     <!-- ====== Список программ ====== -->
-    <string name="programs_empty_list">Нет ни одной программы.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
+    <string name="programs_empty_list">Вы ещё не создали ни одной программы.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
 
     <!-- ====== Тулбары ====== -->
     <string name="toolbar_programs">Программы</string>
+    <string name="toolbar_new_program">Новая программа</string>
     <string name="toolbar_select_profile">Выберите профиль</string>
     <string name="toolbar_new_profile">Создание нового профиля</string>
     <string name="toolbar_update_profile">Изменение профиля</string>

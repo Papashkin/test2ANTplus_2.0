@@ -121,7 +121,6 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
 
         btnCreate.setOnClickListener {
             presenter.onCreateBtnClick()
-
         }
 
         btnCancel.setOnClickListener {
@@ -191,8 +190,8 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
         editAge.text.clear()
         editWeight.text.clear()
         editHeight.text.clear()
-        radioMale.isChecked = false
-        radioFemale.isChecked = false
+        groupGender.clearCheck()
+        hideKeyboard()
     }
 
     override fun showProfileBottomDialog(profile: Profile) {
@@ -209,8 +208,6 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
             editAge.setText("")
             editWeight.setText("")
             editHeight.setText("")
-            radioMale.invalidate()
-            radioFemale.invalidate()
         } else {
             editName.setText(profile.getName())
             editAge.setText(profile.getAge().toString())

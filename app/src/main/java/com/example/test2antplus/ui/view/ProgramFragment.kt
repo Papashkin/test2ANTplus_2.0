@@ -36,7 +36,7 @@ interface ProgramInterface {
     fun updateProgramsList(id: Int)
 }
 
-class ProgramFragment : Fragment(), ProgramInterface {
+class ProgramFragment : BaseFragment(), ProgramInterface {
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter

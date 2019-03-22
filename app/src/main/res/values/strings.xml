@@ -34,30 +34,32 @@
     <string name="profile_setting_gender_female">Female</string>
 
     <!-- ====== Profiles list ====== -->
-    <string name="profiles_empty_list">There are no profiles.\nPlease click the \"plus\" in top of the screen to create one.</string>
+    <string name="profiles_empty_list">You didn\'t create any profiles.\nPlease click the \"plus\" in top of the screen to create one.</string>
 
     <!-- ====== Program settings ====== -->
     <string name="program_settings_name">Program Name:</string>
     <string name="program_settings_name_hint">program name</string>
-    <string name="program_settings_duration">Duration (min):</string>
+    <string name="program_settings_time">Time (min):</string>
     <string name="program_settings_power">Power (W):</string>
     <string name="program_settings_count">Count:</string>
     <string name="program_settings_rest_power">Rest power (W):</string>
     <string name="program_settings_max_power">Max. Power (W):</string>
     <string name="program_settings_min_power">Min. Power (W):</string>
+    <string name="program_setting_common_time">Common time (min):</string>
     <string-array name="program_settings_types">
         <item> </item>
         <item>Single</item>
         <item>Intervals</item>
-        <item>\"Stairs\"</item>
+        <item>\"Three steps\"</item>
     </string-array>
 
     <!-- ====== Programs list ====== -->
-    <string name="programs_empty_list">There are no programs.\nPlease click the \"plus\" in top of the screen to create one.</string>
+    <string name="programs_empty_list">You didn\'t create any programs.\nPlease click the \"plus\" in top of the screen to create one.</string>
 
     <!-- ====== Toolbars ====== -->
     <string name="toolbar_select_profile">Choose the profile</string>
     <string name="toolbar_programs">Programs</string>
+    <string name="toolbar_new_program">New program</string>
     <string name="toolbar_new_profile">New profile settings</string>
     <string name="toolbar_update_profile">Update existed profile</string>
     <string name="toolbar_devices">Devices:</string>
@@ -73,6 +75,7 @@
     <string name="dialog_message_are_you_sure">Are you sure?</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
+
 
 
 </resources>
