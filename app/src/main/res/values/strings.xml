@@ -59,6 +59,7 @@
     <string name="toolbar_select_profile">Choose the profile</string>
     <string name="toolbar_programs">Programs</string>
     <string name="toolbar_new_profile">New profile settings</string>
+    <string name="toolbar_update_profile">Update existed profile</string>
     <string name="toolbar_devices">Devices:</string>
 
     <!-- ====== Data saving ====== -->
@@ -67,6 +68,11 @@
     <string name="new_profile_failed_to_update">Update of the profile failed. Please try it again</string>
     <string name="new_profile_failed_to_create">New profile creating failed. Please try it again</string>
     <string name="new_profile_existed">Profile with the same name is existed</string>
+
+    <!-- ====== Dialog ====== -->
+    <string name="dialog_message_are_you_sure">Are you sure?</string>
+    <string name="dialog_yes">Yes</string>
+    <string name="dialog_no">No</string>
 
 
 </resources>

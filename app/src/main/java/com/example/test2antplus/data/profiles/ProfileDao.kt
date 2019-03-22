@@ -2,7 +2,6 @@ package com.example.test2antplus.data.profiles
 
 import androidx.room.*
 import io.reactivex.Flowable
-import io.reactivex.Single
 
 @Dao
 interface ProfileDao {
@@ -11,7 +10,7 @@ interface ProfileDao {
     fun getAll(): Flowable<List<Profile>>
 
     @Query("Select * from profile where name = :profileName")
-    fun getProfile(profileName: String): Single<Profile>
+    fun getProfile(profileName: String): Profile
 
     @Insert
     fun addProfile(profile: Profile)

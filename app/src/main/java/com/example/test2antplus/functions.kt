@@ -131,4 +131,6 @@ fun BarChart.saveProgramAsImage(name: String): Boolean {
     }
 }
 
-fun Profile.isFilled(): Boolean = this.getName().isNotEmpty() && this.getAge() != 0 && this.getWeight() != 0.0F
+fun Profile.isFilled(): Boolean = this.getName().isNotEmpty() && this.getAge() != 0 && this.getWeight() != 0.0F && this.getHeight() != 0.0F && this.getGender() != ""
+
+fun Profile.isSomethingFilled(): Boolean = this.getName().isNotEmpty() || this.getAge() != 0 || this.getWeight() != 0.0F || this.getHeight() != 0.0F || this.getGender() != ""

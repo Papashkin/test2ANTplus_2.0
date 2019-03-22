@@ -31,6 +31,5 @@ interface AppComponent {
     fun inject(startPresenter: StartPresenter)
     fun inject(programFragment: ProgramFragment)
     fun inject(programPresenter: ProgramPresenter)
-    fun inject(newProfileDialog: NewProfileDialog)
 
 }

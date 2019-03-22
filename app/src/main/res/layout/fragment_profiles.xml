@@ -21,7 +21,7 @@
             android:id="@+id/buttonAddProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:elevation="11dp"
+            android:elevation="6dp"
             android:background="@drawable/ic_add_white_32"
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="@id/toolbarProfiles"
@@ -33,7 +33,7 @@
             android:id="@+id/pbProfiles"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:elevation="10dp"
+            android:elevation="7dp"
             android:layout_marginEnd="10dp"
             android:indeterminateTint="@color/pure_white"
             app:layout_constraintEnd_toStartOf="@id/buttonAddProfile"
@@ -68,5 +68,10 @@
             app:layout_constraintBottom_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"/>
+
+    <include
+            android:id="@+id/newProfileBottomDialog"
+            layout="@layout/dialog_new_profile"
+            android:visibility="invisible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

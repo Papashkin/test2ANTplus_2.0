@@ -5,9 +5,9 @@ import com.example.test2antplus.*
 import com.example.test2antplus.MainApplication.Companion.PROGRAM_IMAGES_PATH
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
+import com.example.test2antplus.ui.view.ProgramSettingsFragment
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
-import com.example.test2antplus.ui.view.ProgramSettingsInterface
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -18,7 +18,7 @@ import java.io.File
 import javax.inject.Inject
 
 @SuppressLint("CheckResult")
-class ProgramSettingsPresenter (private val view: ProgramSettingsInterface) {
+class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
 
     @Inject
     lateinit var router: Router

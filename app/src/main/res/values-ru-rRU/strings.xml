@@ -59,6 +59,7 @@
     <string name="toolbar_programs">Программы</string>
     <string name="toolbar_select_profile">Выберите профиль</string>
     <string name="toolbar_new_profile">Создание нового профиля</string>
+    <string name="toolbar_update_profile">Изменение профиля</string>
     <string name="toolbar_devices">Устройства:</string>
 
     <!-- ====== Сохранение данных ====== -->
@@ -67,5 +68,10 @@
     <string name="new_profile_existed">Профиль с таким именем уже существует</string>
     <string name="new_profile_failed_to_update">Ошибка при обновлении программы. Попробуйте ещё раз</string>
     <string name="new_profile_failed_to_create">Ошибка при сохранении пограммы. Попробуйте ещё раз</string>
+
+    <!-- ====== Диалог ====== -->
+    <string name="dialog_message_are_you_sure">Вы уверены?</string>
+    <string name="dialog_yes">Да</string>
+    <string name="dialog_no">Нет</string>
 
 </resources>

@@ -5,29 +5,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.presenter.ProfilePresenter
 import com.example.test2antplus.ui.adapter.ProfileAdapter
-import com.pawegio.kandroid.toast
+import com.pawegio.kandroid.textWatcher
+import kotlinx.android.synthetic.main.dialog_new_profile.*
 import kotlinx.android.synthetic.main.fragment_profiles.*
 
 interface ProfileInterface {
     fun setProfilesList(newProfiles: ArrayList<Pair<String, Int>>)
-    fun showToast(text: String)
     fun showProfilesList()
     fun hideProfilesList()
     fun showLoading()
     fun hideLoading()
-
     fun deleteSelectedProfile(id: Int)
-
-    fun editProfile(profile: Profile)
+    fun showProfileBottomDialog(profile: Profile)
+    fun hideProfileBottomDialog()
 }
 
-class ProfileFragment : Fragment(), ProfileInterface {
+class ProfileFragment : BaseFragment(), ProfileInterface {
 
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ProfileAdapter
@@ -49,33 +47,110 @@ class ProfileFragment : Fragment(), ProfileInterface {
             profilesAdapter = ProfileAdapter(
                 onDeleteClick = { id ->
                     AlertDialog.Builder(context!!)
-                        .setMessage("Are you sure?")
-                        .setPositiveButton("Yes") { dialog, _ ->
+                        .setMessage(getString(R.string.dialog_message_are_you_sure))
+                        .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
                             presenter.onDeleteClick(id)
                             dialog.dismiss()
                         }
-                        .setNegativeButton("No") { dialog, _ ->
+                        .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
                             dialog.dismiss()
                         }
                         .create()
                         .show()
                 },
                 onEditClick = { id ->
-                    presenter.editSelectedProfile(id)
+                    presenter.onEditProfileClick(id)
                 }, onItemClick = { id ->
+                    hideProfileBottomDialog()
                     presenter.selectProfile(id)
                 })
             listProfiles.adapter = profilesAdapter
         }
 
         buttonAddProfile.setOnClickListener {
-            val profileDialog = NewProfileDialog()
-            profileDialog.show(fragmentManager, profileDialog.tag)
+            presenter.addNewProfileClick()
+        }
+
+        editName.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setName(it.toString())
+                } else {
+                    presenter.setName("")
+                }
+            }
+        }
+
+        editAge.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setAge(it.toString().toInt())
+                } else {
+                    presenter.setAge(0)
+                }
+            }
+        }
+
+        editWeight.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setWeight(it.toString().toFloat())
+                } else {
+                    presenter.setWeight(0.0F)
+                }
+            }
+        }
+
+        editHeight.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setHeight(it.toString().toFloat())
+                } else {
+                    presenter.setHeight(0.0F)
+                }
+            }
+        }
+
+        radioMale.setOnClickListener {
+            presenter.setGender("M")
+        }
+
+        radioFemale.setOnClickListener {
+            presenter.setGender("F")
+        }
+
+        btnCreate.setOnClickListener {
+            presenter.onCreateBtnClick()
+
+        }
+
+        btnCancel.setOnClickListener {
+            hideKeyboard()
+            newProfileBottomDialog.visibility = View.GONE
+        }
+
+        bottomDialogBackground.setOnClickListener {
+            if (presenter.checkProfileFilling()) {
+                AlertDialog.Builder(context!!)
+                    .setMessage(getString(R.string.dialog_message_are_you_sure))
+                    .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
+                        closeProfileDialog()
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
+                        dialog.dismiss()
+                    }
+                    .create()
+                    .show()
+            } else {
+                closeProfileDialog()
+            }
         }
     }
 
-    override fun showToast(text: String) {
-        toast(text)
+    private fun closeProfileDialog() {
+        hideKeyboard()
+        hideProfileBottomDialog()
     }
 
     override fun setProfilesList(newProfiles: ArrayList<Pair<String, Int>>) {
@@ -110,16 +185,41 @@ class ProfileFragment : Fragment(), ProfileInterface {
         profilesAdapter.removeItem(id)
     }
 
-    override fun editProfile(profile: Profile) {
-        val bundle = Bundle()
-        bundle.putInt("profileId", profile.getId())
-        bundle.putString("profileName", profile.getName())
-        bundle.putInt("profileAge", profile.getAge())
-        bundle.putString("profileGender", profile.getGender())
-        bundle.putFloat("profileWeight", profile.getWeight())
-        bundle.putFloat("profileHeight", profile.getHeight())
-        val profileDialog = NewProfileDialog()
-        profileDialog.arguments = bundle
-        profileDialog.show(fragmentManager, profileDialog.tag)
+    override fun hideProfileBottomDialog() {
+        newProfileBottomDialog.visibility = View.GONE
+        editName.text.clear()
+        editAge.text.clear()
+        editWeight.text.clear()
+        editHeight.text.clear()
+        radioMale.isChecked = false
+        radioFemale.isChecked = false
+    }
+
+    override fun showProfileBottomDialog(profile: Profile) {
+        newProfileBottomDialog.visibility = View.VISIBLE
+
+        if (profile.getName() == "") {
+            toolbarNewProfile.setTitle(R.string.toolbar_new_profile)
+        } else {
+            toolbarNewProfile.setTitle(R.string.toolbar_update_profile)
+        }
+
+        if (profile.getName() == "") {
+            editName.setText(profile.getName())
+            editAge.setText("")
+            editWeight.setText("")
+            editHeight.setText("")
+            radioMale.invalidate()
+            radioFemale.invalidate()
+        } else {
+            editName.setText(profile.getName())
+            editAge.setText(profile.getAge().toString())
+            editWeight.setText(profile.getWeight().toString())
+            editHeight.setText(profile.getHeight().toString())
+            when (profile.getGender()) {
+                "M" -> radioMale.toggle()
+                "F" -> radioFemale.toggle()
+            }
+        }
     }
 }

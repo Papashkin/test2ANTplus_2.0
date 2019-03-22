@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
-import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
@@ -18,10 +16,7 @@ import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.example.test2antplus.setCommonParams
 import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.BarData
-import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.textWatcher
-import com.pawegio.kandroid.toast
-import kotlinx.android.synthetic.main.card_program_info.*
 import kotlinx.android.synthetic.main.fragment_program_settings.*
 
 interface ProgramSettingsInterface {
@@ -36,18 +31,12 @@ interface ProgramSettingsInterface {
     fun setViewsDisabled()
     fun setProgramType(type: Int)
 
-    fun showToast(text: String)
-    fun showToast(id: Int)
-
-    fun showKeyboard()
-    fun hideKeyboard()
-
     fun closeScreen()
 
     fun getChart()
 }
 
-class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
+class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
     companion object {
         const val NOTHING = 0
         const val SINGLE = 1
@@ -228,24 +217,6 @@ class ProgramSettingsFragment : Fragment(), ProgramSettingsInterface {
                 setViewsDisabled()
             }
         }
-    }
-
-    override fun showToast(text: String) {
-        toast(text)
-    }
-
-    override fun showToast(id: Int) {
-        toast(id)
-    }
-
-    override fun showKeyboard() {
-        val inputMethodManager = activity?.inputMethodManager
-        inputMethodManager?.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
-    }
-
-    override fun hideKeyboard() {
-        val inputMethodManager = activity?.inputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow(view?.windowToken, 0)
     }
 
     override fun closeScreen() {
