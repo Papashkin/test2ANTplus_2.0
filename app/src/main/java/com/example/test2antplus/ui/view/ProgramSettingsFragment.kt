@@ -7,14 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import com.example.test2antplus.MainApplication
+import com.example.test2antplus.*
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
-import com.example.test2antplus.R
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
-import com.example.test2antplus.setCommonParams
-import com.example.test2antplus.showDialog
 import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.fragment_program_settings.*
@@ -143,8 +140,8 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
     }
 
     override fun updateChart(data: BarData, duration: ArrayList<Float>) {
-        chartProgram.setCommonParams(data)
-        chartProgram.setTouchEnabled(true)
+        val timeLabels = duration.map { it.toLong().timeFormat() }
+        chartProgram.setCommonParams(data, timeLabels)
         chartProgram.invalidate()
     }
 

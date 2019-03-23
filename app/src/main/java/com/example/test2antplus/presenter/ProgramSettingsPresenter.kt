@@ -121,7 +121,7 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
 
     private fun updateChart() {
         program = BarDataSet(entries, "Total time: ${descriptors.sum().toLong().fullTimeFormat()}")
-        program.stackLabels = descriptors.map { it.toLong().timeFormat() }.toTypedArray()
+//        program.stackLabels = descriptors.map { it.toLong().timeFormat() }.toTypedArray()
         program.barBorderWidth = 0f
         view.updateChart(BarData(program), descriptors)
         clearData()
@@ -227,4 +227,6 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
     fun onBackPressed() {
         router.exit()
     }
+
 }
+

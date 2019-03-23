@@ -19,6 +19,7 @@ import kotlinx.android.synthetic.main.dialog_program.view.*
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
+import kotlin.math.absoluteValue
 
 /**
  * Отображает окно с текстом
@@ -73,15 +74,28 @@ fun <T> Observable<T>.workInAsinc(): Observable<T> =
 /**
  * Установка стандартных параметров гистограммы
  */
-fun BarChart.setCommonParams(data: BarData) = this.also {
-    it.data = data
-    it.data.barWidth = 1f
-    it.data.setValueTextSize(9f)
-    it.xAxis.isEnabled = false
-    it.axisRight.isEnabled = false
-    it.description = null
+fun BarChart.setCommonParams(data: BarData, timeLabels: List<String>) = this.also {
     it.setScaleEnabled(false)
     it.setTouchEnabled(true)
+    it.description = null
+
+    it.xAxis.labelCount = timeLabels.size
+    it.xAxis.axisMinimum = -0.5f
+    it.xAxis.axisMaximum = timeLabels.size.toFloat() - 0.5f
+    it.xAxis.setCenterAxisLabels(false)
+    it.xAxis
+    it.xAxis.setValueFormatter { value, _ ->
+        when {
+            (value.rem(1) == 0.0f) -> timeLabels[value.toInt().absoluteValue]
+            else -> ""
+        }
+    }
+
+    it.axisRight.isEnabled = false
+
+    it.data = data
+    it.data.barWidth = 1f
+    it.data.setDrawValues(false)
 }
 
 fun String.convertToLatinScript(): String {
