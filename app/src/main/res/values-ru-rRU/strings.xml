@@ -47,7 +47,6 @@
     <string name="program_settings_min_power">Мин. Мощность (Вт):</string>
     <string name="program_setting_common_time">Общее время (мин):</string>
     <string-array name="program_settings_types">
-        <item> </item>
         <item>Сегмент</item>
         <item>Интервалы</item>
         <item>\"Три ступеньки\"</item>

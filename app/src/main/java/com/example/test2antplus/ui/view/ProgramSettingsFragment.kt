@@ -35,10 +35,9 @@ interface ProgramSettingsInterface {
 
 class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
     companion object {
-        const val NOTHING = 0
-        const val SINGLE = 1
-        const val INTERVAL = 2
-        const val STAIRS = 3
+        const val SINGLE = 0
+        const val INTERVAL = 1
+        const val STAIRS = 2
     }
 
     private lateinit var presenter: ProgramSettingsPresenter
@@ -122,7 +121,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
 
         spinType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                presenter.setProgramType(NOTHING)
+                presenter.setProgramType(SINGLE)
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -135,6 +134,8 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
         }
 
         fabCreateProgram.setOnClickListener {
+            chartProgram.data.setDrawValues(false)
+            chartProgram.legend.isEnabled = false
             presenter.saveProgram()
         }
     }
@@ -211,7 +212,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 textRestPower.text = getString(R.string.program_settings_min_power)
                 textDurationTime.text = getString(R.string.program_setting_common_time)
             }
-            NOTHING -> {
+            else -> {
                 setViewsDisabled()
             }
         }

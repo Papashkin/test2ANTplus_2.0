@@ -36,7 +36,7 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
     private var duration: Float = 0.0f
     private var restDuration: Float = 0.0f
     private var intervalCount = 0
-    private var programType = 0
+    private var programType = 1
     private var entries: ArrayList<BarEntry> = arrayListOf()
     private var descriptors: ArrayList<Float> = arrayListOf()
 
@@ -51,7 +51,7 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
     }
 
     private fun checkViewsEnabled() {
-        if (programName.isNotEmpty() && programType != 0) {
+        if (programName.isNotEmpty()) {
             view.setViewsEnabled()
         } else {
             view.setViewsDisabled()

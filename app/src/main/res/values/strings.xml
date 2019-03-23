@@ -47,7 +47,6 @@
     <string name="program_settings_min_power">Min. Power (W):</string>
     <string name="program_setting_common_time">Common time (min):</string>
     <string-array name="program_settings_types">
-        <item> </item>
         <item>Single</item>
         <item>Intervals</item>
         <item>\"Three steps\"</item>

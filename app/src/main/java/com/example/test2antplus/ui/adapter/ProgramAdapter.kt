@@ -73,7 +73,7 @@ class ProgramAdapter(
             programName.text = program.getName()
             avgPower.text = getAveragePower(programSource)
             maxPower.text = getMaxPower(programSource)
-            duration.text = getDuration(programSource)
+            duration.text = getTotalTime(programSource)
 
             Picasso.get()
                 .load(File(program.getImagePath()))
@@ -120,14 +120,14 @@ class ProgramAdapter(
         }
 
 
-        private fun getDuration(program: String): CharSequence {
+        private fun getTotalTime(program: String): CharSequence {
             var count = 0.0f
             program.split("|").forEach {
                 if (it.isNotEmpty()) {
                     count += it.split("*").first().toFloat()
                 }
             }
-            return "Duration: ${count.toLong().fullTimeFormat()}"
+            return "Total time: ${count.toLong().fullTimeFormat()}"
         }
     }
 
