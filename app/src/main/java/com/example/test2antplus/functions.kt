@@ -83,19 +83,16 @@ fun BarChart.setCommonParams(data: BarData, timeLabels: List<String>) = this.als
     it.xAxis.axisMinimum = -0.5f
     it.xAxis.axisMaximum = timeLabels.size.toFloat() - 0.5f
     it.xAxis.setCenterAxisLabels(false)
-    it.xAxis
-    it.xAxis.setValueFormatter { value, _ ->
-        when {
-            (value.rem(1) == 0.0f) -> timeLabels[value.toInt().absoluteValue]
-            else -> ""
-        }
-    }
+    it.xAxis.isEnabled = false
 
     it.axisRight.isEnabled = false
 
     it.data = data
     it.data.barWidth = 1f
-    it.data.setDrawValues(false)
+    it.data.setValueTextSize(8f)
+    it.data.setValueFormatter { _, entry, _, _ ->
+            timeLabels[entry.x.toInt()]
+    }
 }
 
 fun String.convertToLatinScript(): String {
