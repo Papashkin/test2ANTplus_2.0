@@ -6,38 +6,48 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import com.example.test2antplus.*
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.pawegio.kandroid.textWatcher
-import kotlinx.android.synthetic.main.fragment_program_settings.*
+import kotlinx.android.synthetic.main.dialog_new_program.*
+import kotlinx.android.synthetic.main.fragment_program_setting_new.*
 
 interface ProgramSettingsInterface {
     fun updateChart(data: BarData, duration: ArrayList<Float>)
-    fun showAddPowerFab()
-    fun hideAddPowerFab()
     fun showLoading()
     fun hideLoading()
     fun clearTextFields()
 
-    fun setViewsEnabled()
-    fun setViewsDisabled()
     fun setProgramType(type: Int)
 
     fun closeScreen()
 
     fun getChart()
+
+    fun showProgramBottomDialog()
+    fun hideProgramBottomDialog()
+
+    fun showBackDialog()
+
+    fun showProgramNameDialog()
 }
 
 class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
     companion object {
-        const val SINGLE = 0
+        const val SEGMENT = 0
         const val INTERVAL = 1
-        const val STAIRS = 2
+        const val STEPS_UP = 2
+        const val STEPS_DOWN = 3
     }
 
     private lateinit var presenter: ProgramSettingsPresenter
@@ -46,7 +56,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
-        return inflater.inflate(R.layout.fragment_program_settings, container, false)
+        return inflater.inflate(R.layout.fragment_program_setting_new, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -57,54 +67,12 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
             presenter.onBackPressed()
         }
 
-        fabAddPower.hide()
-
-        editProgramName.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setProgramName(it.toString())
-                } else {
-                    presenter.setProgramName("")
-                }
-            }
-        }
-
         editTargetPower.textWatcher {
             afterTextChanged {
                 if (!it.isNullOrEmpty()) {
                     presenter.setTargetPower(it.toString().toFloat())
                 } else {
                     presenter.setTargetPower(0.0f)
-                }
-            }
-        }
-
-        editDuration.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setDuration(it.toString().toFloat())
-                } else {
-                    presenter.setDuration(0.0f)
-                }
-            }
-        }
-
-        editIntervalsCount.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setIntervalCount(it.toString().toInt())
-                } else {
-                    presenter.setIntervalCount(0)
-                }
-            }
-        }
-
-        editRestDuration.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setRestDuration(it.toString().toFloat())
-                } else {
-                    presenter.setRestDuration(0.0f)
                 }
             }
         }
@@ -119,25 +87,76 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
             }
         }
 
-        spinType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                presenter.setProgramType(SINGLE)
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                presenter.setProgramType(id.toInt())
+        editDuration.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setDuration(it.toString().toFloat())
+                } else {
+                    presenter.setDuration(0.0f)
+                }
             }
         }
 
-        fabAddPower.setOnClickListener {
+        editRestDuration.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setRestDuration(it.toString().toFloat())
+                } else {
+                    presenter.setRestDuration(0.0f)
+                }
+            }
+        }
+
+        editIntervalsCount.textWatcher {
+            afterTextChanged {
+                if (!it.isNullOrEmpty()) {
+                    presenter.setIntervalCount(it.toString().toInt())
+                } else {
+                    presenter.setIntervalCount(0)
+                }
+            }
+        }
+
+        programSegment.setOnClickListener {
+            presenter.addProgramClick(SEGMENT)
+        }
+
+        programIntervals.setOnClickListener {
+            presenter.addProgramClick(INTERVAL)
+        }
+
+        programStepsUp.setOnClickListener {
+            presenter.addProgramClick(STEPS_UP)
+        }
+
+        programStepsDown.setOnClickListener {
+            presenter.addProgramClick(STEPS_DOWN)
+        }
+
+        buttonSaveProgram.setOnClickListener {
+            chartProgram.data.setDrawValues(false)
+            chartProgram.legend.isEnabled = false
+            presenter.showSaveDialog()
+        }
+
+        btnAdd.setOnClickListener {
             presenter.onAddClick()
         }
 
-        fabCreateProgram.setOnClickListener {
-            chartProgram.data.setDrawValues(false)
-            chartProgram.legend.isEnabled = false
-            presenter.saveProgram()
+        btnCancel.setOnClickListener {
+            presenter.onCancelClick()
         }
+
+        chartProgram.setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+            override fun onNothingSelected() {
+                // do nothing
+            }
+
+            override fun onValueSelected(e: Entry, h: Highlight?) {
+                presenter.onModifyClick(e as BarEntry)
+            }
+
+        })
     }
 
     override fun updateChart(data: BarData, duration: ArrayList<Float>) {
@@ -146,20 +165,12 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
         chartProgram.invalidate()
     }
 
-    override fun showAddPowerFab() {
-        fabAddPower.show()
-    }
-
-    override fun hideAddPowerFab() {
-        fabAddPower.hide()
-    }
-
     override fun hideLoading() {
         dialog?.dismiss()
     }
 
     override fun showLoading() {
-        dialog = showDialog(requireActivity(), "Сохранение программы")
+        dialog = showDialog(requireActivity(), getString(R.string.dialog_program_saving))
     }
 
     override fun clearTextFields() {
@@ -170,25 +181,9 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
         editRestPower.setText("")
     }
 
-    override fun setViewsEnabled() {
-        editDuration.isEnabled = true
-        editTargetPower.isEnabled = true
-        editIntervalsCount.isEnabled = true
-        editRestDuration.isEnabled = true
-        editRestPower.isEnabled = true
-    }
-
-    override fun setViewsDisabled() {
-        editDuration.isEnabled = false
-        editTargetPower.isEnabled = false
-        editIntervalsCount.isEnabled = false
-        editRestDuration.isEnabled = false
-        editRestPower.isEnabled = false
-    }
-
     override fun setProgramType(type: Int) {
         when (type) {
-            SINGLE -> {
+            SEGMENT -> {
                 layoutIntervalsCount.visibility = View.INVISIBLE
                 layoutRestDurationTime.visibility = View.INVISIBLE
                 layoutRestPower.visibility = View.INVISIBLE
@@ -204,7 +199,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 textRestPower.text = getString(R.string.program_settings_rest_power)
                 textDurationTime.text = getString(R.string.program_settings_time)
             }
-            STAIRS -> {
+            STEPS_UP, STEPS_DOWN -> {
                 layoutIntervalsCount.visibility = View.INVISIBLE
                 layoutRestDurationTime.visibility = View.INVISIBLE
                 layoutRestPower.visibility = View.VISIBLE
@@ -213,7 +208,6 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 textDurationTime.text = getString(R.string.program_setting_common_time)
             }
             else -> {
-                setViewsDisabled()
             }
         }
     }
@@ -226,5 +220,53 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
 
     override fun getChart() {
         presenter.getProgramImagePath(chartProgram)
+    }
+
+    override fun showProgramBottomDialog() {
+        newProgramBottomDialog.visibility = View.VISIBLE
+    }
+
+    override fun hideProgramBottomDialog() {
+        newProgramBottomDialog.visibility = View.GONE
+    }
+
+    override fun showBackDialog() {
+        val alertDialog = AlertDialog.Builder(context!!)
+        alertDialog.setMessage(getString(R.string.dialog_save_program_question))
+        alertDialog.setCancelable(false)
+        alertDialog.setPositiveButton(resources.getText(R.string.dialog_yes)) { dialog, _ ->
+            presenter.showSaveDialog()
+            dialog.dismiss()
+        }
+        alertDialog.setNegativeButton(resources.getText(R.string.dialog_no)) { dialog, _ ->
+            presenter.onExit()
+            dialog.dismiss()
+        }
+        alertDialog.create().show()
+    }
+
+    override fun showProgramNameDialog() {
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_new_program_name, null)
+
+        val programNameDialog = AlertDialog.Builder(context!!)
+
+        programNameDialog.setView(dialogView)
+
+        val inputText = dialogView.findViewById<EditText>(R.id.etProgramName)
+
+        programNameDialog
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.dialog_ok)) { dialog, _ ->
+                if (inputText.text.isEmpty()) {
+                    showToast(R.string.dialog_empty_program_name)
+                } else {
+                    presenter.setProgramName(inputText.text.toString())
+                    dialog.dismiss()
+                }
+            }
+            .setNegativeButton(getString(R.string.dialog_cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create().show()
     }
 }

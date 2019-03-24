@@ -24,20 +24,8 @@ class ProgramAdapter(
         return ProgramViewHolder(view)
     }
 
-//    fun addProgram(newProgram: Program) {
-//        val oldPrograms = this.getAllData()
-//        if (!programs.contains(newProgram)) {
-//            programs.add(newProgram)
-//        }
-//        programsDiffUtil = ProgramCallback(oldPrograms, programs)
-//        val productDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(programsDiffUtil, false)
-//        productDiffResult.dispatchUpdatesTo(this)
-//        this.notifyItemInserted(programs.size)
-//    }
-
 //    fun getSelectedPrograms(): Program = selectedProgram
 
-//    fun getAllData() = programs
 
     fun removeItem(id: Int) {
         val position = programs.indexOf(programs.first { it.getId() == id })

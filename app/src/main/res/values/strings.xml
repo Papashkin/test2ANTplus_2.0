@@ -40,17 +40,19 @@
     <string name="program_settings_name">Program Name:</string>
     <string name="program_settings_name_hint">program name</string>
     <string name="program_settings_time">Time (min):</string>
+    <string name="program_settings_rest_time">Rest time (min):</string>
     <string name="program_settings_power">Power (W):</string>
     <string name="program_settings_count">Count:</string>
     <string name="program_settings_rest_power">Rest power (W):</string>
     <string name="program_settings_max_power">Max. Power (W):</string>
     <string name="program_settings_min_power">Min. Power (W):</string>
     <string name="program_setting_common_time">Common time (min):</string>
-    <string-array name="program_settings_types">
-        <item>Single</item>
-        <item>Intervals</item>
-        <item>\"Three steps\"</item>
-    </string-array>
+
+    <!-- ====== Program types ====== -->
+    <string name="program_type_segment">Segment</string>
+    <string name="program_type_intervals">Intervals</string>
+    <string name="program_type_3_steps_up">3 Steps up</string>
+    <string name="program_type_3_steps_down">3 Steps down</string>
 
     <!-- ====== Programs list ====== -->
     <string name="programs_empty_list">You didn\'t create any programs.\nPlease click the \"plus\" in top of the screen to create one.</string>
@@ -74,7 +76,10 @@
     <string name="dialog_message_are_you_sure">Are you sure?</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
-
-
+    <string name="dialog_empty_program_name">Please insert the program name</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_save_program_question">You have unsaved data. Do you want to save it?</string>
+    <string name="dialog_program_saving">Program saving …</string>
 
 </resources>

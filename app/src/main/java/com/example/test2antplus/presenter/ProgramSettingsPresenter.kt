@@ -7,8 +7,9 @@ import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.data.programs.ProgramsRepository
 import com.example.test2antplus.ui.view.ProgramSettingsFragment
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERVAL
-import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SINGLE
-import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.STAIRS
+import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SEGMENT
+import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.STEPS_DOWN
+import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.STEPS_UP
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -46,72 +47,74 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
 
     fun setProgramName(text: String) {
         programName = text
-        checkViewsEnabled()
-        checkAddFab()
-    }
-
-    private fun checkViewsEnabled() {
-        if (programName.isNotEmpty()) {
-            view.setViewsEnabled()
-        } else {
-            view.setViewsDisabled()
-        }
+        saveProgram()
     }
 
     fun setTargetPower(power: Float) {
         powerTemp = power
-        checkAddFab()
     }
 
     fun setDuration(time: Float) {
         duration = time*60
-        checkAddFab()
     }
 
     fun setRestPower(power: Float) {
         restPowerTemp = power
-        checkAddFab()
     }
 
     fun setRestDuration(time: Float) {
         restDuration = (time*60)
-        checkAddFab()
     }
 
     fun setIntervalCount(count: Int) {
         intervalCount = count
-        checkAddFab()
-    }
-
-    fun setProgramType(type: Int) {
-        programType = type
-        checkViewsEnabled()
-        view.setProgramType(type)
     }
 
     fun onAddClick() {
-        when (programType) {
-            SINGLE -> {
-                setInterval(duration, powerTemp)
-                updateChart()
-            }
-            INTERVAL -> {
-                for (interval in 0 until intervalCount) {
+        if (checkAddFab()) {
+            when (programType) {
+                SEGMENT -> {
                     setInterval(duration, powerTemp)
-                    setInterval(restDuration, restPowerTemp)
+                    updateChart()
                 }
-                updateChart()
-            }
-            STAIRS -> {
-                val middlePower = restPowerTemp + (powerTemp - restPowerTemp) / 2
-                val steps = floatArrayOf(restPowerTemp, middlePower, powerTemp)
-                val durationForEachStep = duration / 3
-                for (i in steps) {
-                    setInterval(durationForEachStep, i)
+                INTERVAL -> {
+                    for (interval in 0 until intervalCount) {
+                        setInterval(duration, powerTemp)
+                        setInterval(restDuration, restPowerTemp)
+                    }
+                    updateChart()
                 }
-                updateChart()
+                STEPS_UP -> {
+                    val middlePower = restPowerTemp + (powerTemp - restPowerTemp) / 2
+                    val steps = floatArrayOf(restPowerTemp, middlePower, powerTemp)
+                    val durationForEachStep = duration / 3
+                    for (i in steps) {
+                        setInterval(durationForEachStep, i)
+                    }
+                    updateChart()
+                }
+                STEPS_DOWN -> {
+                    val middlePower = restPowerTemp + (powerTemp - restPowerTemp) / 2
+                    val steps = floatArrayOf(powerTemp, middlePower, restPowerTemp)
+                    val durationForEachStep = duration / 3
+                    for (i in steps) {
+                        setInterval(durationForEachStep, i)
+                    }
+                    updateChart()
+                }
             }
+        } else {
+            view.showToast(R.string.invalid_data)
         }
+    }
+
+    fun onModifyClick(entry: BarEntry) {
+        programType = SEGMENT
+        val index = entries.indexOf(entry)
+        powerTemp = entry.y
+        duration = descriptors[index]
+        view.setProgramType(programType)
+        view.showProgramBottomDialog()
     }
 
     private fun setInterval(duration: Float, power: Float) {
@@ -121,29 +124,48 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
 
     private fun updateChart() {
         program = BarDataSet(entries, "Total time: ${descriptors.sum().toLong().fullTimeFormat()}")
-//        program.stackLabels = descriptors.map { it.toLong().timeFormat() }.toTypedArray()
         program.barBorderWidth = 0f
         view.updateChart(BarData(program), descriptors)
         clearData()
         view.hideKeyboard()
-        view.hideAddPowerFab()
     }
 
-    private fun checkAddFab() {
-        when (programType) {
-            SINGLE -> {
-                if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f) {
-                    view.showAddPowerFab()
+    private fun checkAddFab(): Boolean {
+        return when (programType) {
+            SEGMENT -> {
+                if (powerTemp != 0.0f && duration != 0.0f) {
+                    view.hideProgramBottomDialog()
+                    view.hideKeyboard()
+                    true
+                } else {
+                    false
                 }
             }
             INTERVAL -> {
-                if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f && restDuration != 0.0f && restPowerTemp != 0.0f && intervalCount != 0) {
-                    view.showAddPowerFab()
+                if (powerTemp != 0.0f && duration != 0.0f && restDuration != 0.0f && restPowerTemp != 0.0f && intervalCount != 0) {
+                    view.hideProgramBottomDialog()
+                    view.hideKeyboard()
+                    true
+                } else {
+                    false
                 }
             }
-            STAIRS -> {
-                if (programName.isNotEmpty() && powerTemp != 0.0f && duration != 0.0f) {
-                    view.showAddPowerFab()
+            STEPS_UP -> {
+                if (powerTemp != 0.0f  && restPowerTemp != 0.0f && duration != 0.0f) {
+                    view.hideProgramBottomDialog()
+                    view.hideKeyboard()
+                    true
+                } else {
+                    false
+                }
+            }
+            else -> {
+                if (powerTemp != 0.0f  && restPowerTemp != 0.0f && duration != 0.0f) {
+                    view.hideProgramBottomDialog()
+                    view.hideKeyboard()
+                    true
+                } else {
+                    false
                 }
             }
         }
@@ -158,7 +180,7 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
         view.clearTextFields()
     }
 
-    fun saveProgram() {
+    private fun saveProgram() {
         if (programName.isEmpty() || entries.isEmpty()) {
             view.showToast(R.string.invalid_data)
         } else {
@@ -225,8 +247,30 @@ class ProgramSettingsPresenter (private val view: ProgramSettingsFragment) {
     }
 
     fun onBackPressed() {
+        if (!entries.isEmpty()) {
+            view.showBackDialog()
+        } else {
+            onExit()
+        }
+    }
+
+    fun onExit() {
         router.exit()
     }
 
+    fun showSaveDialog() {
+        view.showProgramNameDialog()
+    }
+
+    fun addProgramClick(type: Int) {
+        programType = type
+        view.setProgramType(type)
+        view.showProgramBottomDialog()
+    }
+
+    fun onCancelClick() {
+        clearData()
+        view.hideProgramBottomDialog()
+    }
 }
 

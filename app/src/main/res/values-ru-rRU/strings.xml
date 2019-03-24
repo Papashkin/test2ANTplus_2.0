@@ -40,17 +40,19 @@
     <string name="program_settings_name">Название программы:</string>
     <string name="program_settings_name_hint">название программы</string>
     <string name="program_settings_time">Время (мин):</string>
+    <string name="program_settings_rest_time">Отдых (мин):</string>
     <string name="program_settings_power">Мощность (Вт):</string>
     <string name="program_settings_count">Кол-во:</string>
     <string name="program_settings_rest_power">Отдых (Вт):</string>
     <string name="program_settings_max_power">Макс. Мощность (Вт):</string>
     <string name="program_settings_min_power">Мин. Мощность (Вт):</string>
     <string name="program_setting_common_time">Общее время (мин):</string>
-    <string-array name="program_settings_types">
-        <item>Сегмент</item>
-        <item>Интервалы</item>
-        <item>\"Три ступеньки\"</item>
-    </string-array>
+
+    <!-- ====== Типы программ ====== -->
+    <string name="program_type_segment">Сегмент</string>
+    <string name="program_type_intervals">Интервалы</string>
+    <string name="program_type_3_steps_up">Лесенка вверх</string>
+    <string name="program_type_3_steps_down">Лесенка вниз</string>
 
     <!-- ====== Список программ ====== -->
     <string name="programs_empty_list">Вы ещё не создали ни одной программы.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
@@ -74,5 +76,10 @@
     <string name="dialog_message_are_you_sure">Вы уверены?</string>
     <string name="dialog_yes">Да</string>
     <string name="dialog_no">Нет</string>
+    <string name="dialog_empty_program_name">Пожалуйста, введите имя программы</string>
+    <string name="dialog_ok">ОК</string>
+    <string name="dialog_cancel">Отмена</string>
+    <string name="dialog_save_program_question">Есть несохраненные данные. Хотите их сохранить?</string>
+    <string name="dialog_program_saving">Сохранение программы …</string>
 
 </resources>
