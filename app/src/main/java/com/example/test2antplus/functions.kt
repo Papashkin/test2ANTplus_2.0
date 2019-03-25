@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.dialog_program.view.*
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
-import kotlin.math.absoluteValue
 
 /**
  * Отображает окно с текстом
@@ -112,6 +111,9 @@ fun String.convertToLatinScript(): String {
 
 fun BarChart.saveProgramAsImage(name: String): Boolean {
     try {
+        if (File(name).length() > 0) {
+            File(name).delete()
+        }
         val fos = FileOutputStream(name)
 
         val bitmap = Bitmap.createBitmap(this.width, this.height, Bitmap.Config.RGB_565)
@@ -124,7 +126,7 @@ fun BarChart.saveProgramAsImage(name: String): Boolean {
         }
         draw(canvas)
 
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, fos)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 70, fos)
 
         fos.flush()
         fos.close()

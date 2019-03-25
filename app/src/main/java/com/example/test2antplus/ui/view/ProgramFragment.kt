@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.fragment.app.Fragment
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.R
@@ -23,8 +22,6 @@ import kotlinx.android.synthetic.main.fragment_programs.*
 
 interface ProgramInterface {
     fun selectProgram()
-    fun addNewProgram()
-    fun deleteProgram()
     fun showLoading()
     fun hideLoading()
 
@@ -71,12 +68,12 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
         programAdapter = ProgramAdapter(
             onDeleteClick = {
                 AlertDialog.Builder(context!!)
-                    .setMessage("Are you sure?")
-                    .setPositiveButton("Yes") { dialog, _ ->
+                    .setMessage(resources.getString(R.string.dialog_message_are_you_sure))
+                    .setPositiveButton(resources.getString(R.string.dialog_yes)) { dialog, _ ->
                         presenter.onDeleteClick(it)
                         dialog.dismiss()
                     }
-                    .setNegativeButton("No") { dialog, _ ->
+                    .setNegativeButton(resources.getString(R.string.dialog_no)) { dialog, _ ->
                         dialog.dismiss()
                     }
                     .create()
@@ -96,12 +93,6 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
     }
 
     override fun selectProgram() {
-    }
-
-    override fun addNewProgram() {
-    }
-
-    override fun deleteProgram() {
     }
 
     override fun showLoading() {

@@ -11,6 +11,9 @@ class ProgramsRepository @Inject constructor(private val programDao: ProgramDao)
 
     fun getProgramByName(name: String): Single<Program> = programDao.getProgram(name)
 
+
+    fun getProgramIdByName(name: String): Single<Int> = programDao.getProgramId(name)
+
     fun insertProgram(program: Program) {
         programDao.addProgram(program)
     }

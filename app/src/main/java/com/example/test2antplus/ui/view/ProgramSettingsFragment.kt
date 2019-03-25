@@ -12,6 +12,7 @@ import com.example.test2antplus.*
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarEntry
@@ -28,7 +29,7 @@ interface ProgramSettingsInterface {
     fun hideLoading()
     fun clearTextFields()
 
-    fun setProgramType(type: Int)
+    fun setProgramType(type: Int, powerAndTime: Pair<Float, Float>?)
 
     fun closeScreen()
 
@@ -48,11 +49,23 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
         const val INTERVAL = 1
         const val STEPS_UP = 2
         const val STEPS_DOWN = 3
+        const val MODIFIED_PROGRAM_NAME = "modified program name"
+        const val MODIFIED_PROGRAM_SETTING = "modified program setting"
+        const val MODIFIED_PROGRAM_IMAGE_PATH = "modified program image path"
     }
 
     private lateinit var presenter: ProgramSettingsPresenter
+    private lateinit var modifiedProgram: Pair<String, String>
 
     private var dialog: Dialog? = null
+
+    fun newInstance(program: Program?): ProgramSettingsFragment = ProgramSettingsFragment().apply {
+        this.arguments = Bundle().also {
+            it.putString(MODIFIED_PROGRAM_NAME, program?.getName())
+            it.putString(MODIFIED_PROGRAM_SETTING, program?.getProgram())
+            it.putString(MODIFIED_PROGRAM_IMAGE_PATH, program?.getImagePath())
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
@@ -61,6 +74,19 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         presenter = ProgramSettingsPresenter(this)
+
+        this.arguments?.apply {
+            val programName = this.getString(MODIFIED_PROGRAM_NAME)
+            val programSetting = this.getString(MODIFIED_PROGRAM_SETTING)
+            val programImagePath = this.getString(MODIFIED_PROGRAM_IMAGE_PATH)
+
+            if (programName != null) {
+                modifiedProgram = Pair(programName, programSetting)
+                presenter.onEditExistedProgramOpen(modifiedProgram, programImagePath)
+            } else {
+                presenter.onNewProgramCreate()
+            }
+        }
 
         toolbarProgramSettings.setNavigationIcon(R.drawable.ic_arrow_back_32)
         toolbarProgramSettings.setNavigationOnClickListener {
@@ -162,6 +188,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
     override fun updateChart(data: BarData, duration: ArrayList<Float>) {
         val timeLabels = duration.map { it.toLong().timeFormat() }
         chartProgram.setCommonParams(data, timeLabels)
+        chartProgram.dispatchSetSelected(false)
         chartProgram.invalidate()
     }
 
@@ -181,7 +208,7 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
         editRestPower.setText("")
     }
 
-    override fun setProgramType(type: Int) {
+    override fun setProgramType(type: Int, powerAndTime: Pair<Float, Float>?) {
         when (type) {
             SEGMENT -> {
                 layoutIntervalsCount.visibility = View.INVISIBLE
@@ -190,6 +217,10 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
                 textTargetPower.text = getString(R.string.program_settings_power)
                 textRestPower.text = getString(R.string.program_settings_rest_power)
                 textDurationTime.text = getString(R.string.program_settings_time)
+                if (powerAndTime != null) {
+                    editTargetPower.setText(powerAndTime.first.toString())
+                    editDuration.setText(powerAndTime.second.div(60).toString())
+                }
             }
             INTERVAL -> {
                 layoutIntervalsCount.visibility = View.VISIBLE

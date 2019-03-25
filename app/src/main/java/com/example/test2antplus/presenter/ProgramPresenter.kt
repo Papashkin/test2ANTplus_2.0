@@ -27,7 +27,7 @@ class ProgramPresenter(private val view: ProgramFragment) {
     }
 
     fun addProgram() {
-        router.navigateTo(FragmentScreens.ProgramSettingsScreen())
+        router.navigateTo(FragmentScreens.ProgramSettingsScreen(null))
     }
 
     private fun updateProgramsList() {
@@ -75,7 +75,7 @@ class ProgramPresenter(private val view: ProgramFragment) {
     }
 
     fun onEditClick(id: Int) {
-
+        router.navigateTo(FragmentScreens.ProgramSettingsScreen(programs.first { it.getId() == id }))
     }
 
 //    fun selectProfile(id: Int) {

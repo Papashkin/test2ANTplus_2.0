@@ -11,6 +11,9 @@ interface ProgramDao {
     @Query("Select * from program where name = :programName")
     fun getProgram(programName: String): Single<Program>
 
+    @Query("Select id from program where name = :programName")
+    fun getProgramId(programName: String): Single<Int>
+
     @Insert
     fun addProgram(profile: Program)
 

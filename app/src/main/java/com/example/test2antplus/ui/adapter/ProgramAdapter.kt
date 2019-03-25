@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.fullTimeFormat
+import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import java.io.File
 import java.util.*
@@ -66,6 +67,7 @@ class ProgramAdapter(
             Picasso.get()
                 .load(File(program.getImagePath()))
                 .fit()
+                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(programImage)
 
             btnDelete.setOnClickListener {

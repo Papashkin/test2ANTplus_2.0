@@ -2,6 +2,7 @@ package com.example.test2antplus.navigation
 
 import androidx.fragment.app.Fragment
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.ui.view.*
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -17,8 +18,8 @@ class FragmentScreens {
         override fun getScreenKey(): String = "program_fragment".hashCode().toString()
     }
 
-    class ProgramSettingsScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProgramSettingsFragment()
+    class ProgramSettingsScreen(private val program: Program?) : SupportAppScreen() {
+        override fun getFragment(): Fragment = ProgramSettingsFragment().newInstance(program)
         override fun getScreenKey(): String = "program_settings_fragment".hashCode().toString()
     }
 
