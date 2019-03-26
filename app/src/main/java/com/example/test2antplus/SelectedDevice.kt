@@ -2,16 +2,16 @@ package com.example.test2antplus
 
 import android.os.Parcel
 import android.os.Parcelable
-import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
+import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import javax.inject.Inject
 
 class SelectedDevice @Inject constructor(
-    val device: MultiDeviceSearch.MultiDeviceSearchResult,
+    val device: MultiDeviceSearchResult,
     var isSelected: Boolean
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
-        parcel.readParcelable(MultiDeviceSearch.MultiDeviceSearchResult::class.java.classLoader)!!,
+        parcel.readParcelable(MultiDeviceSearchResult::class.java.classLoader)!!,
         parcel.readByte() != 0.toByte()
     )
 

@@ -9,7 +9,7 @@
     <string name="channel_not_available">Канал недоступен</string>
     <string name="channel_search_timeout">Время ожидания истекло</string>
     <string name="channel_other_failure">Другая причина</string>
-    <string name="channel_scan_stop">Поиск прекращён</string>
+    <string name="channel_scan_stop">Поиск закончен</string>
     <string name="channel_unknown">Неизвестная причина</string>
 
     <!-- ====== Поиск датчиков / утройств ====== -->

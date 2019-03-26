@@ -1,5 +1,6 @@
 package com.example.test2antplus.presenter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.dsi.ant.AntService
@@ -13,8 +14,10 @@ import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.ant.service.AntRadioServiceConnection
 import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ScanFragment
+import com.example.test2antplus.workInAsinc
 import com.pawegio.kandroid.runDelayed
 import com.pawegio.kandroid.runOnUiThread
+import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
@@ -41,7 +44,7 @@ class ScanPresenter(private val view: ScanFragment) {
     }
 
     private fun doBindChannelService() {
-        Log.v(TAG, "doBindChannelService...")
+        Log.v(TAG, "Bind channel service...")
         AntService.bindService(context, connection)
     }
 
@@ -100,9 +103,18 @@ class ScanPresenter(private val view: ScanFragment) {
         doUnbindChannelService()
     }
 
+    @SuppressLint("CheckResult")
     private fun doUnbindChannelService() {
-        Log.v(TAG, "doUnbindChannelService...")
-        connection.closeBackgroundScanChannel()
+        Log.v(TAG, "Unbinding channel service...")
+        Observable.just(
+            connection.closeBackgroundScanChannel()
+        ).compose {
+            it.workInAsinc()
+        }.subscribe({
+            Log.v(TAG, "Channel service was unbinded.")
+        }, {
+            it.printStackTrace()
+        })
     }
 
     fun onDeviceClick() {
@@ -116,17 +128,24 @@ class ScanPresenter(private val view: ScanFragment) {
         }
     }
 
+    @SuppressLint("CheckResult")
     fun connectToSelectedDevices() {
         view.saveSearchedDevices()
-        search?.let {
-            it.close()
+        Observable.just(
+            search?.close()
+        ).compose {
+            it.workInAsinc()
+        }.subscribe({
             view.stopScan()
-        }
-        router.navigateTo(FragmentScreens.WorkScreen(foundedDevices.filter {
-            it.isSelected
-        }.map {
-            it.device
-        } as ArrayList<MultiDeviceSearchResult>))
+            router.navigateTo(FragmentScreens.WorkScreen(
+                devices = foundedDevices.filter {
+                    it.isSelected
+                }.map {
+                    it.device
+                } as ArrayList<MultiDeviceSearchResult>))
+        }, {
+            it.printStackTrace()
+        })
     }
 
     fun onBackPressed() {

@@ -2,9 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff">
+        android:background="@color/pure_white">
 
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarScan"
@@ -39,7 +40,8 @@
                 android:elevation="9dp"
                 android:src="@drawable/ic_search_white_30"
                 android:background="@color/full_black"
-                android:indeterminateTint="@color/pure_white"/>
+                android:indeterminateTint="@color/pure_white"
+                tools:ignore="ContentDescription"/>
 
     </FrameLayout>
 
@@ -50,22 +52,20 @@
             android:src="@drawable/ic_arrow_forward"
             app:backgroundTint="@color/red_700"
             app:fabSize="normal"
+            android:visibility="invisible"
             android:layout_margin="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
-    <ScrollView android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbarScan">
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvDevices"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbarScan"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvDevices"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

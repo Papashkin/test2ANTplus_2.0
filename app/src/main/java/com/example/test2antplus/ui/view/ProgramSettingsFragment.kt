@@ -186,9 +186,9 @@ class ProgramSettingsFragment : BaseFragment(), ProgramSettingsInterface {
     }
 
     override fun updateChart(data: BarData, duration: ArrayList<Float>) {
+        chartProgram.visibility = View.VISIBLE
         val timeLabels = duration.map { it.toLong().timeFormat() }
         chartProgram.setCommonParams(data, timeLabels)
-        chartProgram.dispatchSetSelected(false)
         chartProgram.invalidate()
     }
 

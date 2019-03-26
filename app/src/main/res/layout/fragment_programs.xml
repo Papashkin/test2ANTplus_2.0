@@ -42,23 +42,16 @@
             app:layout_constraintTop_toTopOf="@id/toolbarPrograms"
             app:layout_constraintBottom_toBottomOf="@id/toolbarPrograms"/>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listPrograms"
+            android:elevation="4dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_height="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintTop_toBottomOf="@id/toolbarPrograms"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-        <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/listPrograms"
-                android:elevation="4dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
-
-    </ScrollView>
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     <TextView
             android:id="@+id/emptyListPrograms"

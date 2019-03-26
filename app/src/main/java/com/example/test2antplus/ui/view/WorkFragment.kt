@@ -191,7 +191,7 @@ class WorkFragment : Fragment(), WorkInterface {
             }
         }
 
-        fabBackToScan.setOnClickListener {
+        buttonBackToScan.setOnClickListener {
             presenter.onFabClick()
         }
 
