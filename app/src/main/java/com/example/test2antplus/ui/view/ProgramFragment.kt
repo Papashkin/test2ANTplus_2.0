@@ -38,7 +38,14 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
 
-//    private var dialog: Dialog? = null
+    private var isTime2work: Boolean = false
+
+    //    private var dialog: Dialog? = null
+    fun newInstance(isTime2work: Boolean): ProgramFragment = ProgramFragment().apply {
+        arguments = Bundle().apply {
+            putBoolean("WORK", isTime2work)
+        }
+    }
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -59,6 +66,10 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         showLoading()
         presenter = ProgramPresenter(this)
+
+        this.arguments?.apply {
+            isTime2work = this.getBoolean("WORK")
+        }
 
         toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back_32)
         toolbarPrograms.setNavigationOnClickListener {
@@ -81,8 +92,14 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
             },
             onEditClick = {
                 presenter.onEditClick(it)
-            }
-        )
+            },
+            onItemClick = {
+                if (isTime2work) {
+                    showToast("Si-si-si!")
+                } else {
+                    showToast("No-no-no!")
+                }
+            })
         listPrograms.adapter = programAdapter
 
         buttonAddProgram.setOnClickListener {

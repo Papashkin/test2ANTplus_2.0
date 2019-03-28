@@ -44,6 +44,6 @@ class WorkPresenter(private val view: WorkInterface) {
     }
 
     fun selectProgram() {
-        router.navigateTo(FragmentScreens.ProgramScreen())
+        router.navigateTo(FragmentScreens.ProgramScreen(isTime2work = true))
     }
 }

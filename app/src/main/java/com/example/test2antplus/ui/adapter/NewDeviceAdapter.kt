@@ -45,7 +45,7 @@ class NewDeviceAdapter(
             item -> item.device
     } as ArrayList<MultiDeviceSearch.MultiDeviceSearchResult>
 
-    fun getAllData() = devices
+    fun getAllData() = devices.map { it.device }
 
     private fun getData(): ArrayList<SelectedDevice> = devices
 

@@ -15,7 +15,6 @@ import com.example.test2antplus.ant.service.AntRadioServiceConnection
 import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ScanFragment
 import com.example.test2antplus.workInAsinc
-import com.pawegio.kandroid.runDelayed
 import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router
@@ -24,7 +23,6 @@ import javax.inject.Inject
 
 class ScanPresenter(private val view: ScanFragment) {
     companion object {
-        const val SCAN_DELAY = 15000L
         const val TAG = "test2antplus"
     }
 
@@ -67,6 +65,7 @@ class ScanPresenter(private val view: ScanFragment) {
                 RequestAccessResult.USER_CANCELLED -> R.string.channel_scan_stop
                 else -> R.string.channel_unknown
             }
+            view.stopScan()
             view.showToast(id)
         }
 
@@ -90,13 +89,8 @@ class ScanPresenter(private val view: ScanFragment) {
     }
 
     fun startScan() {
-        view.startScan()
         search = MultiDeviceSearch(context, deviceList, antCallback)
-        runDelayed(SCAN_DELAY) {
-            search?.close()
-            search = null
-            view.stopScan()
-        }
+        view.startScan()
     }
 
     fun unbindChannel() {
@@ -131,21 +125,13 @@ class ScanPresenter(private val view: ScanFragment) {
     @SuppressLint("CheckResult")
     fun connectToSelectedDevices() {
         view.saveSearchedDevices()
-        Observable.just(
-            search?.close()
-        ).compose {
-            it.workInAsinc()
-        }.subscribe({
-            view.stopScan()
-            router.navigateTo(FragmentScreens.WorkScreen(
-                devices = foundedDevices.filter {
-                    it.isSelected
-                }.map {
-                    it.device
-                } as ArrayList<MultiDeviceSearchResult>))
-        }, {
-            it.printStackTrace()
-        })
+        search?.close()
+        router.navigateTo(FragmentScreens.WorkScreen(
+            devices = foundedDevices.filter {
+                it.isSelected
+            }.map {
+                it.device
+            } as ArrayList<MultiDeviceSearchResult>))
     }
 
     fun onBackPressed() {

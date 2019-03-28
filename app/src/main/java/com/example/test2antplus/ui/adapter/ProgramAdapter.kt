@@ -16,7 +16,8 @@ import java.util.*
 
 class ProgramAdapter(
     private val onEditClick: (id: Int)  -> Unit,
-    private val onDeleteClick: (id: Int) -> Unit
+    private val onDeleteClick: (id: Int) -> Unit,
+    private val onItemClick: (id: Int) -> Unit
 ) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
     private var programs: ArrayList<Program> = arrayListOf()
 
@@ -24,9 +25,6 @@ class ProgramAdapter(
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
         return ProgramViewHolder(view)
     }
-
-//    fun getSelectedPrograms(): Program = selectedProgram
-
 
     fun removeItem(id: Int) {
         val position = programs.indexOf(programs.first { it.getId() == id })
@@ -76,6 +74,10 @@ class ProgramAdapter(
 
             btnEdit.setOnClickListener {
                 onEditClick.invoke(program.getId())
+            }
+
+            programImage.setOnClickListener {
+                onItemClick.invoke(program.getId())
             }
         }
 

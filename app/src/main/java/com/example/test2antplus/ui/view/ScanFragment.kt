@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
@@ -22,9 +23,6 @@ interface ScanInterface {
 }
 
 class ScanFragment : BaseFragment(), ScanInterface {
-    companion object {
-//        const val SCAN_LIST = "scan list"
-    }
 
     private lateinit var presenter: ScanPresenter
     private lateinit var newDeviceAdapter: NewDeviceAdapter
@@ -43,6 +41,10 @@ class ScanFragment : BaseFragment(), ScanInterface {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter = ScanPresenter(this)
+
+        this.arguments?.apply {
+            this.getParcelableArrayList<MultiDeviceSearchResult>("devices")
+        }
 
         toolbarScan.setNavigationIcon(R.drawable.ic_arrow_back_32)
         toolbarScan.setNavigationOnClickListener {

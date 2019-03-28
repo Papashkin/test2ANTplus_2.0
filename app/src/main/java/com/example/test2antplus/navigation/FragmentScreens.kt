@@ -13,8 +13,8 @@ class FragmentScreens {
         override fun getScreenKey(): String = "profile_fragment".hashCode().toString()
     }
 
-    class ProgramScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProgramFragment()
+    class ProgramScreen(private val isTime2work: Boolean) : SupportAppScreen() {
+        override fun getFragment(): Fragment = ProgramFragment().newInstance(isTime2work)
         override fun getScreenKey(): String = "program_fragment".hashCode().toString()
     }
 
