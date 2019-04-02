@@ -1,16 +1,12 @@
 package com.example.test2antplus.ui.view
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
 import com.example.test2antplus.MainApplication.Companion.ACTION_WORK_SENDING
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.R
@@ -40,28 +36,20 @@ interface ProgramInterface {
 class ProgramFragment : BaseFragment(), ProgramInterface {
     companion object {
         const val WORK = "it's time to work"
+        const val PROFILE_NAME = "profile name"
     }
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
 
     private var isTime2work: Boolean = false
+    private var profileName: String = ""
 
     //    private var dialog: Dialog? = null
-    fun newInstance(isTime2work: Boolean): ProgramFragment = ProgramFragment().apply {
+    fun newInstance(isTime2work: Boolean, profile: String): ProgramFragment = ProgramFragment().apply {
         arguments = Bundle().apply {
             putBoolean(WORK, isTime2work)
-        }
-    }
-
-    private val receiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            val extra = intent?.getStringExtra(ACTION_PROGRAM_SETTINGS)
-            when (extra) {
-                MainApplication.UPD_PROGRAMS_LIST -> {
-                    // do something
-                }
-            }
+            putString(PROFILE_NAME, profile)
         }
     }
 
@@ -76,6 +64,13 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
 
         this.arguments?.apply {
             isTime2work = this.getBoolean(WORK)
+            profileName = this.getString(PROFILE_NAME, "")
+        }
+
+        if (profileName.isNotEmpty()) {
+            toolbarPrograms.setTitle(R.string.toolbar_select_program)
+        } else {
+            toolbarPrograms.setTitle(R.string.toolbar_programs)
         }
 
         toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back_32)
@@ -102,7 +97,7 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
             },
             onItemClick = {
                 if (isTime2work) {
-                    presenter.setWorkOut(it)
+                    presenter.setWorkOut(it, profileName)
                 }
             })
         listPrograms.adapter = programAdapter
@@ -111,7 +106,6 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
             presenter.addProgram()
         }
 
-        activity?.registerReceiver(receiver, IntentFilter(ACTION_PROGRAM_SETTINGS))
     }
 
     override fun selectProgram() {

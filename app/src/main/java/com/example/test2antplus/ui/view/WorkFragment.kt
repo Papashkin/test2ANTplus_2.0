@@ -23,6 +23,8 @@ import com.example.test2antplus.ant.device.BikeSpeedDistanceDevice
 import com.example.test2antplus.ant.device.FitnessEquipmentDevice
 import com.example.test2antplus.ant.device.HeartRateDevice
 import com.example.test2antplus.presenter.WorkPresenter
+import com.example.test2antplus.setWorkParams
+import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_work.*
 import javax.inject.Inject
@@ -37,15 +39,17 @@ interface WorkInterface {
     fun showDialog(name: String, packageName: String)
     fun closeAccess()
 
-    fun showAddButton()
-    fun hideAddButton()
+    fun setDataToChart(program: BarData, time: ArrayList<Float>)
+
 }
 
 class WorkFragment : Fragment(), WorkInterface {
     companion object {
         const val DEVICES_LIST = "devices list"
         const val PROGRAM_NAME = "program name"
+        const val PROFILE_NAME = "profile name"
     }
+
     private lateinit var presenter: WorkPresenter
     private lateinit var heartRateCensor: HeartRateDevice
     private lateinit var cadenceCensor: BikeCadenceDevice
@@ -56,31 +60,29 @@ class WorkFragment : Fragment(), WorkInterface {
     private var handleCadence: PccReleaseHandle<AntPlusBikeCadencePcc>? = null
     private var handleSpeedDistance: PccReleaseHandle<AntPlusBikeSpeedDistancePcc>? = null
     private var handleEquipment: PccReleaseHandle<AntPlusFitnessEquipmentPcc>? = null
-    private var devices: ArrayList<MultiDeviceSearchResult>? = null
-    private var programName: String? = null
+
+    private var devices: ArrayList<MultiDeviceSearchResult> = arrayListOf()
+    private var timeLabels: ArrayList<Float> = arrayListOf()
+    private var program: String? = null
+    private var profileName: String? = null
+
     private var isHRMInWork = false
     private var isCadenceInWork = false
     private var isSpeedInWork = false
     private var isPowerInWork = false
 
-    @Inject lateinit var appContext: Context
+    @Inject
+    lateinit var appContext: Context
 
-//    private val receiver = object : BroadcastReceiver() {
-//        override fun onReceive(context: Context?, intent: Intent?) {
-//            val extra = intent?.getStringExtra(ACTION_WORK_SENDING)
-//            when (extra) {
-//                ARGS_PROGRAM -> {
-//                    val programName = intent.getStringExtra(ARGS_PROGRAM)
-//                    presenter.setProgram(programName)
-//                }
-//            }
-//        }
-//    }
-
-    fun newInstance(devices: java.util.ArrayList<MultiDeviceSearchResult>, programName: String?): WorkFragment = WorkFragment().apply {
+    fun newInstance(
+        devices: ArrayList<MultiDeviceSearchResult>,
+        program: String,
+        profileName: String
+    ): WorkFragment = WorkFragment().apply {
         this.arguments = Bundle().also {
             it.putParcelableArrayList(DEVICES_LIST, devices)
-            it.putString(PROGRAM_NAME, programName)
+            it.putString(PROGRAM_NAME, program)
+            it.putString(PROFILE_NAME, profileName)
         }
     }
 
@@ -94,125 +96,126 @@ class WorkFragment : Fragment(), WorkInterface {
         presenter = WorkPresenter(this)
 
         this.arguments?.apply {
-            devices = this.getParcelableArrayList(DEVICES_LIST)
-            programName = this.getString(PROGRAM_NAME)
+            devices = this.getParcelableArrayList(DEVICES_LIST) ?: arrayListOf()
+            program = this.getString(PROGRAM_NAME)
+            profileName = this.getString(PROFILE_NAME)
         }
 
-        if (programName != null) {
-            presenter.setProgram(programName!!)
-        } else {
-            presenter.setEmptyProgram()
+        if (program != null) {
+            presenter.setProgram(program!!)
         }
 
-        devices?.forEach {
-            if (it.antDeviceType == DeviceType.HEARTRATE && !isHRMInWork) {
-                heartRateCensor = HeartRateDevice(
-                    getHearRate = { heartRate ->
-                        presenter.setHeartRate(heartRate)
-                    },
-                    showToast = { text ->
-                        toast(text)
-                    },
-                    setDependencies = { name, packageName ->
-                        presenter.showDialog(name, packageName)
-                    })
-                handleHeartRate = AntPlusHeartRatePcc.requestAccess(
-                    appContext,
-                    it.antDeviceNumber,
-                    0,
-                    heartRateCensor.baseIPluginAccessResultReceiver,
-                    heartRateCensor.baseDeviceChangeReceiver
-                )
-                isHRMInWork = true
-            }
+        if (devices.isNotEmpty()) {
+            devices.forEach {
+                if (it.antDeviceType == DeviceType.HEARTRATE && !isHRMInWork) {
+                    heartRateCensor = HeartRateDevice(
+                        getHearRate = { heartRate ->
+                            presenter.setHeartRate(heartRate)
+                        },
+                        showToast = { text ->
+                            toast(text)
+                        },
+                        setDependencies = { name, packageName ->
+                            presenter.showDialog(name, packageName)
+                        })
+                    handleHeartRate = AntPlusHeartRatePcc.requestAccess(
+                        appContext,
+                        it.antDeviceNumber,
+                        0,
+                        heartRateCensor.baseIPluginAccessResultReceiver,
+                        heartRateCensor.baseDeviceChangeReceiver
+                    )
+                    isHRMInWork = true
+                }
 
-            if (it.antDeviceType == DeviceType.BIKE_CADENCE && !isCadenceInWork) {
-                cadenceCensor = BikeCadenceDevice(
-                    appContext,
-                    getCadence = { cadence ->
-                        presenter.setCadence(cadence)
-                    },
-                    getSpeed = {speed ->
-                        presenter.setSpeed(speed)
-                    },
-                    showToast = {text ->
-                        toast(text)
-                    },
-                    setDependencies = {name, packageName ->
-                        presenter.showDialog(name, packageName)
-                    })
+                if (it.antDeviceType == DeviceType.BIKE_CADENCE && !isCadenceInWork) {
+                    cadenceCensor = BikeCadenceDevice(
+                        appContext,
+                        getCadence = { cadence ->
+                            presenter.setCadence(cadence)
+                        },
+                        getSpeed = { speed ->
+                            presenter.setSpeed(speed)
+                        },
+                        showToast = { text ->
+                            toast(text)
+                        },
+                        setDependencies = { name, packageName ->
+                            presenter.showDialog(name, packageName)
+                        })
 
-                handleCadence = AntPlusBikeCadencePcc.requestAccess(
-                    appContext,
-                    it.antDeviceNumber,
-                    0,
-                    false,
-                    cadenceCensor.mResultReceiver,
-                    cadenceCensor.mDeviceStateChangeReceiver
-                )
-                isCadenceInWork = true
-            }
+                    handleCadence = AntPlusBikeCadencePcc.requestAccess(
+                        appContext,
+                        it.antDeviceNumber,
+                        0,
+                        false,
+                        cadenceCensor.mResultReceiver,
+                        cadenceCensor.mDeviceStateChangeReceiver
+                    )
+                    isCadenceInWork = true
+                }
 
-            if (it.antDeviceType== DeviceType.BIKE_SPD && !isSpeedInWork) {
-                speedDistanceCensor = BikeSpeedDistanceDevice(
-                    appContext,
-                    getSpeed = {speed ->
-                        if (!isCadenceInWork) presenter.setSpeed(speed)
-                    },
-                    getDistance = {distance ->
-                        presenter.setDistance(distance)
-                    },
-                    getCadence = {cadence ->
-                        if (!isCadenceInWork) presenter.setCadence(cadence)
-                    },
-                    showToast = {text ->
-                        toast(text)
-                    },
-                    setDependencies = {name, packageName ->
-                        presenter.showDialog(name, packageName)
-                    })
+                if (it.antDeviceType == DeviceType.BIKE_SPD && !isSpeedInWork) {
+                    speedDistanceCensor = BikeSpeedDistanceDevice(
+                        appContext,
+                        getSpeed = { speed ->
+                            if (!isCadenceInWork) presenter.setSpeed(speed)
+                        },
+                        getDistance = { distance ->
+                            presenter.setDistance(distance)
+                        },
+                        getCadence = { cadence ->
+                            if (!isCadenceInWork) presenter.setCadence(cadence)
+                        },
+                        showToast = { text ->
+                            toast(text)
+                        },
+                        setDependencies = { name, packageName ->
+                            presenter.showDialog(name, packageName)
+                        })
 
-                handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
-                    appContext,
-                    it.antDeviceNumber,
-                    0,
-                    false,
-                    speedDistanceCensor.mResultReceiver,
-                    speedDistanceCensor.mDeviceStateChangeReceiver
-                )
-                isSpeedInWork = true
-            }
+                    handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
+                        appContext,
+                        it.antDeviceNumber,
+                        0,
+                        false,
+                        speedDistanceCensor.mResultReceiver,
+                        speedDistanceCensor.mDeviceStateChangeReceiver
+                    )
+                    isSpeedInWork = true
+                }
 
-            if (it.antDeviceType == DeviceType.FITNESS_EQUIPMENT && !isPowerInWork) {
-                fitnessEquipmentCensor = FitnessEquipmentDevice(
-                    showToast = {text ->
-                        toast(text)
-                    },
-                    setDependencies = {name, packageName ->
-                        presenter.showDialog(name, packageName)
-                    },
-                    getPower = {power ->
-                        presenter.setPower(power)
-                    },
-                    getCadence = { cadence ->
-                        if (!isCadenceInWork or !isSpeedInWork) presenter.setCadence(cadence)
-                    },
-                    getSpeed = {speed ->
-                        if (!isCadenceInWork or !isSpeedInWork) presenter.setSpeed(speed)
-                    },
-                    getDistance = {distance ->
-                        if (!isSpeedInWork) presenter.setDistance(distance)
-                    })
+                if (it.antDeviceType == DeviceType.FITNESS_EQUIPMENT && !isPowerInWork) {
+                    fitnessEquipmentCensor = FitnessEquipmentDevice(
+                        showToast = { text ->
+                            toast(text)
+                        },
+                        setDependencies = { name, packageName ->
+                            presenter.showDialog(name, packageName)
+                        },
+                        getPower = { power ->
+                            presenter.setPower(power)
+                        },
+                        getCadence = { cadence ->
+                            if (!isCadenceInWork or !isSpeedInWork) presenter.setCadence(cadence)
+                        },
+                        getSpeed = { speed ->
+                            if (!isCadenceInWork or !isSpeedInWork) presenter.setSpeed(speed)
+                        },
+                        getDistance = { distance ->
+                            if (!isSpeedInWork) presenter.setDistance(distance)
+                        })
 
-                handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
-                    appContext,
-                    it.antDeviceNumber,
-                    0,
-                    fitnessEquipmentCensor.mPluginAccessResultReceiver,
-                    fitnessEquipmentCensor.mDeviceStateChangeReceiver,
-                    fitnessEquipmentCensor.mFitnessEquipmentStateReceiver
-                )
-                isPowerInWork = true
+                    handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
+                        appContext,
+                        it.antDeviceNumber,
+                        0,
+                        fitnessEquipmentCensor.mPluginAccessResultReceiver,
+                        fitnessEquipmentCensor.mDeviceStateChangeReceiver,
+                        fitnessEquipmentCensor.mFitnessEquipmentStateReceiver
+                    )
+                    isPowerInWork = true
+                }
             }
         }
 
@@ -220,9 +223,6 @@ class WorkFragment : Fragment(), WorkInterface {
             presenter.onFabClick()
         }
 
-        fabSelectProgram.setOnClickListener {
-            presenter.selectProgram()
-        }
     }
 
     override fun onFabClick() {
@@ -275,13 +275,10 @@ class WorkFragment : Fragment(), WorkInterface {
         handleEquipment?.close()
     }
 
-    override fun hideAddButton() {
-        fabSelectProgram.hide()
+    override fun setDataToChart(program: BarData, time: ArrayList<Float>) {
         workGraph.visibility = View.VISIBLE
-    }
-
-    override fun showAddButton() {
-        fabSelectProgram.show()
-        workGraph.visibility = View.INVISIBLE
+        timeLabels = time
+        workGraph.setWorkParams(program)
+        workGraph.invalidate()
     }
 }

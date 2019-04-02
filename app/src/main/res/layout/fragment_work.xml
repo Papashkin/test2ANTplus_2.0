@@ -145,33 +145,17 @@
             app:layout_constraintEnd_toEndOf="@id/textViewDistance"/>
 
 
-    <FrameLayout
-            android:id="@+id/viewProgram"
+    <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/workGraph"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="260dp"
             android:layout_marginTop="20dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:elevation="4dp"
             android:background="@drawable/shape_value_info"
             app:layout_constraintTop_toBottomOf="@id/distanceValue"
-            android:elevation="10dp">
-
-        <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/workGraph"
-                android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:layout_margin="4dp"
-                android:background="@drawable/shape_value_info"
-                android:visibility="invisible"/>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fabSelectProgram"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:src="@drawable/ic_add_white"
-                app:backgroundTint="@color/grey_400"/>
-
-    </FrameLayout>
-
+            android:visibility="invisible"/>
 
     <Button
             android:id="@+id/buttonStartWork"
@@ -180,7 +164,7 @@
             android:text="START"
             android:background="@color/green_700"
             android:textColor="@color/full_black"
-            app:layout_constraintTop_toBottomOf="@id/viewProgram"
+            app:layout_constraintTop_toBottomOf="@id/workGraph"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/buttonStopWork"/>
@@ -192,7 +176,7 @@
             android:text="STOP"
             android:textColor="@color/pure_white"
             android:background="@color/red_700"
-            app:layout_constraintTop_toBottomOf="@id/viewProgram"
+            app:layout_constraintTop_toBottomOf="@id/workGraph"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/buttonStartWork"
             app:layout_constraintEnd_toStartOf="@id/buttonBackToScan"/>
@@ -204,7 +188,7 @@
             android:text="BACK"
             android:textColor="@color/full_black"
             android:background="@color/grey_500"
-            app:layout_constraintTop_toBottomOf="@id/viewProgram"
+            app:layout_constraintTop_toBottomOf="@id/workGraph"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/buttonStopWork"
             app:layout_constraintEnd_toEndOf="parent"/>

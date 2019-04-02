@@ -94,6 +94,26 @@ fun BarChart.setCommonParams(data: BarData, timeLabels: List<String>) = this.als
     }
 }
 
+
+/**
+ * Установка рабочих параметров гистограммы
+ */
+fun BarChart.setWorkParams(data: BarData) = this.also {
+    it.setScaleEnabled(false)
+    it.setTouchEnabled(false)
+    it.description = null
+
+    it.legend.isEnabled = false
+
+    it.xAxis.isEnabled = false
+    it.axisRight.isEnabled = false
+    it.axisLeft.isEnabled = false
+
+    it.data = data
+    it.data.barWidth = 1f
+    it.data.setValueTextSize(8f)
+}
+
 fun String.convertToLatinScript(): String {
     val russianScript = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split(" ")
     val latinScript = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch \" y ' e yu ya".split(" ")

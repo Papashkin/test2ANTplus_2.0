@@ -1,13 +1,10 @@
 package com.example.test2antplus.presenter
 
-import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
-import com.example.test2antplus.data.programs.Program
-import com.example.test2antplus.data.programs.ProgramsRepository
-import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.WorkInterface
-import com.example.test2antplus.workInAsinc
-import io.reactivex.Observable
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import ru.terrakok.cicerone.Router
 import javax.inject.Inject
 
@@ -16,8 +13,8 @@ class WorkPresenter(private val view: WorkInterface) {
     @Inject
     lateinit var router: Router
 
-    @Inject
-    lateinit var programsRepository: ProgramsRepository
+    private var timeDescriptors = arrayListOf<Float>()
+    private var programEntries = arrayListOf<BarEntry>()
 
     init {
         MainApplication.graph.inject(this)
@@ -25,7 +22,7 @@ class WorkPresenter(private val view: WorkInterface) {
 
     fun onFabClick() {
         view.closeAccess()
-        router.backTo(FragmentScreens.ScanScreen())
+        router.exit()
     }
 
     fun setHeartRate(hr: String) {
@@ -52,30 +49,32 @@ class WorkPresenter(private val view: WorkInterface) {
         view.showDialog(name, packageName)
     }
 
-    fun selectProgram() {
-        router.navigateTo(FragmentScreens.ProgramScreen(isTime2work = true))
+    fun setProgram(program: String) {
+        programEntries.clear()
+        timeDescriptors.clear()
+        programEntries = decompileProgram(program)
+        updateChart()
     }
 
-    @SuppressLint("CheckResult")
-    fun setProgram(programName: String) {
-        Observable.fromCallable {
-            programsRepository.getProgramByName(programName)
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
-            it.doOnSuccess { program ->
-                prepareProgram(program)
+
+    private fun decompileProgram(programLegend: String): ArrayList<BarEntry> {
+        val entries = arrayListOf<BarEntry>()
+        var count = 0
+
+        programLegend.split("|").forEach { firstDecompiler ->
+            if (firstDecompiler.isNotEmpty()) {
+                val timeAndPower = firstDecompiler.split("*")
+                timeDescriptors.add(timeAndPower.first().toFloat())
+                entries.add(BarEntry(count.toFloat(), timeAndPower.last().toFloat()))
+                count += 1
             }
-        }, {
-            it.printStackTrace()
-        })
+        }
+        return entries
     }
 
-    private fun prepareProgram(program: Program) {
-
-    }
-
-    fun setEmptyProgram() {
-        view.showAddButton()
+    private fun updateChart() {
+        val program = BarDataSet(programEntries, "")
+        program.barBorderWidth = 0f
+        view.setDataToChart(BarData(program), timeDescriptors)
     }
 }

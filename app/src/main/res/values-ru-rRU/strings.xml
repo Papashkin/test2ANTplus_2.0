@@ -63,6 +63,7 @@
     <string name="toolbar_select_profile">Выберите профиль</string>
     <string name="toolbar_new_profile">Создание нового профиля</string>
     <string name="toolbar_update_profile">Изменение профиля</string>
+    <string name="toolbar_select_program">Выберите программу</string>
     <string name="toolbar_devices">Устройства:</string>
 
     <!-- ====== Сохранение данных ====== -->

@@ -78,9 +78,8 @@ class ProgramPresenter(private val view: ProgramFragment) {
         router.navigateTo(FragmentScreens.ProgramSettingsScreen(programs.first { it.getId() == id }))
     }
 
-    fun setWorkOut(id: Int) {
-        val selectedProgram = programs[id]
-        view.chooseProgramAndCloseScreen(selectedProgram.getName())
-        router.exit()
+    fun setWorkOut(id: Int, profileName: String) {
+        val selectedProgram = programs.first { it.getId() == id }
+        router.navigateTo(FragmentScreens.ScanScreen(profileName, selectedProgram))
     }
 }

@@ -13,8 +13,8 @@ class FragmentScreens {
         override fun getScreenKey(): String = "profile_fragment".hashCode().toString()
     }
 
-    class ProgramScreen(private val isTime2work: Boolean) : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProgramFragment().newInstance(isTime2work)
+    class ProgramScreen(private val isTime2work: Boolean, private val profile: String) : SupportAppScreen() {
+        override fun getFragment(): Fragment = ProgramFragment().newInstance(isTime2work, profile)
         override fun getScreenKey(): String = "program_fragment".hashCode().toString()
     }
 
@@ -28,13 +28,13 @@ class FragmentScreens {
         override fun getScreenKey(): String = "start_fragment".hashCode().toString()
     }
 
-    class ScanScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = ScanFragment()
+    class ScanScreen(private val profileName: String, private val program: Program) : SupportAppScreen() {
+        override fun getFragment(): Fragment = ScanFragment().newInstance(profileName, program)
         override fun getScreenKey(): String = "scan_fragment".hashCode().toString()
     }
 
-    class WorkScreen(private val devices: ArrayList<MultiDeviceSearchResult>, private val programName: String?) : SupportAppScreen() {
-        override fun getFragment(): Fragment = WorkFragment().newInstance(devices, programName ?: null)
+    class WorkScreen(private val devices: ArrayList<MultiDeviceSearchResult>, private val program: String, private val profileName: String) : SupportAppScreen() {
+        override fun getFragment(): Fragment = WorkFragment().newInstance(devices, program, profileName)
         override fun getScreenKey(): String = "work_fragment".hashCode().toString()
     }
 }

@@ -8,6 +8,7 @@ import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchRe
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
+import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ScanPresenter
 import com.example.test2antplus.ui.adapter.NewDeviceAdapter
 import com.pawegio.kandroid.putParcelableCollection
@@ -23,15 +24,23 @@ interface ScanInterface {
 }
 
 class ScanFragment : BaseFragment(), ScanInterface {
+    companion object {
+        const val SELECTED_PROGRAM = "selected program"
+        const val SELECTED_PROFILE = "selected profile"
+    }
 
     private lateinit var presenter: ScanPresenter
     private lateinit var newDeviceAdapter: NewDeviceAdapter
 
-//    fun newInstance(devices: ArrayList<SelectedDevice>): WorkFragment = WorkFragment().apply {
-//        arguments = Bundle().apply {
-//            putParcelableCollection(SCAN_LIST, devices)
-//        }
-//    }
+    private var program: String? = null
+    private var profileName: String? = null
+
+    fun newInstance(profileName: String, program: Program): ScanFragment = ScanFragment().apply {
+        arguments = Bundle().apply {
+            putString(SELECTED_PROFILE, profileName)
+            putString(SELECTED_PROGRAM, program.getProgram())
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
      MainApplication.graph.inject(this)
@@ -44,6 +53,8 @@ class ScanFragment : BaseFragment(), ScanInterface {
 
         this.arguments?.apply {
             this.getParcelableArrayList<MultiDeviceSearchResult>("devices")
+            profileName = getString(SELECTED_PROFILE)
+            program = getString(SELECTED_PROGRAM)
         }
 
         toolbarScan.setNavigationIcon(R.drawable.ic_arrow_back_32)
@@ -67,7 +78,7 @@ class ScanFragment : BaseFragment(), ScanInterface {
             if (newDeviceAdapter.getSelectedData().isEmpty()) {
                 showToast(getString(R.string.scan_no_selected_devices))
             } else {
-                presenter.connectToSelectedDevices()
+                presenter.connectToSelectedDevices(profileName = profileName ?: "", program =  program ?: "")
             }
         }
     }
@@ -92,7 +103,7 @@ class ScanFragment : BaseFragment(), ScanInterface {
     }
 
     override fun hideButtonConnect() {
-        fabContinue.hide()
+//        fabContinue.hide()
     }
 
     override fun showButtonConnect() {

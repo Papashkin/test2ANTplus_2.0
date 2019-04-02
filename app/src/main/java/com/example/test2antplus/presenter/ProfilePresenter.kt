@@ -59,7 +59,7 @@ class ProfilePresenter(private val view: ProfileFragment) {
 
     fun selectProfile(id: Int) {
         selectedProfile = profiles.first { it.getId() == id }
-        router.navigateTo(FragmentScreens.ScanScreen())
+        router.navigateTo(FragmentScreens.ProgramScreen(true, selectedProfile.getName()))
     }
 
     fun onBackPressed() {

@@ -122,8 +122,7 @@ class ScanPresenter(private val view: ScanFragment) {
         }
     }
 
-    @SuppressLint("CheckResult")
-    fun connectToSelectedDevices() {
+    fun connectToSelectedDevices(program: String, profileName: String) {
         view.saveSearchedDevices()
         search?.close()
         router.navigateTo(FragmentScreens.WorkScreen(
@@ -132,7 +131,8 @@ class ScanPresenter(private val view: ScanFragment) {
             }.map {
                 it.device
             } as ArrayList<MultiDeviceSearchResult>,
-            programName = null
+            program = program,
+            profileName = profileName
         ))
     }
 

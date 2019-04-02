@@ -63,6 +63,7 @@
     <string name="toolbar_new_program">New program</string>
     <string name="toolbar_new_profile">New profile settings</string>
     <string name="toolbar_update_profile">Update existed profile</string>
+    <string name="toolbar_select_program">Choose the program</string>
     <string name="toolbar_devices">Devices:</string>
 
     <!-- ====== Data saving ====== -->

@@ -18,6 +18,9 @@ class StartPresenter {
     }
 
     fun onProgramClick() {
-        router.navigateTo(FragmentScreens.ProgramScreen(isTime2work = false))
+        router.navigateTo(FragmentScreens.ProgramScreen(
+            isTime2work = false,
+            profile = ""
+        ))
     }
 }
