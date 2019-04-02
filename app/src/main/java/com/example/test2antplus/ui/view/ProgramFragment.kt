@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.ACTION_PROGRAM_SETTINGS
+import com.example.test2antplus.MainApplication.Companion.ACTION_WORK_SENDING
+import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramPresenter
@@ -31,9 +33,14 @@ interface ProgramInterface {
     fun hideProgramsList()
 
     fun updateProgramsList(id: Int)
+
+    fun chooseProgramAndCloseScreen(programName: String)
 }
 
 class ProgramFragment : BaseFragment(), ProgramInterface {
+    companion object {
+        const val WORK = "it's time to work"
+    }
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
@@ -43,7 +50,7 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
     //    private var dialog: Dialog? = null
     fun newInstance(isTime2work: Boolean): ProgramFragment = ProgramFragment().apply {
         arguments = Bundle().apply {
-            putBoolean("WORK", isTime2work)
+            putBoolean(WORK, isTime2work)
         }
     }
 
@@ -68,7 +75,7 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
         presenter = ProgramPresenter(this)
 
         this.arguments?.apply {
-            isTime2work = this.getBoolean("WORK")
+            isTime2work = this.getBoolean(WORK)
         }
 
         toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back_32)
@@ -95,9 +102,7 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
             },
             onItemClick = {
                 if (isTime2work) {
-                    showToast("Si-si-si!")
-                } else {
-                    showToast("No-no-no!")
+                    presenter.setWorkOut(it)
                 }
             })
         listPrograms.adapter = programAdapter
@@ -137,5 +142,11 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
 
     override fun updateProgramsList(id: Int) {
         programAdapter.removeItem(id)
+    }
+
+    override fun chooseProgramAndCloseScreen(programName: String) {
+        activity?.sendBroadcast(Intent(ACTION_WORK_SENDING).apply {
+            this.putExtra(ARGS_PROGRAM, programName)
+        })
     }
 }

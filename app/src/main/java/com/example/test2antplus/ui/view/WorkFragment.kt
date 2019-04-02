@@ -36,11 +36,15 @@ interface WorkInterface {
     fun onFabClick()
     fun showDialog(name: String, packageName: String)
     fun closeAccess()
+
+    fun showAddButton()
+    fun hideAddButton()
 }
 
 class WorkFragment : Fragment(), WorkInterface {
     companion object {
         const val DEVICES_LIST = "devices list"
+        const val PROGRAM_NAME = "program name"
     }
     private lateinit var presenter: WorkPresenter
     private lateinit var heartRateCensor: HeartRateDevice
@@ -53,6 +57,7 @@ class WorkFragment : Fragment(), WorkInterface {
     private var handleSpeedDistance: PccReleaseHandle<AntPlusBikeSpeedDistancePcc>? = null
     private var handleEquipment: PccReleaseHandle<AntPlusFitnessEquipmentPcc>? = null
     private var devices: ArrayList<MultiDeviceSearchResult>? = null
+    private var programName: String? = null
     private var isHRMInWork = false
     private var isCadenceInWork = false
     private var isSpeedInWork = false
@@ -60,9 +65,22 @@ class WorkFragment : Fragment(), WorkInterface {
 
     @Inject lateinit var appContext: Context
 
-    fun newInstance(devices: java.util.ArrayList<MultiDeviceSearchResult>): WorkFragment = WorkFragment().apply {
+//    private val receiver = object : BroadcastReceiver() {
+//        override fun onReceive(context: Context?, intent: Intent?) {
+//            val extra = intent?.getStringExtra(ACTION_WORK_SENDING)
+//            when (extra) {
+//                ARGS_PROGRAM -> {
+//                    val programName = intent.getStringExtra(ARGS_PROGRAM)
+//                    presenter.setProgram(programName)
+//                }
+//            }
+//        }
+//    }
+
+    fun newInstance(devices: java.util.ArrayList<MultiDeviceSearchResult>, programName: String?): WorkFragment = WorkFragment().apply {
         this.arguments = Bundle().also {
             it.putParcelableArrayList(DEVICES_LIST, devices)
+            it.putString(PROGRAM_NAME, programName)
         }
     }
 
@@ -77,6 +95,13 @@ class WorkFragment : Fragment(), WorkInterface {
 
         this.arguments?.apply {
             devices = this.getParcelableArrayList(DEVICES_LIST)
+            programName = this.getString(PROGRAM_NAME)
+        }
+
+        if (programName != null) {
+            presenter.setProgram(programName!!)
+        } else {
+            presenter.setEmptyProgram()
         }
 
         devices?.forEach {
@@ -248,5 +273,15 @@ class WorkFragment : Fragment(), WorkInterface {
         handleCadence?.close()
         handleSpeedDistance?.close()
         handleEquipment?.close()
+    }
+
+    override fun hideAddButton() {
+        fabSelectProgram.hide()
+        workGraph.visibility = View.VISIBLE
+    }
+
+    override fun showAddButton() {
+        fabSelectProgram.show()
+        workGraph.visibility = View.INVISIBLE
     }
 }

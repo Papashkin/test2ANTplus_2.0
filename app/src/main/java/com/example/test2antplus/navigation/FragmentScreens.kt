@@ -33,8 +33,8 @@ class FragmentScreens {
         override fun getScreenKey(): String = "scan_fragment".hashCode().toString()
     }
 
-    class WorkScreen(private val devices: ArrayList<MultiDeviceSearchResult>) : SupportAppScreen() {
-        override fun getFragment(): Fragment = WorkFragment().newInstance(devices)
+    class WorkScreen(private val devices: ArrayList<MultiDeviceSearchResult>, private val programName: String?) : SupportAppScreen() {
+        override fun getFragment(): Fragment = WorkFragment().newInstance(devices, programName ?: null)
         override fun getScreenKey(): String = "work_fragment".hashCode().toString()
     }
 }

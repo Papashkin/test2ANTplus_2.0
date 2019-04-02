@@ -131,7 +131,9 @@ class ScanPresenter(private val view: ScanFragment) {
                 it.isSelected
             }.map {
                 it.device
-            } as ArrayList<MultiDeviceSearchResult>))
+            } as ArrayList<MultiDeviceSearchResult>,
+            programName = null
+        ))
     }
 
     fun onBackPressed() {

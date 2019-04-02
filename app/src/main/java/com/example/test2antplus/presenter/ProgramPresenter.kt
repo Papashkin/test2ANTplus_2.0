@@ -78,8 +78,9 @@ class ProgramPresenter(private val view: ProgramFragment) {
         router.navigateTo(FragmentScreens.ProgramSettingsScreen(programs.first { it.getId() == id }))
     }
 
-//    fun selectProfile(id: Int) {
-//        selectedProgram = programs[id]
-//        // TODO add selected program to broadcast
-//    }
+    fun setWorkOut(id: Int) {
+        val selectedProgram = programs[id]
+        view.chooseProgramAndCloseScreen(selectedProgram.getName())
+        router.exit()
+    }
 }

@@ -53,6 +53,7 @@ class ProgramAdapter(
         private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
         private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProgram)
         private val btnEdit = view.findViewById<ImageView>(R.id.btnEditProgram)
+        private val programLayout = view.findViewById<View>(R.id.clProgram)
 
         fun bind(program: Program) {
 
@@ -76,7 +77,7 @@ class ProgramAdapter(
                 onEditClick.invoke(program.getId())
             }
 
-            programImage.setOnClickListener {
+            programLayout.setOnClickListener {
                 onItemClick.invoke(program.getId())
             }
         }

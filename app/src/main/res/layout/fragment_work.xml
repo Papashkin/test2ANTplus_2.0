@@ -157,8 +157,9 @@
         <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/workGraph"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
+                android:layout_height="260dp"
                 android:layout_margin="4dp"
+                android:background="@drawable/shape_value_info"
                 android:visibility="invisible"/>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
