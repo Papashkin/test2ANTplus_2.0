@@ -11,7 +11,7 @@ import java.util.*
 
 class ProfileAdapter(
     private val onEditClick: (id: Int) -> Unit,
-    private val onDeleteClick: (id: Int) -> Unit,
+    private val onDeleteClick: (position: Int) -> Unit,
     private val onItemClick: (id: Int) -> Unit
 ) : RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>() {
 
@@ -21,11 +21,17 @@ class ProfileAdapter(
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_profile_info, parent, false)
         return ProfileViewHolder(view)
     }
+//
+//    fun removeItem(id: Int) {
+//        val position = profiles.indexOf(profiles.first { it.second == id })
+//        profiles.removeAt(position)
+//        notifyItemRemoved(position)
+//    }
 
-    fun removeItem(id: Int) {
-        val position = profiles.indexOf(profiles.first { it.second == id })
+    fun removeItem(position: Int) {
         profiles.removeAt(position)
         notifyItemRemoved(position)
+        onDeleteClick.invoke(position)
     }
 
     override fun getItemCount(): Int = profiles.size
@@ -43,20 +49,20 @@ class ProfileAdapter(
 
     inner class ProfileViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val programName = view.findViewById<TextView>(R.id.textProfileName)
-        private val btnEdit = view.findViewById<ImageView>(R.id.btnEditProfile)
-        private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProfile)
+//        private val btnEdit = view.findViewById<ImageView>(R.id.btnEditProfile)
+//        private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProfile)
 
         fun bind(profile: Pair<String, Int>) {
 
             programName.text = profile.first
 
-            btnDelete.setOnClickListener {
-                onDeleteClick.invoke(profile.second)
-            }
+//            btnDelete.setOnClickListener {
+//                onDeleteClick.invoke(profile.second)
+//            }
 
-            btnEdit.setOnClickListener {
-                onEditClick.invoke(profile.second)
-            }
+//            btnEdit.setOnClickListener {
+//                onEditClick.invoke(profile.second)
+//            }
 
             programName.setOnClickListener {
                 onItemClick.invoke(profile.second)

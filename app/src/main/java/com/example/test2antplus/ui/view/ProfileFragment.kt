@@ -5,14 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.presenter.ProfilePresenter
 import com.example.test2antplus.ui.adapter.ProfileAdapter
+import com.example.test2antplus.ui.adapter.ProfileSwipeCallback
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.dialog_new_profile.*
 import kotlinx.android.synthetic.main.fragment_profiles.*
+import android.R.string
+import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
+import com.google.android.material.snackbar.Snackbar
+import android.R.id
+
+
 
 interface ProfileInterface {
     fun setProfilesList(newProfiles: ArrayList<Pair<String, Int>>)
@@ -30,6 +38,12 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ProfileAdapter
 
+    private lateinit var profileCallback: ItemTouchHelper.Callback
+
+//    new SimpleItemTouchHelperCallback(adapter)
+//    ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+//    touchHelper.attachToRecyclerView(recyclerView);
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
         return inflater.inflate(R.layout.fragment_profiles, container, false)
@@ -45,18 +59,21 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
 
         activity?.let {
             profilesAdapter = ProfileAdapter(
-                onDeleteClick = { id ->
-                    AlertDialog.Builder(context!!)
-                        .setMessage(getString(R.string.dialog_message_are_you_sure))
-                        .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
-                            presenter.onDeleteClick(id)
-                            dialog.dismiss()
-                        }
-                        .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
-                            dialog.dismiss()
-                        }
-                        .create()
-                        .show()
+//                onDeleteClick = { id ->
+//                    AlertDialog.Builder(context!!)
+//                        .setMessage(getString(R.string.dialog_message_are_you_sure))
+//                        .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
+//                            presenter.onDeleteClick(id)
+//                            dialog.dismiss()
+//                        }
+//                        .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
+//                            dialog.dismiss()
+//                        }
+//                        .create()
+//                        .show()
+//                },
+                onDeleteClick = { pos ->
+                    presenter.onDeleteClick(pos)
                 },
                 onEditClick = { id ->
                     presenter.onEditProfileClick(id)
@@ -64,6 +81,9 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
                     hideProfileBottomDialog()
                     presenter.selectProfile(id)
                 })
+
+            profileCallback = ProfileSwipeCallback(profilesAdapter)
+            ItemTouchHelper(profileCallback).attachToRecyclerView(listProfiles)
             listProfiles.adapter = profilesAdapter
         }
 
@@ -181,8 +201,31 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
     }
 
     override fun deleteSelectedProfile(id: Int) {
+        showUndoSnackbar()
         profilesAdapter.removeItem(id)
     }
+
+    private fun showUndoSnackbar() {
+        val snackbarView = LayoutInflater.from(this.context).inflate(R.layout.design_layout_snackbar, null)
+        val snackBar = Snackbar.make(
+            snackbarView,
+            "one item was deleted",
+            Snackbar.LENGTH_LONG
+        )
+
+        snackBar.setAction("UNDO") {
+            presenter.undoDelete()
+        }
+        snackBar.show()
+    }
+
+//    private fun undoDelete() {
+//        mListItems.add(
+//            mRecentlyDeletedItemPosition,
+//            mRecentlyDeletedItem
+//        )
+//        notifyItemInserted(mRecentlyDeletedItemPosition)
+//    }
 
     override fun hideProfileBottomDialog() {
         newProfileBottomDialog.visibility = View.GONE
