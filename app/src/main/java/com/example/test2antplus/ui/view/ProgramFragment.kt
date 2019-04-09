@@ -1,11 +1,12 @@
 package com.example.test2antplus.ui.view
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.ACTION_WORK_SENDING
 import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
@@ -13,6 +14,8 @@ import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramPresenter
 import com.example.test2antplus.ui.adapter.program.ProgramAdapter
+import com.example.test2antplus.ui.adapter.program.ProgramSwipeCallback
+import com.google.android.material.snackbar.Snackbar
 import com.pawegio.kandroid.hide
 import com.pawegio.kandroid.show
 import kotlinx.android.synthetic.main.fragment_programs.*
@@ -28,9 +31,11 @@ interface ProgramInterface {
     fun showProgramsList()
     fun hideProgramsList()
 
-    fun updateProgramsList(id: Int)
-
     fun chooseProgramAndCloseScreen(programName: String)
+
+    fun updateAdapter()
+
+    fun showSnackbar(programName: String)
 }
 
 class ProgramFragment : BaseFragment(), ProgramInterface {
@@ -41,11 +46,11 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
 
     private lateinit var presenter: ProgramPresenter
     private lateinit var programAdapter: ProgramAdapter
+    private lateinit var programCallback: ItemTouchHelper.Callback
 
     private var isTime2work: Boolean = false
     private var profileName: String = ""
 
-    //    private var dialog: Dialog? = null
     fun newInstance(isTime2work: Boolean, profile: String): ProgramFragment = ProgramFragment().apply {
         arguments = Bundle().apply {
             putBoolean(WORK, isTime2work)
@@ -79,18 +84,8 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
         }
 
         programAdapter = ProgramAdapter(
-            onDeleteClick = {
-                AlertDialog.Builder(context!!)
-                    .setMessage(resources.getString(R.string.dialog_message_are_you_sure))
-                    .setPositiveButton(resources.getString(R.string.dialog_yes)) { dialog, _ ->
-                        presenter.onDeleteClick(it)
-                        dialog.dismiss()
-                    }
-                    .setNegativeButton(resources.getString(R.string.dialog_no)) { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    .create()
-                    .show()
+            onDeleteClick = { position ->
+                presenter.onDeleteClick(position)
             },
             onEditClick = {
                 presenter.onEditClick(it)
@@ -100,6 +95,9 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
                     presenter.setWorkOut(it, profileName)
                 }
             })
+
+        programCallback = ProgramSwipeCallback(programAdapter)
+        ItemTouchHelper(programCallback).attachToRecyclerView(listPrograms)
         listPrograms.adapter = programAdapter
 
         buttonAddProgram.setOnClickListener {
@@ -134,13 +132,23 @@ class ProgramFragment : BaseFragment(), ProgramInterface {
         hideLoading()
     }
 
-    override fun updateProgramsList(id: Int) {
-        programAdapter.removeItem(id)
-    }
-
     override fun chooseProgramAndCloseScreen(programName: String) {
         activity?.sendBroadcast(Intent(ACTION_WORK_SENDING).apply {
             this.putExtra(ARGS_PROGRAM, programName)
         })
+    }
+
+    override fun updateAdapter() {
+        programAdapter.undoDelete()
+    }
+
+    override fun showSnackbar(programName: String) {
+        Snackbar
+            .make(programsListLayout, "Program \"$programName\" was deleted", Snackbar.LENGTH_LONG)
+            .setActionTextColor(Color.YELLOW)
+            .setAction("UNDO") {
+                presenter.undoDelete()
+            }
+            .show()
     }
 }
