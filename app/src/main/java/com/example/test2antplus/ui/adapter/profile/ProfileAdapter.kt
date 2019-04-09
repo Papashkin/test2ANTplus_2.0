@@ -1,9 +1,8 @@
-package com.example.test2antplus.ui.adapter
+package com.example.test2antplus.ui.adapter.profile
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
@@ -16,27 +15,32 @@ class ProfileAdapter(
 ) : RecyclerView.Adapter<ProfileAdapter.ProfileViewHolder>() {
 
     private var profiles: ArrayList<Pair<String, Int>> = arrayListOf()
+    private var deletedPosition: Int = -1
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileAdapter.ProfileViewHolder {
+    private lateinit var deletedItem: Pair<String, Int>
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_profile_info, parent, false)
         return ProfileViewHolder(view)
     }
-//
-//    fun removeItem(id: Int) {
-//        val position = profiles.indexOf(profiles.first { it.second == id })
-//        profiles.removeAt(position)
-//        notifyItemRemoved(position)
-//    }
 
     fun removeItem(position: Int) {
+        deletedItem = profiles[position]
+        deletedPosition = position
         profiles.removeAt(position)
         notifyItemRemoved(position)
         onDeleteClick.invoke(position)
     }
 
+    fun editItem(position: Int) {
+        val selectedId = profiles[position].second
+        notifyDataSetChanged()
+        onEditClick.invoke(selectedId)
+    }
+
     override fun getItemCount(): Int = profiles.size
 
-    override fun onBindViewHolder(holder: ProfileAdapter.ProfileViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProfileViewHolder, position: Int) {
         holder.bind(this.profiles[position])
     }
 
@@ -49,21 +53,9 @@ class ProfileAdapter(
 
     inner class ProfileViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val programName = view.findViewById<TextView>(R.id.textProfileName)
-//        private val btnEdit = view.findViewById<ImageView>(R.id.btnEditProfile)
-//        private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProfile)
 
         fun bind(profile: Pair<String, Int>) {
-
             programName.text = profile.first
-
-//            btnDelete.setOnClickListener {
-//                onDeleteClick.invoke(profile.second)
-//            }
-
-//            btnEdit.setOnClickListener {
-//                onEditClick.invoke(profile.second)
-//            }
-
             programName.setOnClickListener {
                 onItemClick.invoke(profile.second)
             }

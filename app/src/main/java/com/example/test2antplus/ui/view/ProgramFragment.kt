@@ -12,7 +12,7 @@ import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramPresenter
-import com.example.test2antplus.ui.adapter.ProgramAdapter
+import com.example.test2antplus.ui.adapter.program.ProgramAdapter
 import com.pawegio.kandroid.hide
 import com.pawegio.kandroid.show
 import kotlinx.android.synthetic.main.fragment_programs.*

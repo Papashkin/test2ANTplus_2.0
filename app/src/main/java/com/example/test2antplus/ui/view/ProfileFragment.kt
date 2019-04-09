@@ -1,5 +1,6 @@
 package com.example.test2antplus.ui.view
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,16 +11,12 @@ import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
 import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.presenter.ProfilePresenter
-import com.example.test2antplus.ui.adapter.ProfileAdapter
-import com.example.test2antplus.ui.adapter.ProfileSwipeCallback
+import com.example.test2antplus.ui.adapter.profile.ProfileAdapter
+import com.example.test2antplus.ui.adapter.profile.ProfileSwipeCallback
+import com.google.android.material.snackbar.Snackbar
 import com.pawegio.kandroid.textWatcher
 import kotlinx.android.synthetic.main.dialog_new_profile.*
 import kotlinx.android.synthetic.main.fragment_profiles.*
-import android.R.string
-import androidx.core.view.accessibility.AccessibilityEventCompat.setAction
-import com.google.android.material.snackbar.Snackbar
-import android.R.id
-
 
 
 interface ProfileInterface {
@@ -28,21 +25,17 @@ interface ProfileInterface {
     fun hideProfilesList()
     fun showLoading()
     fun hideLoading()
-    fun deleteSelectedProfile(id: Int)
+    fun showSnackBar(profileName: String)
     fun showProfileBottomDialog(profile: Profile)
     fun hideProfileBottomDialog()
+    fun updateAdapter()
 }
 
 class ProfileFragment : BaseFragment(), ProfileInterface {
 
     private lateinit var presenter: ProfilePresenter
     private lateinit var profilesAdapter: ProfileAdapter
-
     private lateinit var profileCallback: ItemTouchHelper.Callback
-
-//    new SimpleItemTouchHelperCallback(adapter)
-//    ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-//    touchHelper.attachToRecyclerView(recyclerView);
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         MainApplication.graph.inject(this)
@@ -59,19 +52,6 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
 
         activity?.let {
             profilesAdapter = ProfileAdapter(
-//                onDeleteClick = { id ->
-//                    AlertDialog.Builder(context!!)
-//                        .setMessage(getString(R.string.dialog_message_are_you_sure))
-//                        .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
-//                            presenter.onDeleteClick(id)
-//                            dialog.dismiss()
-//                        }
-//                        .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
-//                            dialog.dismiss()
-//                        }
-//                        .create()
-//                        .show()
-//                },
                 onDeleteClick = { pos ->
                     presenter.onDeleteClick(pos)
                 },
@@ -200,32 +180,19 @@ class ProfileFragment : BaseFragment(), ProfileInterface {
         pbProfiles.visibility = View.GONE
     }
 
-    override fun deleteSelectedProfile(id: Int) {
-        showUndoSnackbar()
-        profilesAdapter.removeItem(id)
+    override fun showSnackBar(profileName: String) {
+        Snackbar
+            .make(profileListLayout, "Profile \"$profileName\" was deleted", Snackbar.LENGTH_LONG)
+            .setActionTextColor(Color.YELLOW)
+            .setAction("UNDO") {
+                presenter.undoDelete()
+            }
+            .show()
     }
 
-    private fun showUndoSnackbar() {
-        val snackbarView = LayoutInflater.from(this.context).inflate(R.layout.design_layout_snackbar, null)
-        val snackBar = Snackbar.make(
-            snackbarView,
-            "one item was deleted",
-            Snackbar.LENGTH_LONG
-        )
-
-        snackBar.setAction("UNDO") {
-            presenter.undoDelete()
-        }
-        snackBar.show()
+    override fun updateAdapter() {
+        profilesAdapter.notifyDataSetChanged()
     }
-
-//    private fun undoDelete() {
-//        mListItems.add(
-//            mRecentlyDeletedItemPosition,
-//            mRecentlyDeletedItem
-//        )
-//        notifyItemInserted(mRecentlyDeletedItemPosition)
-//    }
 
     override fun hideProfileBottomDialog() {
         newProfileBottomDialog.visibility = View.GONE

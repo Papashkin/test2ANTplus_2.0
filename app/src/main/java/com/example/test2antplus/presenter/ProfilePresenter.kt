@@ -78,41 +78,20 @@ class ProfilePresenter(private val view: ProfileFragment) {
             it.workInAsinc()
         }.subscribe({
             profiles.remove(profiles[pos])
-            view.deleteSelectedProfile(profileToDelete!!.getId())
             if (profiles.isEmpty()) {
                 view.hideProfilesList()
             }
+            view.showSnackBar(profileToDelete!!.getName())
         }, {
             it.printStackTrace()
         })
     }
 
     fun undoDelete() {
+        undoDeleteProfile()
         profiles.add(deletePosition, profileToDelete!!)
+
     }
-
-
-//    @SuppressLint("CheckResult")
-//    fun onDeleteClick(id: Int) {
-//        val profileToDelete = profiles.first {
-//            it.getId() == id
-//        }
-//        Single.fromCallable {
-//            profilesRepository.removeProfile(profileToDelete)
-//        }.compose {
-//            it.workInAsinc()
-//        }.subscribe({
-//            profiles.remove(profiles.first {
-//                it.getId() == id
-//            })
-//            view.deleteSelectedProfile(id)
-//            if (profiles.isEmpty()) {
-//                view.hideProfilesList()
-//            }
-//        }, {
-//            it.printStackTrace()
-//        })
-//    }
 
     fun onEditProfileClick(id: Int) {
         isNewProfile = false
@@ -123,6 +102,19 @@ class ProfilePresenter(private val view: ProfileFragment) {
     fun addNewProfileClick() {
         isNewProfile = true
         view.showProfileBottomDialog(newProfile)
+    }
+
+    private fun undoDeleteProfile() {
+        Observable.fromCallable {
+            profilesRepository.insertProfile(profileToDelete!!)
+        }.compose {
+            it.workInAsinc()
+        }.subscribe({
+            view.updateAdapter()
+        }, {
+            view.showToast(R.string.new_profile_failed_to_create)
+            it.printStackTrace()
+        })
     }
 
     private fun checkTheProfiles() {

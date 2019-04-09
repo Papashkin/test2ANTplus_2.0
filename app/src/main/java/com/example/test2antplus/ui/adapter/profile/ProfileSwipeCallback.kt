@@ -1,27 +1,13 @@
-package com.example.test2antplus.ui.adapter
+package com.example.test2antplus.ui.adapter.profile
 
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
 
-enum class ButtonsState {
-    GONE,
-    LEFT_VISIBLE,
-    RIGHT_VISIBLE
-}
 
-class ProfileSwipeCallback(private val adapter: ProfileAdapter): ItemTouchHelper.Callback() {
-
-    private val bgRed: ColorDrawable = ColorDrawable(Color.RED)
-    private val bgGreen: ColorDrawable = ColorDrawable(Color.GREEN)
-    init {
-        var buttonState = ButtonsState.GONE
-        var swipeBack = false
-        var buttonWidth = 300f
-    }
+class ProfileSwipeCallback(private val adapter: ProfileAdapter) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val swipeFlags = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
@@ -35,8 +21,14 @@ class ProfileSwipeCallback(private val adapter: ProfileAdapter): ItemTouchHelper
     ): Boolean = false
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        adapter.removeItem(position)
+        when (direction) {
+            ItemTouchHelper.RIGHT -> {
+                adapter.editItem(viewHolder.adapterPosition)
+            }
+            ItemTouchHelper.LEFT -> {
+                adapter.removeItem(viewHolder.adapterPosition)
+            }
+        }
     }
 
     override fun onChildDraw(
@@ -50,43 +42,55 @@ class ProfileSwipeCallback(private val adapter: ProfileAdapter): ItemTouchHelper
     ) {
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
 
-        val iconDelete = viewHolder.itemView.context.resources.getDrawable(R.drawable.ic_delete_white_24)
-        val iconEdit = viewHolder.itemView.context.resources.getDrawable(R.drawable.ic_edit_white_24)
-
         val itemView = viewHolder.itemView
-        val backgroundCornerOffset = 20 //so bgRed is behind the rounded corners of itemView
+        val backgroundCornerOffset = 20     // background is behind the rounded corners of itemView
+
+        val iconDelete = itemView.context.resources.getDrawable(R.drawable.ic_delete_white_24)
+        val iconEdit = itemView.context.resources.getDrawable(R.drawable.ic_edit_white_24)
+
+        val bgRed = ColorDrawable(itemView.context.resources.getColor(R.color.red_700))
+        val bgGreen = ColorDrawable(itemView.context.resources.getColor(R.color.green_700))
 
         val iconMargin = (itemView.height - iconDelete.intrinsicHeight) / 2
         val iconTop = itemView.top + (itemView.height - iconDelete.intrinsicHeight) / 2
         val iconBottom = iconTop + iconDelete.intrinsicHeight
 
-        when {
-            (dX > 0) -> {
+        val background: ColorDrawable
+        background = when {
+            (dX > 0) -> {   // edit swipe
                 val iconLeft = itemView.left + iconMargin + iconEdit.intrinsicHeight
                 val iconRight = itemView.left + iconMargin
-                iconEdit.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                iconEdit.setBounds(iconRight, iconTop, iconLeft, iconBottom)
 
-                bgRed.setBounds(
-                    itemView.left, itemView.top,
-                    itemView.left + dX.toInt() + backgroundCornerOffset, itemView.bottom
+                bgGreen.setBounds(
+                    itemView.left,
+                    itemView.top,
+                    itemView.left + dX.toInt() + backgroundCornerOffset,
+                    itemView.bottom
                 )
+                bgGreen
             }
-            (dX < 0) -> {
+            (dX < 0) -> {   // delete swipe
                 val iconLeft = itemView.right - iconMargin - iconDelete.intrinsicHeight
                 val iconRight = itemView.right - iconMargin
                 iconDelete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
 
                 bgRed.setBounds(
                     itemView.right + dX.toInt() - backgroundCornerOffset,
-                    itemView.top, itemView.right, itemView.bottom
+                    itemView.top,
+                    itemView.right,
+                    itemView.bottom
                 )
+                bgRed
             }
             else -> {
                 bgRed.setBounds(0, 0, 0, 0)
+                bgRed
             }
         }
 
-        bgRed.draw(c)
+        background.draw(c)
         iconDelete.draw(c)
+        iconEdit.draw(c)
     }
 }
