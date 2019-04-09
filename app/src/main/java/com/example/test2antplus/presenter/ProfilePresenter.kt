@@ -90,7 +90,6 @@ class ProfilePresenter(private val view: ProfileFragment) {
     fun undoDelete() {
         undoDeleteProfile()
         profiles.add(deletePosition, profileToDelete!!)
-
     }
 
     fun onEditProfileClick(id: Int) {

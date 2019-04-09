@@ -20,6 +20,8 @@ class ProgramPresenter(private val view: ProgramFragment) {
     lateinit var programsRepository: ProgramsRepository
 
     private var programs: ArrayList<Program> = arrayListOf()
+    private var programToDelete: Program? = null
+    private var deletePosition = -1
 
     init {
         MainApplication.graph.inject(this)
@@ -57,18 +59,36 @@ class ProgramPresenter(private val view: ProgramFragment) {
         router.exit()
     }
 
-    fun onDeleteClick(id: Int) {
-        val deletedProgram = programs.first { it.getId() == id }
-        programs.remove(deletedProgram)
+    fun onDeleteClick(position: Int) {
+        deletePosition = position
+        programToDelete = programs[position]
+        programs.remove(programToDelete!!)
         Single.fromCallable {
-            programsRepository.removeProgram(deletedProgram)
+            programsRepository.removeProgram(programToDelete!!)
         }.compose {
             it.workInAsinc()
         }.subscribe({
-            view.updateProgramsList(id)
+            view.showSnackbar(programToDelete!!.getName())
             if (programs.isEmpty()) {
                 view.hideProgramsList()
             }
+        },{
+            it.printStackTrace()
+        })
+    }
+
+    fun undoDelete() {
+        undoDeleteProgram()
+        programs.add(deletePosition, programToDelete!!)
+    }
+
+    private fun undoDeleteProgram() {
+        Single.fromCallable {
+            programsRepository.insertProgram(programToDelete!!)
+        }.compose {
+            it.workInAsinc()
+        }.subscribe({
+            view.updateAdapter()
         },{
             it.printStackTrace()
         })

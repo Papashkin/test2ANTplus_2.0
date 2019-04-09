@@ -16,20 +16,36 @@ import java.util.*
 
 class ProgramAdapter(
     private val onEditClick: (id: Int)  -> Unit,
-    private val onDeleteClick: (id: Int) -> Unit,
+    private val onDeleteClick: (position: Int) -> Unit,
     private val onItemClick: (id: Int) -> Unit
 ) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
+
     private var programs: ArrayList<Program> = arrayListOf()
+    private var deletedPosition: Int = -1
+
+    private lateinit var deletedItem: Program
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
         return ProgramViewHolder(view)
     }
 
-    fun removeItem(id: Int) {
-        val position = programs.indexOf(programs.first { it.getId() == id })
+    fun removeItem(position: Int) {
+        deletedItem = programs[position]
+        deletedPosition = position
         programs.removeAt(position)
         notifyItemRemoved(position)
+        onDeleteClick.invoke(position)
+    }
+
+    fun editItem(position: Int) {
+        notifyDataSetChanged()
+        onEditClick.invoke(programs[position].getId())
+    }
+
+    fun undoDelete() {
+        programs.add(deletedPosition, deletedItem)
+        notifyDataSetChanged()
     }
 
     override fun getItemCount(): Int = programs.size
@@ -51,8 +67,6 @@ class ProgramAdapter(
         private val duration = view.findViewById<TextView>(R.id.textDuration)
         private val programImage = view.findViewById<ImageView>(R.id.imageProgram)
         private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
-        private val btnDelete = view.findViewById<ImageView>(R.id.btnDeleteProgram)
-        private val btnEdit = view.findViewById<ImageView>(R.id.btnEditProgram)
         private val programLayout = view.findViewById<View>(R.id.clProgram)
 
         fun bind(program: Program) {
@@ -68,14 +82,6 @@ class ProgramAdapter(
                 .fit()
                 .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
                 .into(programImage)
-
-            btnDelete.setOnClickListener {
-                onDeleteClick.invoke(program.getId())
-            }
-
-            btnEdit.setOnClickListener {
-                onEditClick.invoke(program.getId())
-            }
 
             programLayout.setOnClickListener {
                 onItemClick.invoke(program.getId())
