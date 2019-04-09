@@ -1,4 +1,4 @@
-package com.example.test2antplus.ui.adapter
+package com.example.test2antplus.ui.adapter.program
 
 import android.view.LayoutInflater
 import android.view.View
@@ -21,7 +21,7 @@ class ProgramAdapter(
 ) : RecyclerView.Adapter<ProgramAdapter.ProgramViewHolder>() {
     private var programs: ArrayList<Program> = arrayListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramAdapter.ProgramViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
         return ProgramViewHolder(view)
     }
@@ -34,7 +34,7 @@ class ProgramAdapter(
 
     override fun getItemCount(): Int = programs.size
 
-    override fun onBindViewHolder(holder: ProgramAdapter.ProgramViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ProgramViewHolder, position: Int) {
         holder.bind(this.programs[position])
     }
 

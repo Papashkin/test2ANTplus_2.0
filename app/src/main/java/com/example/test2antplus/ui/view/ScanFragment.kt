@@ -10,7 +10,7 @@ import com.example.test2antplus.R
 import com.example.test2antplus.SelectedDevice
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ScanPresenter
-import com.example.test2antplus.ui.adapter.NewDeviceAdapter
+import com.example.test2antplus.ui.adapter.device.NewDeviceAdapter
 import com.pawegio.kandroid.putParcelableCollection
 import kotlinx.android.synthetic.main.fragment_scan.*
 

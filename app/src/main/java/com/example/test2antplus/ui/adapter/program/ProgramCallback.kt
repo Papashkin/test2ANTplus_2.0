@@ -1,4 +1,4 @@
-package com.example.test2antplus.ui.adapter
+package com.example.test2antplus.ui.adapter.program
 
 import androidx.recyclerview.widget.DiffUtil
 import com.example.test2antplus.data.programs.Program

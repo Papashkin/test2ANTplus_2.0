@@ -22,6 +22,8 @@ class ProfilePresenter(private val view: ProfileFragment) {
     private var profiles: ArrayList<Profile> = arrayListOf()
     private var newProfile: Profile = Profile(0, "", 0, "", 0.0f, 0.0f)
     private var existedProfile: Profile? = null
+    private var profileToDelete: Profile? = null
+    private var deletePosition = -1
     private var isNewProfile = true
 
     private lateinit var selectedProfile: Profile
@@ -67,25 +69,28 @@ class ProfilePresenter(private val view: ProfileFragment) {
     }
 
     @SuppressLint("CheckResult")
-    fun onDeleteClick(id: Int) {
-        val profileToDelete = profiles.first {
-            it.getId() == id
-        }
+    fun onDeleteClick(pos: Int) {
+        deletePosition = pos
+        profileToDelete = profiles[pos]
         Single.fromCallable {
-            profilesRepository.removeProfile(profileToDelete)
+            profilesRepository.removeProfile(profileToDelete!!)
         }.compose {
             it.workInAsinc()
         }.subscribe({
-            profiles.remove(profiles.first {
-                it.getId() == id
-            })
-            view.deleteSelectedProfile(id)
+            profiles.remove(profiles[pos])
             if (profiles.isEmpty()) {
                 view.hideProfilesList()
             }
+            view.showSnackBar(profileToDelete!!.getName())
         }, {
             it.printStackTrace()
         })
+    }
+
+    fun undoDelete() {
+        undoDeleteProfile()
+        profiles.add(deletePosition, profileToDelete!!)
+
     }
 
     fun onEditProfileClick(id: Int) {
@@ -97,6 +102,19 @@ class ProfilePresenter(private val view: ProfileFragment) {
     fun addNewProfileClick() {
         isNewProfile = true
         view.showProfileBottomDialog(newProfile)
+    }
+
+    private fun undoDeleteProfile() {
+        Observable.fromCallable {
+            profilesRepository.insertProfile(profileToDelete!!)
+        }.compose {
+            it.workInAsinc()
+        }.subscribe({
+            view.updateAdapter()
+        }, {
+            view.showToast(R.string.new_profile_failed_to_create)
+            it.printStackTrace()
+        })
     }
 
     private fun checkTheProfiles() {
