@@ -47,7 +47,7 @@ class BikeSpeedDistanceDevice(
                         showToast.invoke("Channel Not Available")
                     }
                     RequestAccessResult.ADAPTER_NOT_DETECTED -> {
-                        showToast.invoke("ANT Adapter Not Available. Built-in ANT hardware or external adapter required.")
+                        showToast.invoke("ANT Adapter Not Available.\nBuilt-in ANT hardware or external adapter required.")
                     }
                     RequestAccessResult.BAD_PARAMS -> {
                         showToast.invoke("Bad request parameters.")

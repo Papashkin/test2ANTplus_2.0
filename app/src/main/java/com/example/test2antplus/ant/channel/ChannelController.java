@@ -51,7 +51,6 @@ public class ChannelController {
 
         @Override
         public void onBurstStateChange(BurstState newBurstSate) {
-            // Not bursting; can ignore these events
         }
 
         @Override
@@ -82,8 +81,11 @@ public class ChannelController {
 
     private void configureBackgroundScanningChannel() {
         // Setting the channel ID to search for any device (i.e. device number is 0)
-        ChannelId channelId = new ChannelId(WILDCARD_SEARCH_DEVICE_NUMBER,
-                CHANNEL_PROOF_DEVICE_TYPE, CHANNEL_PROOF_TRANSMISSION_TYPE);
+        ChannelId channelId = new ChannelId(
+                WILDCARD_SEARCH_DEVICE_NUMBER,
+                CHANNEL_PROOF_DEVICE_TYPE,
+                CHANNEL_PROOF_TRANSMISSION_TYPE
+        );
 
         try {
             // Setting channel and adapter event handlers

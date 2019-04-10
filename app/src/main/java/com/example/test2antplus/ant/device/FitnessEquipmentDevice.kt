@@ -4,7 +4,9 @@ import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc
 import com.dsi.ant.plugins.antplus.pcc.defines.EventFlag
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
+import com.dsi.ant.plugins.antplus.pcc.defines.RequestStatus
 import com.dsi.ant.plugins.antplus.pccbase.AntPluginPcc
+import com.dsi.ant.plugins.antplus.pccbase.AntPlusCommonPcc
 import com.pawegio.kandroid.runOnUiThread
 import java.math.BigDecimal
 import java.util.*
@@ -60,43 +62,43 @@ class FitnessEquipmentDevice(
 //        }
 //    }
 
-//    val requestFinishedReceiver = AntPlusCommonPcc.IRequestFinishedReceiver { requestStatus ->
-//        runOnUiThread {
-//            when (requestStatus) {
-//                RequestStatus.SUCCESS -> {
-//                    showToast.invoke("Request Successfully Sent")
-//                }
-//                RequestStatus.FAIL_PLUGINS_SERVICE_VERSION -> {
-//                    showToast.invoke("Plugin Service Upgrade Required?")
-//                }
-//                else -> {
-//                    showToast.invoke("Request Failed to be Sent")
-//                }
-//            }
-//        }
-//    }
+    private val requestFinishedReceiver = AntPlusCommonPcc.IRequestFinishedReceiver { requestStatus ->
+        runOnUiThread {
+            when (requestStatus) {
+                RequestStatus.SUCCESS -> {
+                    showToast.invoke("Request Successfully Sent")
+                }
+                RequestStatus.FAIL_PLUGINS_SERVICE_VERSION -> {
+                    showToast.invoke("Plugin Service Upgrade Required?")
+                }
+                else -> {
+                    showToast.invoke("Request Failed to be Sent")
+                }
+            }
+        }
+    }
 
-//    button_setBasicResistance.setOnClickListener {
-//        //TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
-//        val submitted = fePcc.getTrainerMethods().requestSetBasicResistance(BigDecimal("4.5"), requestFinishedReceiver)
-//
-//        if (!submitted)
-//            Toast.makeText(
-//                context,
-//                "Request Could not be Made",
-//                Toast.LENGTH_SHORT
-//            ).show();
-//    }
+    /**
+     * @param basicResistance = BigDecimal("4.5"), as example
+     */
+    fun setBasicResistance(basicResistance: BigDecimal) {
+        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
+        val submitted = fePcc?.trainerMethods?.requestSetBasicResistance(basicResistance, requestFinishedReceiver)
+        submitted?.apply {
+            showToast.invoke("Request Could not be Made")
+        }
+    }
 
-//    button_setTargetPower.setOnClickListener {
-//        val targetPower = BigDecimal("42.25")   //42.25%
-//
-//        //TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
-//        val submitted = fePcc.getTrainerMethods().requestSetTargetPower(targetPower, requestFinishedReceiver)
-//
-//        if (!submitted)
-//            Toast.makeText(context, "Request Could not be Made", Toast.LENGTH_SHORT).show()
-//    }
+    /**
+     * @param targetPower: BigDecimal("42.25") is the same as 42.25%
+     */
+    fun setTargetPower(targetPower: BigDecimal) {
+        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
+        val submitted = fePcc?.trainerMethods?.requestSetTargetPower(targetPower, requestFinishedReceiver)
+        submitted?.apply {
+            showToast.invoke("Request Could not be Made")
+        }
+    }
 
 
     val mPluginAccessResultReceiver =
@@ -195,7 +197,7 @@ class FitnessEquipmentDevice(
 
         fePcc?.subscribeGeneralSettingsEvent { _, _, _, inclinePercentage, resistanceLevel ->
             runOnUiThread {
-//                tv_estTimestamp.text = estTimestamp.toString()
+                //                tv_estTimestamp.text = estTimestamp.toString()
 //
 //                tv_cycleLength.text = if (cycleLength == BigDecimal(-1)) {
 //                    "Invalid"
@@ -218,7 +220,7 @@ class FitnessEquipmentDevice(
 
         fePcc?.subscribeGeneralMetabolicDataEvent { _, _, instantaneousMetabolicEquivalents, instantaneousCaloricBurn, cumulativeCalories ->
             runOnUiThread {
-//                tv_estTimestamp.text = estTimestamp.toString()
+                //                tv_estTimestamp.text = estTimestamp.toString()
 //                tv_mets.text = if (instantaneousMetabolicEquivalents == BigDecimal(-1)) {
 //                    "Invalid"
 //                } else {
@@ -305,7 +307,7 @@ class FitnessEquipmentDevice(
 
                                 it.subscribeRawTrainerDataEvent { _, _, count, instantCadence, instantPower, accumulatedPower ->
                                     runOnUiThread {
-//                                        tv_estTimestamp.text = timestamp.toString()
+                                        //                                        tv_estTimestamp.text = timestamp.toString()
 //                                        textView_TrainerUpdateEventCount.text = count.toString()
 //                                        textView_TrainerInstantaneousCadence.text = if (instantCadence == -1) {
 //                                            "N/A"
@@ -333,7 +335,8 @@ class FitnessEquipmentDevice(
                         subscriptionsDone = true
                     }
 
-                    AntPlusFitnessEquipmentPcc.EquipmentType.UNKNOWN -> {} //tv_feType.text = "UNKNOWN"
+                    AntPlusFitnessEquipmentPcc.EquipmentType.UNKNOWN -> {
+                    } //tv_feType.text = "UNKNOWN"
                     AntPlusFitnessEquipmentPcc.EquipmentType.UNRECOGNIZED -> {
                         showToast.invoke("UNRECOGNIZED type, PluginLib upgrade required?")
                     }

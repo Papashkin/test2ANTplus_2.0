@@ -13,15 +13,10 @@ class MainApplication: Application() {
 
         const val ACTION_WORK_SENDING = "com.example.test2antplus.ui.view.WorkFragment"
         const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.ui.view.ProgramFragment"
-        const val PERMISSION_FOR_APP = 1
-
         const val UPD_PROGRAMS_LIST = "programs list"
-//        const val UPD_PROFILES_LIST = "profiles list"
-
-//        const val ARGS_PROFILE = "selected profile"
         const val ARGS_PROGRAM = "selected program"
 
-//        const val CHART_IMAGE_GALLERY = "programs_gallery"
+        const val PERMISSION_FOR_APP = 1
 
         var PROGRAM_IMAGES_PATH: String? = null
     }

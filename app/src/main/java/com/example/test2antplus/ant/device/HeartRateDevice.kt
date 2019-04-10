@@ -30,7 +30,7 @@ class HeartRateDevice(
                 }
 
                 RequestAccessResult.ADAPTER_NOT_DETECTED -> {
-                    showToast.invoke("ANT Adapter Not Available.\\nBuilt-in ANT hardware or external adapter required.")
+                    showToast.invoke("ANT Adapter Not Available.\nBuilt-in ANT hardware or external adapter required.")
                 }
 
                 RequestAccessResult.BAD_PARAMS -> {
@@ -70,12 +70,9 @@ class HeartRateDevice(
         if (hrPcc == null) return
 
         hrPcc?.let {
-            it.subscribeHeartRateDataEvent { _, _, computedHeartRate, _, _, dataState ->
-                val textHeartRate =
-                    computedHeartRate.toString() +
-                            (if (AntPlusHeartRatePcc.DataState.ZERO_DETECTED == dataState) "*" else "")
+            it.subscribeHeartRateDataEvent { _, _, computedHeartRate, _, _, _ ->
                 runOnUiThread {
-                    getHearRate.invoke(textHeartRate)
+                    getHearRate.invoke(computedHeartRate.toString())
                 }
             }
         }

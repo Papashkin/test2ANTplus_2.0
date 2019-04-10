@@ -15,14 +15,14 @@ import com.example.test2antplus.ant.channel.ChannelInfo
 import javax.inject.Inject
 
 
-class AntRadioServiceConnection @Inject constructor(private var context: Context): ServiceConnection {
+class AntRadioServiceConnection @Inject constructor(private var context: Context) : ServiceConnection {
     companion object {
         private const val TAG = "ChannelService"
         private val CHANNEL_LOCK = Object()
     }
 
     private var mAllowAcquireBackgroundScanChannel = false
-    private var mBackgroundScanController : ChannelController? = null
+    private var mBackgroundScanController: ChannelController? = null
     private var mListener: ChannelChangedListener? = null
     private var mBackgroundScanInProgress = false
     private var mBackgroundScanAcquired = false
@@ -40,8 +40,11 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
         /**
          * [onBackgroundScanStateChange] allows starting background scan if no scan in progress
          */
-        override fun onBackgroundScanStateChange(backgroundScanInProgress: Boolean, backgroundScanIsConfigured: Boolean) {
-            if(mListener == null) return
+        override fun onBackgroundScanStateChange(
+            backgroundScanInProgress: Boolean,
+            backgroundScanIsConfigured: Boolean
+        ) {
+            if (mListener == null) return
 
             mBackgroundScanInProgress = backgroundScanInProgress
             mListener?.apply {
@@ -54,7 +57,7 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
          */
         override fun onChannelDeath() {
             closeBackgroundScanChannel()
-            if(mListener == null) return
+            if (mListener == null) return
             mListener?.apply { this.onAllowStartScan(false) }
         }
     }
@@ -71,7 +74,7 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
         try {
             mAntChannelProvider = mAntRadioService!!.channelProvider
 
-            val mChannelAvailable : Boolean = (getNumberOfChannelsAvailable() > 0)
+            val mChannelAvailable: Boolean = (getNumberOfChannelsAvailable() > 0)
             val legacyInterfaceInUse: Boolean = mAntChannelProvider!!.isLegacyInterfaceInUse
 
             // If there are channels OR legacy interface in use, allow acquire background scan.
@@ -86,10 +89,8 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
                 }
             }
         } catch (e: RemoteException) {
-            // TODO Auto-generated catch block
             e.printStackTrace()
-        } catch (e: ChannelNotAvailableException) {
-            // If channel is not available, do not allow to start scan
+        } catch (e: ChannelNotAvailableException) {     // If channel is not available, do not allow to start scan
             mListener?.apply { this.onAllowStartScan(false) }
         }
     }
@@ -103,7 +104,7 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
      * of channels capable of background scanning.
      */
     private fun getNumberOfChannelsAvailable(): Int {
-        if(null != mAntChannelProvider) {
+        if (null != mAntChannelProvider) {
             val capabilities = Capabilities()
             capabilities.supportBackgroundScanning(true)
             try {
@@ -129,8 +130,7 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
                 mBackgroundScanAcquired = true
 
                 if (null != antChannel) {
-                    mBackgroundScanController =
-                            ChannelController(antChannel, broadcastListener)
+                    mBackgroundScanController = ChannelController(antChannel, broadcastListener)
                 }
             }
         }
@@ -144,7 +144,7 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
     @Throws(ChannelNotAvailableException::class)
     fun acquireChannel(): AntChannel? {
         var mAntChannel: AntChannel? = null
-        if(null != mAntChannelProvider) {
+        if (null != mAntChannelProvider) {
             try {
                 val capableOfBackgroundScan = Capabilities()
                 capableOfBackgroundScan.supportBackgroundScanning(true)
@@ -156,7 +156,8 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
 
                 // Get background scan status
                 mBackgroundScanInProgress = mAntChannel?.backgroundScanState!!.isInProgress
-            } catch (e: RemoteException) { }
+            } catch (e: RemoteException) {
+            }
         }
         return mAntChannel
     }
