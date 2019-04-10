@@ -10,6 +10,7 @@ import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import javax.inject.Inject
 
+
 class MainActivity : AppCompatActivity() {
 
     @Inject

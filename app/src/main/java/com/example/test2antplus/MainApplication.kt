@@ -13,7 +13,7 @@ class MainApplication: Application() {
 
         const val ACTION_WORK_SENDING = "com.example.test2antplus.ui.view.WorkFragment"
         const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.ui.view.ProgramFragment"
-//        const val ACTION_PROFILE_SETTINGS = "com.example.test2antplus.ui.view.ProfileFragment"
+        const val PERMISSION_FOR_APP = 1
 
         const val UPD_PROGRAMS_LIST = "programs list"
 //        const val UPD_PROFILES_LIST = "profiles list"
