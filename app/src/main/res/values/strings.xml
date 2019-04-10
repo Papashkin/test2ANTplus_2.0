@@ -1,7 +1,7 @@
 <resources>
 
     <!-- ====== Common ====== -->
-    <string name="app_name">test2ANTplus</string>
+    <string name="app_name">Ant\'s bike trainer</string>
     <string name="programs">Programs</string>
     <string name="start">Start</string>
 

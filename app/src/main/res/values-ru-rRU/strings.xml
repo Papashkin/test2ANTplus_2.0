@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ====== Общие текстовые переменные ====== -->
-    <string name="app_name">test2ANTplus</string>
+    <string name="app_name">Ant\'s bike trainer</string>
     <string name="start">Старт</string>
     <string name="programs">Программы</string>
 
