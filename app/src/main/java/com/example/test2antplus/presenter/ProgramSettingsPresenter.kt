@@ -10,6 +10,10 @@ import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.INTERV
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.SEGMENT
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.STEPS_DOWN
 import com.example.test2antplus.ui.view.ProgramSettingsFragment.Companion.STEPS_UP
+import com.example.test2antplus.util.convertToLatinScript
+import com.example.test2antplus.util.fullTimeFormat
+import com.example.test2antplus.util.saveProgramAsImage
+import com.example.test2antplus.util.workInAsinc
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet

@@ -6,6 +6,9 @@ import com.example.test2antplus.data.profiles.Profile
 import com.example.test2antplus.data.profiles.ProfilesRepository
 import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ProfileFragment
+import com.example.test2antplus.util.isFilled
+import com.example.test2antplus.util.isSomethingFilled
+import com.example.test2antplus.util.workInAsinc
 import io.reactivex.Observable
 import io.reactivex.Single
 import ru.terrakok.cicerone.Router

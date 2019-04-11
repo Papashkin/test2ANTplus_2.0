@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
 import com.example.test2antplus.data.programs.Program
-import com.example.test2antplus.fullTimeFormat
+import com.example.test2antplus.util.fullTimeFormat
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import java.io.File

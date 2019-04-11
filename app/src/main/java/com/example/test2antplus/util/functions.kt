@@ -1,4 +1,4 @@
-package com.example.test2antplus
+package com.example.test2antplus.util
 
 import android.app.Activity
 import android.app.Dialog
@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import com.example.test2antplus.R
 import com.example.test2antplus.data.profiles.Profile
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData

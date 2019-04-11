@@ -23,7 +23,7 @@ import com.example.test2antplus.ant.device.BikeSpeedDistanceDevice
 import com.example.test2antplus.ant.device.FitnessEquipmentDevice
 import com.example.test2antplus.ant.device.HeartRateDevice
 import com.example.test2antplus.presenter.WorkPresenter
-import com.example.test2antplus.setWorkParams
+import com.example.test2antplus.util.setWorkParams
 import com.github.mikephil.charting.data.BarData
 import com.pawegio.kandroid.toast
 import kotlinx.android.synthetic.main.fragment_work.*

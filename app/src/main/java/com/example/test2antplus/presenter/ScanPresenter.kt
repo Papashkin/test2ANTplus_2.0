@@ -10,11 +10,11 @@ import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
-import com.example.test2antplus.SelectedDevice
+import com.example.test2antplus.ant.device.SelectedDevice
 import com.example.test2antplus.ant.service.AntRadioServiceConnection
 import com.example.test2antplus.navigation.FragmentScreens
 import com.example.test2antplus.ui.view.ScanFragment
-import com.example.test2antplus.workInAsinc
+import com.example.test2antplus.util.workInAsinc
 import com.pawegio.kandroid.runOnUiThread
 import io.reactivex.Observable
 import ru.terrakok.cicerone.Router

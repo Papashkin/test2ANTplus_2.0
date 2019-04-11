@@ -9,7 +9,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 import com.example.test2antplus.R
-import com.example.test2antplus.SelectedDevice
+import com.example.test2antplus.ant.device.SelectedDevice
 
 class NewDeviceAdapter(
     private val onItemClick: (position: Int) -> Unit

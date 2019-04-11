@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.R
-import com.example.test2antplus.SelectedDevice
+import com.example.test2antplus.ant.device.SelectedDevice
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ScanPresenter
 import com.example.test2antplus.ui.adapter.device.NewDeviceAdapter

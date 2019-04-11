@@ -16,7 +16,9 @@
             android:fullBackupContent="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity" android:windowSoftInputMode="adjustPan">
+        <activity android:name=".MainActivity"
+                  android:windowSoftInputMode="adjustPan"
+                  android:configChanges="orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

@@ -1,7 +1,7 @@
 package com.example.test2antplus.ui.adapter.device
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.test2antplus.SelectedDevice
+import com.example.test2antplus.ant.device.SelectedDevice
 
 class DeviceCallback(
     private val oldList: ArrayList<SelectedDevice>,

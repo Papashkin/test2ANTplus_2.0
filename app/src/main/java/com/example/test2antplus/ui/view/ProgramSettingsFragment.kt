@@ -14,6 +14,9 @@ import com.example.test2antplus.MainApplication.Companion.ARGS_PROGRAM
 import com.example.test2antplus.MainApplication.Companion.UPD_PROGRAMS_LIST
 import com.example.test2antplus.data.programs.Program
 import com.example.test2antplus.presenter.ProgramSettingsPresenter
+import com.example.test2antplus.util.setCommonParams
+import com.example.test2antplus.util.showDialog
+import com.example.test2antplus.util.timeFormat
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry

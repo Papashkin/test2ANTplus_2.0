@@ -1,4 +1,4 @@
-package com.example.test2antplus
+package com.example.test2antplus.ant.device
 
 import android.os.Parcel
 import android.os.Parcelable
