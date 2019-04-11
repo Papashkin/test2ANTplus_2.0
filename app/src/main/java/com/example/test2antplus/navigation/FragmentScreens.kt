@@ -2,19 +2,24 @@ package com.example.test2antplus.navigation
 
 import androidx.fragment.app.Fragment
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
-import com.example.test2antplus.data.programs.Program
-import com.example.test2antplus.ui.view.*
+import com.example.test2antplus.data.repositories.programs.Program
+import com.example.test2antplus.presentation.view.profiles.ProfilesFragment
+import com.example.test2antplus.presentation.view.programSettings.ProgramSettingsFragment
+import com.example.test2antplus.presentation.view.programs.ProgramsFragment
+import com.example.test2antplus.presentation.view.scan.ScanFragment
+import com.example.test2antplus.presentation.view.start.StartFragment
+import com.example.test2antplus.presentation.view.work.WorkFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 class FragmentScreens {
 
     class ProfileScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProfileFragment()
+        override fun getFragment(): Fragment = ProfilesFragment()
         override fun getScreenKey(): String = "profile_fragment".hashCode().toString()
     }
 
     class ProgramScreen(private val isTime2work: Boolean, private val profile: String) : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProgramFragment().newInstance(isTime2work, profile)
+        override fun getFragment(): Fragment = ProgramsFragment().newInstance(isTime2work, profile)
         override fun getScreenKey(): String = "program_fragment".hashCode().toString()
     }
 

@@ -3,12 +3,12 @@ package com.example.test2antplus.di.modules
 import android.content.Context
 import androidx.annotation.NonNull
 import androidx.room.Room
-import com.example.test2antplus.data.profiles.ProfileDao
-import com.example.test2antplus.data.profiles.ProfilesDatabase
-import com.example.test2antplus.data.profiles.ProfilesRepository
-import com.example.test2antplus.data.programs.ProgramDao
-import com.example.test2antplus.data.programs.ProgramsDatabase
-import com.example.test2antplus.data.programs.ProgramsRepository
+import com.example.test2antplus.data.db.profiles.ProfilesDao
+import com.example.test2antplus.data.db.profiles.ProfilesDatabase
+import com.example.test2antplus.data.repositories.profiles.ProfilesRepository
+import com.example.test2antplus.data.db.programs.ProgramsDao
+import com.example.test2antplus.data.db.programs.ProgramsDatabase
+import com.example.test2antplus.data.repositories.programs.ProgramsRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -34,7 +34,7 @@ class AppModule(@NonNull private val context: Context) {
 
     @Provides
     @Singleton
-    fun getProfilesRepository(dao: ProfileDao) = ProfilesRepository(dao)
+    fun getProfilesRepository(dao: ProfilesDao) = ProfilesRepository(dao)
 
 
     @Provides
@@ -52,5 +52,5 @@ class AppModule(@NonNull private val context: Context) {
 
     @Provides
     @Singleton
-    fun getProgramsRepository(dao: ProgramDao) = ProgramsRepository(dao)
+    fun getProgramsRepository(dao: ProgramsDao) = ProgramsRepository(dao)
 }

@@ -11,8 +11,8 @@ class MainApplication: Application() {
         @JvmStatic
         lateinit var graph: AppComponent
 
-        const val ACTION_WORK_SENDING = "com.example.test2antplus.ui.view.WorkFragment"
-        const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.ui.view.ProgramFragment"
+        const val ACTION_WORK_SENDING = "com.example.test2antplus.presentation.view.workScreen.WorkFragment"
+        const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.presentation.view.programs.ProgramsFragment"
         const val UPD_PROGRAMS_LIST = "programs list"
         const val ARGS_PROGRAM = "selected program"
 
