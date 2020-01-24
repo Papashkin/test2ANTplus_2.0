@@ -1,13 +1,14 @@
 package com.example.test2antplus.presentation
 
 import android.view.inputmethod.InputMethodManager
+import androidx.annotation.LayoutRes
 import androidx.fragment.app.Fragment
-import com.example.test2antplus.presentation.presenter.BaseView
 import com.pawegio.kandroid.inputMethodManager
 import com.pawegio.kandroid.toast
 
 
-open class BaseFragment: Fragment(), BaseView {
+open class BaseFragment(@LayoutRes layoutId: Int): Fragment(layoutId), BaseView {
+
     override fun showToast(text: String) {
         toast(text)
     }

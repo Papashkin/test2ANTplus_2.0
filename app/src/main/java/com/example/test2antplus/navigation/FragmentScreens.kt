@@ -3,18 +3,19 @@ package com.example.test2antplus.navigation
 import androidx.fragment.app.Fragment
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.example.test2antplus.data.repositories.programs.Program
-import com.example.test2antplus.presentation.view.profiles.ProfilesFragment
-import com.example.test2antplus.presentation.view.programSettings.ProgramSettingsFragment
-import com.example.test2antplus.presentation.view.programs.ProgramsFragment
-import com.example.test2antplus.presentation.view.scan.ScanFragment
-import com.example.test2antplus.presentation.view.start.StartFragment
-import com.example.test2antplus.presentation.view.work.WorkFragment
+import com.example.test2antplus.presentation.profiles.ProfilesFragment
+import com.example.test2antplus.presentation.programSettings.ProgramSettingsFragment
+import com.example.test2antplus.presentation.programs.ProgramsFragment
+import com.example.test2antplus.presentation.scan.ScanFragment
+import com.example.test2antplus.presentation.start.StartFragment
+import com.example.test2antplus.presentation.work.WorkFragment
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
 class FragmentScreens {
 
     class ProfileScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = ProfilesFragment()
+        override fun getFragment(): Fragment =
+            ProfilesFragment()
         override fun getScreenKey(): String = "profile_fragment".hashCode().toString()
     }
 
@@ -29,7 +30,8 @@ class FragmentScreens {
     }
 
     class StartScreen : SupportAppScreen() {
-        override fun getFragment(): Fragment = StartFragment()
+        override fun getFragment(): Fragment =
+            StartFragment()
         override fun getScreenKey(): String = "start_fragment".hashCode().toString()
     }
 

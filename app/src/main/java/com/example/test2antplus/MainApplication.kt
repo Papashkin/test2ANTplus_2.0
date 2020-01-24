@@ -12,7 +12,7 @@ class MainApplication: Application() {
         lateinit var graph: AppComponent
 
         const val ACTION_WORK_SENDING = "com.example.test2antplus.presentation.view.workScreen.WorkFragment"
-        const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.presentation.view.programs.ProgramsFragment"
+        const val ACTION_PROGRAM_SETTINGS = "com.example.test2antplus.presentation.programs.ProgramsFragment"
         const val UPD_PROGRAMS_LIST = "programs list"
         const val ARGS_PROGRAM = "selected program"
 
@@ -23,7 +23,10 @@ class MainApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+        initDI()
+    }
 
+    private fun initDI() {
         graph = DaggerAppComponent.builder()
             .appModule(AppModule(applicationContext))
             .navigationModule(NavigationModule())
