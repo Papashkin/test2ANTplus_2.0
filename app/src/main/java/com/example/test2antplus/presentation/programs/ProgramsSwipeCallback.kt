@@ -2,6 +2,7 @@ package com.example.test2antplus.presentation.programs
 
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.test2antplus.R
@@ -44,22 +45,22 @@ class ProgramsSwipeCallback(private val adapter: ProgramsAdapter) : ItemTouchHel
         val itemView = viewHolder.itemView
         val backgroundCornerOffset = 20     // background is behind the rounded corners of itemView
 
-        val iconDelete = itemView.context.resources.getDrawable(R.drawable.ic_delete_white_40)
-        val iconEdit = itemView.context.resources.getDrawable(R.drawable.ic_edit_white_40)
+        val iconDelete = ContextCompat.getDrawable(itemView.context, R.drawable.ic_delete_white_40)
+        val iconEdit = ContextCompat.getDrawable(itemView.context, R.drawable.ic_edit_white_40)
 
-        val bgRed = ColorDrawable(itemView.context.resources.getColor(R.color.red_700))
-        val bgGreen = ColorDrawable(itemView.context.resources.getColor(R.color.green_700))
+        val bgRed = ColorDrawable(ContextCompat.getColor(itemView.context, R.color.red_700))
+        val bgGreen = ColorDrawable(ContextCompat.getColor(itemView.context, R.color.green_700))
 
-        val iconMargin = (itemView.height - iconDelete.intrinsicHeight) / 5
-        val iconTop = itemView.top + (itemView.height - iconDelete.intrinsicHeight) / 2
-        val iconBottom = iconTop + iconDelete.intrinsicHeight
+        val iconMargin = (itemView.height - (iconDelete?.intrinsicHeight ?: 0)) / 5
+        val iconTop = itemView.top + (itemView.height - (iconDelete?.intrinsicHeight ?: 0)) / 2
+        val iconBottom = iconTop + (iconDelete?.intrinsicHeight ?: 0)
 
         val background: ColorDrawable
         background = when {
             (dX > 0) -> {   // edit swipe
-                val iconLeft = itemView.left + iconMargin + iconEdit.intrinsicHeight
+                val iconLeft = itemView.left + iconMargin + (iconEdit?.intrinsicHeight ?: 0)
                 val iconRight = itemView.left + iconMargin
-                iconEdit.setBounds(iconRight, iconTop, iconLeft, iconBottom)
+                iconEdit?.setBounds(iconRight, iconTop, iconLeft, iconBottom)
 
                 bgGreen.setBounds(
                     itemView.left,
@@ -70,9 +71,9 @@ class ProgramsSwipeCallback(private val adapter: ProgramsAdapter) : ItemTouchHel
                 bgGreen
             }
             (dX < 0) -> {   // delete swipe
-                val iconLeft = itemView.right - iconMargin - iconDelete.intrinsicHeight
+                val iconLeft = itemView.right - iconMargin - (iconDelete?.intrinsicHeight ?: 0)
                 val iconRight = itemView.right - iconMargin
-                iconDelete.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                iconDelete?.setBounds(iconLeft, iconTop, iconRight, iconBottom)
 
                 bgRed.setBounds(
                     itemView.right + dX.toInt() - backgroundCornerOffset,
@@ -89,7 +90,7 @@ class ProgramsSwipeCallback(private val adapter: ProgramsAdapter) : ItemTouchHel
         }
 
         background.draw(c)
-        iconDelete.draw(c)
-        iconEdit.draw(c)
+        iconDelete?.draw(c)
+        iconEdit?.draw(c)
     }
 }

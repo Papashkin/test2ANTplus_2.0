@@ -18,6 +18,15 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan), ScanView {
     companion object {
         const val SELECTED_PROGRAM = "selected program"
         const val SELECTED_PROFILE = "selected profile"
+
+        fun newInstance(profileName: String, program: Program): ScanFragment = ScanFragment().apply {
+            arguments = Bundle().apply {
+                profileName to SELECTED_PROFILE
+                program.getProgram() to SELECTED_PROGRAM
+//                putString(SELECTED_PROFILE, profileName)
+//                putString(SELECTED_PROGRAM, program.getProgram())
+            }
+        }
     }
 
     private lateinit var presenter: ScanPresenter
@@ -25,13 +34,6 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan), ScanView {
 
     private var program: String? = null
     private var profileName: String? = null
-
-    fun newInstance(profileName: String, program: Program): ScanFragment = ScanFragment().apply {
-        arguments = Bundle().apply {
-            putString(SELECTED_PROFILE, profileName)
-            putString(SELECTED_PROGRAM, program.getProgram())
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.graph.inject(this)

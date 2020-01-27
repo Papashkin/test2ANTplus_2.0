@@ -32,6 +32,18 @@ class WorkFragment : BaseFragment(R.layout.fragment_work), WorkView {
         const val DEVICES_LIST = "devices list"
         const val PROGRAM_NAME = "program name"
         const val PROFILE_NAME = "profile name"
+
+        fun newInstance(
+            devices: ArrayList<MultiDeviceSearchResult>,
+            program: String,
+            profileName: String
+        ): WorkFragment = WorkFragment().apply {
+            this.arguments = Bundle().also {
+                it.putParcelableArrayList(DEVICES_LIST, devices)
+                it.putString(PROGRAM_NAME, program)
+                it.putString(PROFILE_NAME, profileName)
+            }
+        }
     }
 
     private lateinit var presenter: WorkPresenter
@@ -58,18 +70,6 @@ class WorkFragment : BaseFragment(R.layout.fragment_work), WorkView {
 
     @Inject
     lateinit var appContext: Context
-
-    fun newInstance(
-        devices: ArrayList<MultiDeviceSearchResult>,
-        program: String,
-        profileName: String
-    ): WorkFragment = WorkFragment().apply {
-        this.arguments = Bundle().also {
-            it.putParcelableArrayList(DEVICES_LIST, devices)
-            it.putString(PROGRAM_NAME, program)
-            it.putString(PROFILE_NAME, profileName)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.graph.inject(this)

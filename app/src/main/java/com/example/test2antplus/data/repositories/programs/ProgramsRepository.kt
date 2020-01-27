@@ -1,29 +1,16 @@
 package com.example.test2antplus.data.repositories.programs
 
 import com.example.test2antplus.data.db.programs.ProgramsDao
-import io.reactivex.Single
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class ProgramsRepository @Inject constructor(private val programsDao: ProgramsDao) {
 
-    fun getAllPrograms(): Single<List<Program>> = programsDao.getAll()
-
-    fun getProgramByName(name: String): Single<Program> = programsDao.getProgram(name)
-
-
-    fun getProgramIdByName(name: String): Single<Int> = programsDao.getProgramId(name)
-
-    fun insertProgram(program: Program) {
-        programsDao.addProgram(program)
-    }
-
-    fun updateProgram(program: Program) {
-        programsDao.updateProgram(program)
-    }
-
-    fun removeProgram(program: Program) {
-        programsDao.deleteProgram(program)
-    }
+    suspend fun getAllPrograms(): List<Program> = programsDao.getAll()
+    suspend fun getProgramByName(name: String): Program? = programsDao.getProgram(name)
+    suspend fun getProgramIdByName(name: String): Int = programsDao.getProgramId(name)
+    suspend fun insertProgram(program: Program) = programsDao.addProgram(program)
+    suspend fun updateProgram(program: Program) = programsDao.updateProgram(program)
+    suspend fun removeProgram(program: Program) = programsDao.deleteProgram(program)
 }

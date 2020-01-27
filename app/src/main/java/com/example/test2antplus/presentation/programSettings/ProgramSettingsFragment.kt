@@ -36,6 +36,14 @@ class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_setting_n
         const val MODIFIED_PROGRAM_NAME = "modified program name"
         const val MODIFIED_PROGRAM_SETTING = "modified program setting"
         const val MODIFIED_PROGRAM_IMAGE_PATH = "modified program image path"
+
+        fun newInstance(program: Program?): ProgramSettingsFragment = ProgramSettingsFragment().apply {
+            this.arguments = Bundle().also {
+                it.putString(MODIFIED_PROGRAM_NAME, program?.getName())
+                it.putString(MODIFIED_PROGRAM_SETTING, program?.getProgram())
+                it.putString(MODIFIED_PROGRAM_IMAGE_PATH, program?.getImagePath())
+            }
+        }
     }
 
     private lateinit var presenter: ProgramSettingsPresenter
@@ -43,13 +51,7 @@ class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_setting_n
 
     private var dialog: Dialog? = null
 
-    fun newInstance(program: Program?): ProgramSettingsFragment = ProgramSettingsFragment().apply {
-        this.arguments = Bundle().also {
-            it.putString(MODIFIED_PROGRAM_NAME, program?.getName())
-            it.putString(MODIFIED_PROGRAM_SETTING, program?.getProgram())
-            it.putString(MODIFIED_PROGRAM_IMAGE_PATH, program?.getImagePath())
-        }
-    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.graph.inject(this)

@@ -1,11 +1,11 @@
 package com.example.test2antplus.presentation.programSettings
 
-import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.MainApplication.Companion.PROGRAM_IMAGES_PATH
 import com.example.test2antplus.R
 import com.example.test2antplus.data.repositories.programs.Program
 import com.example.test2antplus.data.repositories.programs.ProgramsRepository
+import com.example.test2antplus.presentation.BasePresenter
 import com.example.test2antplus.presentation.BaseView
 import com.example.test2antplus.presentation.programSettings.ProgramSettingsFragment.Companion.INTERVAL
 import com.example.test2antplus.presentation.programSettings.ProgramSettingsFragment.Companion.SEGMENT
@@ -14,14 +14,14 @@ import com.example.test2antplus.presentation.programSettings.ProgramSettingsFrag
 import com.example.test2antplus.util.convertToLatinScript
 import com.example.test2antplus.util.fullTimeFormat
 import com.example.test2antplus.util.saveProgramAsImage
-import com.example.test2antplus.util.workInAsinc
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
-import io.reactivex.Observable
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
 import java.io.File
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -39,8 +39,7 @@ interface ProgramSettingsView : BaseView {
     fun showProgramNameDialog()
 }
 
-@SuppressLint("CheckResult")
-class ProgramSettingsPresenter(private val view: ProgramSettingsView) {
+class ProgramSettingsPresenter(private val view: ProgramSettingsView) : BasePresenter<ProgramSettingsView>() {
 
     @Inject
     lateinit var router: Router
@@ -239,50 +238,47 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsView) {
         }
     }
 
-    private fun checkProgramName(programValues: String) {
-        programsRepository.getProgramByName(programName)
-            .compose {
-                it.workInAsinc()
-            }.subscribe({
+    private fun checkProgramName(programValues: String) = launch {
+        try {
+            val programWithSameName = programsRepository.getProgramByName(programName)
+            if (programWithSameName == null) {
+                view.getChart()
+                saveImage(programValues)
+            } else {
                 view.showToast(R.string.program_settings_this_program_is_existed)
                 view.hideLoading()
-            }, {
-                view.getChart()
-                saveImage(programValues)
-            })
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    private fun getProgramId(programValues: String) {
-        programsRepository.getProgramIdByName(programName)
-            .compose {
-                it.workInAsinc()
-            }.subscribe({
-                programIdFromDb = it!!
-                view.getChart()
-                saveImage(programValues)
-            }, {
-                it.printStackTrace()
-            })
+    private fun getProgramId(programValues: String) = launch {
+        try {
+            val id = programsRepository.getProgramIdByName(programName)
+            programIdFromDb = id
+            view.getChart()
+            saveImage(programValues)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun saveImage(programValues: String) {
-        Observable.fromCallable {
+        try {
             programChart.saveProgramAsImage(programImagePath)
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
             if (isNewProgram) {
                 insertToDb(values = programValues)
             } else {
                 updateInDb(values = programValues)
             }
-        }, {
-            it.printStackTrace()
-        })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-    private fun insertToDb(values: String) {
-        Observable.fromCallable {
+    private fun insertToDb(values: String) = launch {
+        try {
             programsRepository.insertProgram(
                 Program(
                     id = 0,
@@ -291,17 +287,16 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsView) {
                     imagePath = programImagePath
                 )
             )
-        }.compose {
-            it.workInAsinc()
-        }.subscribe {
             view.hideLoading()
             view.closeScreen()
             router.exit()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
-    private fun updateInDb(values: String) {
-        Observable.fromCallable {
+    private fun updateInDb(values: String) = launch {
+        try {
             programsRepository.updateProgram(
                 Program(
                     id = programIdFromDb,
@@ -310,12 +305,11 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsView) {
                     imagePath = programImagePath
                 )
             )
-        }.compose {
-            it.workInAsinc()
-        }.subscribe {
             view.hideLoading()
             view.closeScreen()
             router.exit()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -328,7 +322,7 @@ class ProgramSettingsPresenter(private val view: ProgramSettingsView) {
     }
 
     fun onBackPressed() {
-        if (!entries.isEmpty()) {
+        if (entries.isNotEmpty()) {
             view.showBackDialog()
         } else {
             onExit()

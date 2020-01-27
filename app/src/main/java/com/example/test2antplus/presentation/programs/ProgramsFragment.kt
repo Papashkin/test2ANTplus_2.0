@@ -17,11 +17,19 @@ import com.pawegio.kandroid.show
 import kotlinx.android.synthetic.main.fragment_programs.*
 
 
-class ProgramsFragment : BaseFragment(R.layout.fragment_programs),
-    ProgramsView {
+class ProgramsFragment : BaseFragment(R.layout.fragment_programs), ProgramsView {
     companion object {
         const val WORK = "it's time to work"
         const val PROFILE_NAME = "profile name"
+
+        fun newInstance(isTime2work: Boolean, profile: String): ProgramsFragment = ProgramsFragment().apply {
+            arguments = Bundle().apply {
+                isTime2work to WORK
+                profile to PROFILE_NAME
+//                putBoolean(WORK, isTime2work)
+//                putString(PROFILE_NAME, profile)
+            }
+        }
     }
 
     private lateinit var presenter: ProgramsPresenter
@@ -30,13 +38,6 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs),
 
     private var isTime2work: Boolean = false
     private var profileName: String = ""
-
-    fun newInstance(isTime2work: Boolean, profile: String): ProgramsFragment = ProgramsFragment().apply {
-        arguments = Bundle().apply {
-            putBoolean(WORK, isTime2work)
-            putString(PROFILE_NAME, profile)
-        }
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.graph.inject(this)
@@ -58,11 +59,8 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs),
         }
 
         toolbarPrograms.setNavigationIcon(R.drawable.ic_arrow_back_32)
-
         setAdapter()
-
         setListeners()
-
     }
 
     private fun setAdapter() {
@@ -79,8 +77,7 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs),
                 }
             })
 
-        programCallback =
-            ProgramsSwipeCallback(programsAdapter)
+        programCallback = ProgramsSwipeCallback(programsAdapter)
         ItemTouchHelper(programCallback).attachToRecyclerView(listPrograms)
         listPrograms.adapter = programsAdapter
     }
@@ -89,7 +86,6 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs),
         toolbarPrograms.setNavigationOnClickListener {
             presenter.onBackPressed()
         }
-
         buttonAddProgram.setOnClickListener {
             presenter.addProgram()
         }

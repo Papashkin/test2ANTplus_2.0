@@ -6,13 +6,13 @@ import com.example.test2antplus.R
 import com.example.test2antplus.data.repositories.profiles.Profile
 import com.example.test2antplus.data.repositories.profiles.ProfilesRepository
 import com.example.test2antplus.navigation.FragmentScreens
+import com.example.test2antplus.presentation.BasePresenter
 import com.example.test2antplus.presentation.BaseView
 import com.example.test2antplus.util.isFilled
 import com.example.test2antplus.util.isSomethingFilled
-import com.example.test2antplus.util.workInAsinc
-import io.reactivex.Observable
-import io.reactivex.Single
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
+import java.lang.Exception
 import javax.inject.Inject
 
 interface ProfilesView : BaseView {
@@ -28,7 +28,7 @@ interface ProfilesView : BaseView {
 }
 
 @SuppressLint("CheckResult")
-class ProfilesPresenter(private val view: ProfilesView) {
+class ProfilesPresenter(private val view: ProfilesView): BasePresenter<ProfilesView>() {
 
     @Inject
     lateinit var router: Router
@@ -51,15 +51,16 @@ class ProfilesPresenter(private val view: ProfilesView) {
         checkProfileList()
     }
 
-    private fun checkProfileList() {
-        profilesRepository.getAllProfiles()
-            .compose {
-                it.workInAsinc()
-            }.subscribe({ list ->
-                profiles.clear()
-                profiles.addAll(list)
-                setData()
-            }, {})
+    private fun checkProfileList() = launch {
+        try {
+            profiles.clear()
+            profiles.addAll(profilesRepository.getAllProfiles())
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        finally {
+            setData()
+        }
     }
 
     private fun setData() {
@@ -69,9 +70,7 @@ class ProfilesPresenter(private val view: ProfilesView) {
         } else {
             view.showProfilesList()
         }
-        view.setProfilesList(profiles.map {
-            Pair(it.getName(), it.getId())
-        } as ArrayList)
+        view.setProfilesList(profiles.map { Pair(it.getName(), it.getId()) } as ArrayList)
     }
 
     fun selectProfile(id: Int) {
@@ -83,23 +82,19 @@ class ProfilesPresenter(private val view: ProfilesView) {
         router.exit()
     }
 
-    @SuppressLint("CheckResult")
-    fun onDeleteClick(pos: Int) {
-        deletePosition = pos
-        profileToDelete = profiles[pos]
-        Single.fromCallable {
+    fun onDeleteClick(pos: Int) = launch {
+        try {
+            deletePosition = pos
+            profileToDelete = profiles[pos]
             profilesRepository.removeProfile(profileToDelete!!)
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
             profiles.remove(profiles[pos])
             if (profiles.isEmpty()) {
                 view.hideProfilesList()
             }
             view.showSnackBar(profileToDelete!!.getName())
-        }, {
-            it.printStackTrace()
-        })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun undoDelete() {
@@ -118,63 +113,57 @@ class ProfilesPresenter(private val view: ProfilesView) {
         view.showProfileSettingDialog(newProfile)
     }
 
-    private fun undoDeleteProfile() {
-        Observable.fromCallable {
+    private fun undoDeleteProfile() = launch {
+        try {
             profilesRepository.insertProfile(profileToDelete!!)
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
             view.updateAdapter()
-        }, {
+        } catch (e: Exception) {
             view.showToast(R.string.new_profile_failed_to_create)
-            it.printStackTrace()
-        })
-    }
-
-    private fun checkTheProfiles() {
-        Observable.fromCallable {
-            profilesRepository.getProfileByName(newProfile.getName())
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
-            view.showToast(R.string.new_profile_existed)
-        }, {
-            createProfile()
-        })
-    }
-
-    private fun createProfile() {
-        if (newProfile.isFilled()) {
-            Observable.fromCallable {
-                profilesRepository.insertProfile(newProfile)
-            }.compose {
-                it.workInAsinc()
-            }.subscribe({
-                view.hideProfileSettingDialog()
-                view.hideKeyboard()
-            }, {
-                view.showToast(R.string.new_profile_failed_to_create)
-                it.printStackTrace()
-            })
-        } else {
-            view.showToast(R.string.invalid_data)
+            e.printStackTrace()
         }
     }
 
-    private fun updateProfile() {
-        if (existedProfile!!.isFilled()) {
-            Observable.fromCallable {
-                profilesRepository.updateProfile(existedProfile!!)
-            }.compose {
-                it.workInAsinc()
-            }.subscribe({
+    private fun checkTheProfiles() = launch {
+        try {
+            val profileWithSameName = profilesRepository.getProfileByName(newProfile.getName())
+            if (profileWithSameName != null) {
+                view.showToast(R.string.new_profile_existed)
+            } else {
+                createProfile()
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun createProfile() = launch {
+        try {
+            if (newProfile.isFilled()) {
+                profilesRepository.insertProfile(newProfile)
                 view.hideProfileSettingDialog()
-            }, {
-                view.showToast(R.string.new_profile_failed_to_update)
-                it.printStackTrace()
-            })
-        } else {
-            view.showToast(R.string.invalid_data)
+                view.hideKeyboard()
+                profiles.add(newProfile)
+                setData()
+            } else {
+                view.showToast(R.string.invalid_data)
+            }
+        } catch (e: Exception) {
+            view.showToast(R.string.new_profile_failed_to_create)
+            e.printStackTrace()
+        }
+    }
+
+    private fun updateProfile() = launch {
+        try {
+            if (existedProfile!!.isFilled()) {
+                profilesRepository.updateProfile(existedProfile!!)
+                view.hideProfileSettingDialog()
+            } else {
+                view.showToast(R.string.invalid_data)
+            }
+        } catch (e: Exception) {
+            view.showToast(R.string.new_profile_failed_to_update)
+            e.printStackTrace()
         }
     }
 

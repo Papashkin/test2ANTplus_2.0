@@ -11,11 +11,11 @@ import com.example.test2antplus.R
 import com.example.test2antplus.data.repositories.profiles.Profile
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
-import io.reactivex.Flowable
-import io.reactivex.Observable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+//import io.reactivex.Flowable
+//import io.reactivex.Observable
+//import io.reactivex.Single
+//import io.reactivex.android.schedulers.AndroidSchedulers
+//import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.dialog_program.view.*
 import java.io.File
 import java.io.FileOutputStream
@@ -59,17 +59,17 @@ fun Long.fullTimeFormat(): String {
     return String.format("%2d:%02d:%02d", hours, minutes, seconds)
 }
 
-fun <T> Single<T>.workInAsinc(): Single<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
+//fun <T> Single<T>.workInAsinc(): Single<T> =
+//    this.observeOn(AndroidSchedulers.mainThread())
+//        .subscribeOn(Schedulers.io())
 
-fun <T> Flowable<T>.workInAsinc(): Flowable<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
+//fun <T> Flowable<T>.workInAsinc(): Flowable<T> =
+//    this.observeOn(AndroidSchedulers.mainThread())
+//        .subscribeOn(Schedulers.io())
 
-fun <T> Observable<T>.workInAsinc(): Observable<T> =
-    this.observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
+//fun <T> Observable<T>.workInAsinc(): Observable<T> =
+//    this.observeOn(AndroidSchedulers.mainThread())
+//        .subscribeOn(Schedulers.io())
 
 /**
  * Установка стандартных параметров гистограммы

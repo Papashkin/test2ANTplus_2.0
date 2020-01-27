@@ -1,14 +1,14 @@
 package com.example.test2antplus.presentation.programs
 
-import android.annotation.SuppressLint
 import com.example.test2antplus.MainApplication
 import com.example.test2antplus.data.repositories.programs.Program
 import com.example.test2antplus.data.repositories.programs.ProgramsRepository
 import com.example.test2antplus.navigation.FragmentScreens
+import com.example.test2antplus.presentation.BasePresenter
 import com.example.test2antplus.presentation.BaseView
-import com.example.test2antplus.util.workInAsinc
-import io.reactivex.Single
+import kotlinx.coroutines.launch
 import ru.terrakok.cicerone.Router
+import java.lang.Exception
 import javax.inject.Inject
 
 
@@ -24,8 +24,7 @@ interface ProgramsView : BaseView {
     fun showSnackBar(programName: String)
 }
 
-@SuppressLint("CheckResult")
-class ProgramsPresenter(private val view: ProgramsView) {
+class ProgramsPresenter(private val view: ProgramsView) : BasePresenter<ProgramsView>() {
 
     @Inject
     lateinit var router: Router
@@ -46,18 +45,16 @@ class ProgramsPresenter(private val view: ProgramsView) {
         router.navigateTo(FragmentScreens.ProgramSettingsScreen(null))
     }
 
-    private fun updateProgramsList() {
-        programs.clear()
-        programsRepository.getAllPrograms()
-            .compose {
-                it.workInAsinc()
-            }.subscribe({ list ->
-                programs.addAll(list)
-                setData()
-            }, { error ->
-                error.printStackTrace()
-                setData()
-            })
+    private fun updateProgramsList() = launch {
+        try {
+            programs.clear()
+            programs.addAll(programsRepository.getAllPrograms())
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        finally {
+            setData()
+        }
     }
 
     private fun setData() {
@@ -73,22 +70,19 @@ class ProgramsPresenter(private val view: ProgramsView) {
         router.exit()
     }
 
-    fun onDeleteClick(position: Int) {
-        deletePosition = position
-        programToDelete = programs[position]
-        programs.remove(programToDelete!!)
-        Single.fromCallable {
+    fun onDeleteClick(position: Int) = launch {
+        try {
+            deletePosition = position
+            programToDelete = programs[position]
+            programs.remove(programToDelete!!)
             programsRepository.removeProgram(programToDelete!!)
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
             view.showSnackBar(programToDelete!!.getName())
             if (programs.isEmpty()) {
                 view.hideProgramsList()
             }
-        },{
-            it.printStackTrace()
-        })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun undoDelete() {
@@ -96,16 +90,13 @@ class ProgramsPresenter(private val view: ProgramsView) {
         programs.add(deletePosition, programToDelete!!)
     }
 
-    private fun undoDeleteProgram() {
-        Single.fromCallable {
+    private fun undoDeleteProgram() = launch {
+        try {
             programsRepository.insertProgram(programToDelete!!)
-        }.compose {
-            it.workInAsinc()
-        }.subscribe({
             view.updateAdapter()
-        },{
-            it.printStackTrace()
-        })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     fun onEditClick(id: Int) {

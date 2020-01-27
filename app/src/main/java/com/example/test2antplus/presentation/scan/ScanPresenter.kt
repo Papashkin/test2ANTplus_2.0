@@ -1,6 +1,6 @@
 package com.example.test2antplus.presentation.scan
 
-import android.annotation.SuppressLint
+//import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.dsi.ant.AntService
@@ -13,14 +13,16 @@ import com.example.test2antplus.R
 import com.example.test2antplus.ant.device.SelectedDevice
 import com.example.test2antplus.ant.service.AntRadioServiceConnection
 import com.example.test2antplus.navigation.FragmentScreens
+import com.example.test2antplus.presentation.BasePresenter
 import com.example.test2antplus.presentation.BaseView
-import com.example.test2antplus.util.workInAsinc
+//import com.example.test2antplus.util.workInAsinc
 import com.pawegio.kandroid.runOnUiThread
-import io.reactivex.Observable
+//import io.reactivex.Observable
+import kotlinx.coroutines.*
 import ru.terrakok.cicerone.Router
+import java.lang.Exception
 import java.util.*
 import javax.inject.Inject
-
 
 interface ScanView : BaseView {
     fun startScan()
@@ -31,7 +33,7 @@ interface ScanView : BaseView {
     fun saveSearchedDevices()
 }
 
-class ScanPresenter(private val view: ScanView) {
+class ScanPresenter(private val view: ScanView): BasePresenter<ScanView>() {
     companion object {
         const val TAG = "test2antplus"
     }
@@ -107,18 +109,27 @@ class ScanPresenter(private val view: ScanView) {
         doUnbindChannelService()
     }
 
-    @SuppressLint("CheckResult")
-    private fun doUnbindChannelService() {
-        Log.v(TAG, "Unbinding channel service...")
-        Observable.just(
+//    @SuppressLint("CheckResult")
+//    private fun doUnbindChannelService() {
+//        Log.v(TAG, "Unbinding channel service...")
+//        Observable.just(
+//            connection.closeBackgroundScanChannel()
+//        ).compose {
+//            it.workInAsinc()
+//        }.subscribe({
+//            Log.v(TAG, "Channel service was unbinded.")
+//        }, {
+//            it.printStackTrace()
+//        })
+//    }
+
+    private fun doUnbindChannelService() = launch {
+        try {
+            Log.v(TAG, "Unbinding channel service...")
             connection.closeBackgroundScanChannel()
-        ).compose {
-            it.workInAsinc()
-        }.subscribe({
-            Log.v(TAG, "Channel service was unbinded.")
-        }, {
-            it.printStackTrace()
-        })
+        } catch (e: Exception) {
+            Log.e(TAG, "Channel working failed with $e")
+        }
     }
 
     fun onDeviceClick() {
