@@ -1,6 +1,8 @@
 package com.antsfamily.biketrainer.ant.device
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc.CalculatedSpeedReceiver
@@ -70,67 +72,85 @@ class BikeCadenceDevice(
              */
             private fun subscribeToEvents() {
                 bcPcc?.subscribeCalculatedCadenceEvent { _, _, cadence ->
-                    getCadence.invoke(cadence.toString())
+                    Handler(Looper.getMainLooper()).post {
+                        getCadence.invoke(cadence.toString())
+                    }
                 }
 
                 bcPcc?.subscribeRawCadenceDataEvent { _, _, _, _ ->
+                    Handler(Looper.getMainLooper()).post {}
                 }
 
                 if (bcPcc!!.isSpeedAndCadenceCombinedSensor) {
-                    bsReleaseHandle = AntPlusBikeSpeedDistancePcc.requestAccess(
-                        context,
-                        bcPcc!!.antDeviceNumber,
-                        0,
-                        true,
-                        { result, resultCode, _ ->
-                            // Handle the result, connecting to events on success or reporting failure to user.
-                            when (resultCode) {
-                                RequestAccessResult.SUCCESS -> {
-                                    bsPcc = result
-                                    bsPcc?.subscribeCalculatedSpeedEvent(object :
-                                        CalculatedSpeedReceiver(BigDecimal(2.095)) {
-                                        override fun onNewCalculatedSpeed(
-                                            estTimestamp: Long,
-                                            eventFlags: EnumSet<EventFlag>,
-                                            speed: BigDecimal
-                                        ) {
-                                                getSpeed.invoke(speed.toString())
+                    Handler(Looper.getMainLooper()).post {
+                        bsReleaseHandle = AntPlusBikeSpeedDistancePcc.requestAccess(
+                            context,
+                            bcPcc!!.antDeviceNumber,
+                            0,
+                            true,
+                            { result, resultCode, _ ->
+                                // Handle the result, connecting to events on success or reporting failure to user.
+                                when (resultCode) {
+                                    RequestAccessResult.SUCCESS -> {
+                                        bsPcc = result
+                                        bsPcc?.subscribeCalculatedSpeedEvent(object :
+                                            CalculatedSpeedReceiver(BigDecimal(2.095)) {
+                                            override fun onNewCalculatedSpeed(
+                                                estTimestamp: Long,
+                                                eventFlags: EnumSet<EventFlag>,
+                                                speed: BigDecimal
+                                            ) {
+                                                Handler(Looper.getMainLooper()).post {
+                                                    getSpeed.invoke(speed.toString())
+                                                }
                                             }
-                                    })
+
+                                        })
+                                    }
+
+                                    RequestAccessResult.CHANNEL_NOT_AVAILABLE -> {
+                                    }//tv_calculatedSpeed.setText("CHANNEL NOT AVAILABLE")
+
+                                    RequestAccessResult.BAD_PARAMS -> {
+                                    }//tv_calculatedSpeed.setText("BAD_PARAMS")
+
+                                    RequestAccessResult.OTHER_FAILURE -> {
+                                    } //tv_calculatedSpeed.setText("OTHER FAILURE")
+
+                                    RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
+                                    } //tv_calculatedSpeed.setText("DEPENDENCY NOT INSTALLED")
+
+                                    else -> {
+                                    }//tv_calculatedSpeed.setText("UNRECOGNIZED ERROR: $resultCode")
                                 }
-
-                                RequestAccessResult.CHANNEL_NOT_AVAILABLE -> {
-                                }//tv_calculatedSpeed.setText("CHANNEL NOT AVAILABLE")
-
-                                RequestAccessResult.BAD_PARAMS -> {
-                                }//tv_calculatedSpeed.setText("BAD_PARAMS")
-
-                                RequestAccessResult.OTHER_FAILURE -> {
-                                } //tv_calculatedSpeed.setText("OTHER FAILURE")
-
-                                RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
-                                } //tv_calculatedSpeed.setText("DEPENDENCY NOT INSTALLED")
-
-                                else -> {
-                                }//tv_calculatedSpeed.setText("UNRECOGNIZED ERROR: $resultCode")
-                            }
-                        },
-                        // Receives state changes and shows it on the status display line
-                        { newDeviceState ->
-                            if (newDeviceState == DeviceState.DEAD) {
-                                bsPcc = null
-                            }
-                        })
+                            },
+                            // Receives state changes and shows it on the status display line
+                            { newDeviceState ->
+                                Handler(Looper.getMainLooper()).post {
+                                    if (newDeviceState != DeviceState.TRACKING) {
+                                    }
+                                    if (newDeviceState == DeviceState.DEAD) {
+                                        bsPcc = null
+                                    }
+                                }
+                            })
+                    }
                 } else {
                     // Subscribe to the events available in the pure cadence profile
                     bcPcc?.subscribeCumulativeOperatingTimeEvent { _, _, _ ->
+                        Handler(Looper.getMainLooper()).post {
+                        }
                     }
 
                     bcPcc?.subscribeBatteryStatusEvent { _, _, _, _ ->
+                        Handler(Looper.getMainLooper()).post {
+                        }
                     }
 
                     bcPcc?.subscribeMotionAndCadenceDataEvent { _, _, isPedallingStopped ->
-                        if (isPedallingStopped) showToast.invoke("Крути, сука!")
+                        Handler(Looper.getMainLooper()).post {
+                            if (isPedallingStopped) showToast.invoke("Крути, сука!")
+                        }
                     }
                 }
             }
@@ -138,8 +158,10 @@ class BikeCadenceDevice(
 
     // Receives state changes and shows it on the status display line
     val mDeviceStateChangeReceiver = AntPluginPcc.IDeviceStateChangeReceiver { state ->
-        if (state == DeviceState.DEAD) {
-            bcPcc = null
+        Handler(Looper.getMainLooper()).post {
+            if (state == DeviceState.DEAD) {
+                bcPcc = null
+            }
         }
     }
 }

@@ -34,7 +34,6 @@
             app:layout_constraintStart_toStartOf="@id/textViewHR"
             app:layout_constraintEnd_toEndOf="@id/textViewHR"/>
 
-
     <TextView
             android:id="@+id/textViewCadence"
             android:text="@string/text_cadence"
@@ -60,7 +59,6 @@
             app:layout_constraintTop_toBottomOf="@id/textViewCadence"
             app:layout_constraintStart_toStartOf="@id/textViewCadence"
             app:layout_constraintEnd_toEndOf="@id/textViewCadence"/>
-
 
     <TextView
             android:id="@+id/textViewSpeed"
@@ -144,7 +142,6 @@
             app:layout_constraintStart_toStartOf="@id/textViewDistance"
             app:layout_constraintEnd_toEndOf="@id/textViewDistance"/>
 
-
     <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/workGraph"
             android:layout_width="match_parent"
@@ -152,10 +149,8 @@
             android:layout_marginTop="20dp"
             android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
-            android:elevation="4dp"
             android:background="@drawable/shape_value_info"
-            app:layout_constraintTop_toBottomOf="@id/distanceValue"
-            android:visibility="invisible"/>
+            app:layout_constraintTop_toBottomOf="@id/distanceValue" />
 
     <Button
             android:id="@+id/buttonStartWork"

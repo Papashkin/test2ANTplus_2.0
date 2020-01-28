@@ -4,6 +4,8 @@
     <string name="app_name">Ant\'s bike trainer</string>
     <string name="start">Старт</string>
     <string name="programs">Программы</string>
+    <string name="profiles">Профили</string>
+    <string name="save">Сохранить</string>
 
     <!-- ====== Работа с каналами ANT+ ====== -->
     <string name="channel_not_available">Канал недоступен</string>
@@ -37,16 +39,16 @@
     <string name="profiles_empty_list">Нет ни одного профиля.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
 
     <!-- ====== Настройки программы ====== -->
-    <string name="program_settings_name">Название программы:</string>
+    <string name="program_settings_name">Название программы</string>
     <string name="program_settings_name_hint">название программы</string>
-    <string name="program_settings_time">Время (мин):</string>
-    <string name="program_settings_rest_time">Отдых (мин):</string>
-    <string name="program_settings_power">Мощность (Вт):</string>
-    <string name="program_settings_count">Кол-во:</string>
-    <string name="program_settings_rest_power">Отдых (Вт):</string>
-    <string name="program_settings_max_power">Макс. Мощность (Вт):</string>
-    <string name="program_settings_min_power">Мин. Мощность (Вт):</string>
-    <string name="program_setting_common_time">Общее время (мин):</string>
+    <string name="program_settings_time">Время (мин)</string>
+    <string name="program_settings_rest_time">Отдых (мин)</string>
+    <string name="program_settings_power">Мощность (Вт)</string>
+    <string name="program_settings_count">Повторы</string>
+    <string name="program_settings_rest_power">Отдых (Вт)</string>
+    <string name="program_settings_max_power">Макс. Мощность (Вт)</string>
+    <string name="program_settings_min_power">Мин. Мощность (Вт)</string>
+    <string name="program_setting_common_time">Общее время (мин)</string>
 
     <!-- ====== Типы программ ====== -->
     <string name="program_type_segment">Сегмент</string>
@@ -68,6 +70,7 @@
 
     <!-- ====== Сохранение данных ====== -->
     <string name="invalid_data">Некорректные данные</string>
+    <string name="invalid_program_name">Некорректное имя программы</string>
     <string name="program_settings_this_program_is_existed">Программа с таким названием уже существует</string>
     <string name="new_profile_existed">Профиль с таким именем уже существует</string>
     <string name="new_profile_failed_to_update">Ошибка при обновлении программы. Попробуйте ещё раз</string>

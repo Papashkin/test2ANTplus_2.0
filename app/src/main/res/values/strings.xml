@@ -3,7 +3,9 @@
     <!-- ====== Common ====== -->
     <string name="app_name">Ant\'s bike trainer</string>
     <string name="programs">Programs</string>
+    <string name="profiles">Profiles</string>
     <string name="start">Start</string>
+    <string name="save">Save</string>
 
     <!-- ====== Работа с каналами ANT+ ====== -->
     <string name="channel_not_available">Channel not available</string>
@@ -37,16 +39,16 @@
     <string name="profiles_empty_list">You didn\'t create any profiles.\nPlease click the \"plus\" in top of the screen to create one.</string>
 
     <!-- ====== Program settings ====== -->
-    <string name="program_settings_name">Program Name:</string>
+    <string name="program_settings_name">Program Name</string>
     <string name="program_settings_name_hint">program name</string>
-    <string name="program_settings_time">Time (min):</string>
-    <string name="program_settings_rest_time">Rest time (min):</string>
-    <string name="program_settings_power">Power (W):</string>
-    <string name="program_settings_count">Count:</string>
-    <string name="program_settings_rest_power">Rest power (W):</string>
-    <string name="program_settings_max_power">Max. Power (W):</string>
-    <string name="program_settings_min_power">Min. Power (W):</string>
-    <string name="program_setting_common_time">Common time (min):</string>
+    <string name="program_settings_time">Time (min)</string>
+    <string name="program_settings_rest_time">Rest time (min)</string>
+    <string name="program_settings_power">Power (W)</string>
+    <string name="program_settings_count">Count</string>
+    <string name="program_settings_rest_power">Rest power (W)</string>
+    <string name="program_settings_max_power">Max. Power (W)</string>
+    <string name="program_settings_min_power">Min. Power (W)</string>
+    <string name="program_setting_common_time">Common time (min)</string>
 
     <!-- ====== Program types ====== -->
     <string name="program_type_segment">Segment</string>
@@ -68,6 +70,7 @@
 
     <!-- ====== Data saving ====== -->
     <string name="invalid_data">invalid data</string>
+    <string name="invalid_program_name">invalid program name</string>
     <string name="program_settings_this_program_is_existed">Program with the same name is exist in database</string>
     <string name="new_profile_failed_to_update">Update of the profile failed. Please try it again</string>
     <string name="new_profile_failed_to_create">New profile creating failed. Please try it again</string>

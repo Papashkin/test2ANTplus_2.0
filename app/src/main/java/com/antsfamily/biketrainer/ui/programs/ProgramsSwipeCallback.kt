@@ -6,7 +6,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.ui.programs.ProgramsAdapter
 
 class ProgramsSwipeCallback(private val adapter: ProgramsAdapter) : ItemTouchHelper.Callback() {
 
