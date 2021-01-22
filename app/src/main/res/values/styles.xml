@@ -10,22 +10,22 @@
 
     <style name="MainToolbar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/full_black</item>
-        <item name="android:textColor">@color/pure_white</item>
+        <item name="android:textColor">#ffe500</item>
         <item name="android:elevation">6dp</item>
     </style>
 
-    <style name="ProfileList" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/pure_white</item>
-        <item name="android:textColor">@color/full_black</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:gravity">start</item>
-    </style>
+
 
     <style name="ProfileListLayout" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:background">@color/pure_white</item>
         <item name="android:layout_margin">2dp</item>
         <item name="android:elevation">4dp</item>
+    </style>
+
+    <style name="TitleText">
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/pure_white</item>
     </style>
 
 </resources>

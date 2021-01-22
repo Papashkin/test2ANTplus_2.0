@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.data.repositories.programs.Program
+import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
@@ -43,10 +43,10 @@ class ProgramsAdapter(
         onEditClick.invoke(programs[position].getId())
     }
 
-    fun undoDelete() {
-        programs.add(deletedPosition, deletedItem)
-        notifyDataSetChanged()
-    }
+//    fun undoDelete() {
+//        programs.add(deletedPosition, deletedItem)
+//        notifyDataSetChanged()
+//    }
 
     override fun getItemCount(): Int = programs.size
 
@@ -54,12 +54,11 @@ class ProgramsAdapter(
         holder.bind(this.programs[position])
     }
 
-    fun setProgramList(newPrograms: ArrayList<Program>) {
+    fun setProgramList(newPrograms: List<Program>) {
         programs.clear()
         programs.addAll(newPrograms)
         notifyDataSetChanged()
     }
-
 
     inner class ProgramViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val programName = view.findViewById<TextView>(R.id.textProgramName)

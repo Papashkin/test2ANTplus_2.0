@@ -3,7 +3,8 @@ package com.antsfamily.biketrainer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.antsfamily.biketrainer.MainApplication.Companion.PROGRAM_IMAGES_PATH
-import com.antsfamily.biketrainer.navigation.FragmentScreens
+import com.antsfamily.biketrainer.util.navigation.FragmentScreens
+import com.antsfamily.biketrainer.R
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.NavigatorHolder
 import ru.terrakok.cicerone.Router

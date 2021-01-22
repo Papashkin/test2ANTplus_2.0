@@ -1,6 +1,8 @@
 package com.antsfamily.biketrainer.ant.device
 
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc.CalculatedAccumulatedDistanceReceiver
@@ -82,7 +84,9 @@ class BikeSpeedDistanceDevice(
                             eventFlags: EnumSet<EventFlag>,
                             speed: BigDecimal
                         ) {
-                            getSpeed.invoke(speed.setScale(1, 0).toString())
+                            Handler(Looper.getMainLooper()).post {
+                                getSpeed.invoke(speed.setScale(1, 0).toString())
+                            }
                         }
                     })
 
@@ -93,64 +97,82 @@ class BikeSpeedDistanceDevice(
                             eventFlags: EnumSet<EventFlag>,
                             distance: BigDecimal
                         ) {
-                            getDistance.invoke(distance.setScale(2, 0).toString())
+                            Handler(Looper.getMainLooper()).post {
+                                getDistance.invoke(distance.setScale(2, 0).toString())
+                            }
                         }
                     })
 
                 bsdPcc?.subscribeRawSpeedAndDistanceDataEvent { _, _, speed, distance ->
-                    getSpeed.invoke(speed.toString())
-                    getDistance.invoke(distance.toString())
+                    Handler(Looper.getMainLooper()).post {
+                        getSpeed.invoke(speed.toString())
+                        getDistance.invoke(distance.toString())
+                    }
                 }
 
                 if (bsdPcc!!.isSpeedAndCadenceCombinedSensor) {
-                    bcReleaseHandle = AntPlusBikeCadencePcc.requestAccess(
-                        context,
-                        bsdPcc!!.antDeviceNumber,
-                        0,
-                        true,
-                        { result, resultCode, _ ->
-                            // IPluginAccessResultReceiver<AntPlusBikeCadencePcc> :
-                            // Handle the result, connecting to events
-                            // on success or reporting failure to user.
-                            when (resultCode) {
-                                RequestAccessResult.SUCCESS -> {
-                                    bcPcc = result
-                                    bcPcc?.let {
-                                        it.subscribeCalculatedCadenceEvent { _, _, cadence ->
-                                            getCadence.invoke(cadence.toString())
+                    Handler(Looper.getMainLooper()).post {
+                        bcReleaseHandle = AntPlusBikeCadencePcc.requestAccess(
+                            context,
+                            bsdPcc!!.antDeviceNumber,
+                            0,
+                            true,
+                            { result, resultCode, _ ->
+                                // IPluginAccessResultReceiver<AntPlusBikeCadencePcc> :
+                                // Handle the result, connecting to events
+                                // on success or reporting failure to user.
+                                when (resultCode) {
+                                    RequestAccessResult.SUCCESS -> {
+                                        bcPcc = result
+                                        bcPcc?.let {
+                                            it.subscribeCalculatedCadenceEvent { _, _, cadence ->
+                                                Handler(Looper.getMainLooper()).post {
+                                                    getCadence.invoke(cadence.toString())
+                                                }
+                                            }
                                         }
                                     }
-                                }
-                                RequestAccessResult.CHANNEL_NOT_AVAILABLE -> {
-                                }
+                                    RequestAccessResult.CHANNEL_NOT_AVAILABLE -> {
+                                    }
 
-                                RequestAccessResult.BAD_PARAMS -> {
-                                }
+                                    RequestAccessResult.BAD_PARAMS -> {
+                                    }
 
-                                RequestAccessResult.OTHER_FAILURE -> {
-                                }
+                                    RequestAccessResult.OTHER_FAILURE -> {
+                                    }
 
-                                RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
-                                }
+                                    RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
+                                    }
 
-                                else -> {
-                                    showToast.invoke("Unrecognized result: $resultCode")
+                                    else -> {
+                                        showToast.invoke("Unrecognized result: $resultCode")
+                                    }
                                 }
-                            }
-                        },
-                        // Receives state changes and shows it on the status display line
+                            },
+                            // Receives state changes and shows it on the status display line
 
-                        { state ->
-                            // AntPluginPcc.IDeviceStateChangeReceiver:
-                            if (state == DeviceState.DEAD) {
-                                bcPcc = null
-                            }
-                        })
+                            { state ->
+                                // AntPluginPcc.IDeviceStateChangeReceiver:
+                                Handler(Looper.getMainLooper()).post {
+                                    if (state == DeviceState.DEAD) {
+                                        bcPcc = null
+                                    }
+                                }
+                            })
+                    }
                 } else {
+                    // Subscribe to the events available in the pure cadence profile
+                    Handler(Looper.getMainLooper()).post {
+                    }
+
                     bsdPcc?.subscribeCumulativeOperatingTimeEvent { _, _, _ ->
+                        Handler(Looper.getMainLooper()).post {
+                        }
                     }
 
                     bsdPcc?.subscribeMotionAndSpeedDataEvent { _, _, _ ->
+                        Handler(Looper.getMainLooper()).post {
+                        }
                     }
                 }
             }
@@ -158,8 +180,10 @@ class BikeSpeedDistanceDevice(
 
     // Receives state changes and shows it on the status display line
     val mDeviceStateChangeReceiver = AntPluginPcc.IDeviceStateChangeReceiver { newDeviceState ->
-        if (newDeviceState == DeviceState.DEAD) {
-            bsdPcc = null
+        Handler(Looper.getMainLooper()).post {
+            if (newDeviceState == DeviceState.DEAD) {
+                bsdPcc = null
+            }
         }
     }
 }

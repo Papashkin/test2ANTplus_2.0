@@ -4,21 +4,22 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.data.repositories.profiles.Profile
-import com.antsfamily.biketrainer.presentation.BaseFragment
-import com.antsfamily.biketrainer.presentation.profiles.ProfilesPresenter
-import com.antsfamily.biketrainer.presentation.profiles.ProfilesView
+import com.antsfamily.biketrainer.data.models.Profile
+import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
+import com.antsfamily.biketrainer.presentation.withFactory
+import com.antsfamily.biketrainer.ui.BaseFragment
+import com.antsfamily.biketrainer.ui.util.afterTextChange
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.dialog_new_profile.*
 import kotlinx.android.synthetic.main.fragment_profiles.*
 
-class ProfilesFragment : BaseFragment(R.layout.fragment_profiles),
-    ProfilesView {
+class ProfilesFragment : BaseFragment(R.layout.fragment_profiles) {
 
-    private lateinit var presenter: ProfilesPresenter
+    override val viewModel: ProfilesViewModel by viewModels { withFactory(viewModelFactory) }
+
     private lateinit var profilesAdapter: ProfilesAdapter
     private lateinit var profileCallback: ItemTouchHelper.Callback
 
@@ -28,122 +29,53 @@ class ProfilesFragment : BaseFragment(R.layout.fragment_profiles),
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        presenter =
-            ProfilesPresenter(
-                this
-            )
-
         toolbarProfiles.setNavigationIcon(R.drawable.ic_arrow_back_32)
-        toolbarProfiles.setNavigationOnClickListener {
-            presenter.onBackPressed()
-        }
-
-        activity?.let {
-            profilesAdapter =
-                ProfilesAdapter(
-                    onDeleteClick = { pos ->
-                        presenter.onDeleteClick(pos)
-                    },
-                    onEditClick = { id ->
-                        presenter.onEditProfileClick(id)
-                    }, onItemClick = { id ->
-                        hideProfileSettingDialog()
-                        presenter.selectProfile(id)
-                    })
-
-            profileCallback =
-                ProfilesSwipeCallback(
-                    profilesAdapter
-                )
+        toolbarProfiles.setNavigationOnClickListener { viewModel.onBackPressed() }
+        requireActivity().let {
+            profilesAdapter = ProfilesAdapter(
+                onDeleteClick = { pos -> viewModel.onDeleteClick(pos) },
+                onEditClick = { id -> viewModel.onEditProfileClick(id)
+                }, onItemClick = { id ->
+                    hideProfileSettingDialog()
+                    viewModel.selectProfile(id, false)
+                }
+            )
+            profileCallback = ProfilesSwipeCallback(profilesAdapter)
             ItemTouchHelper(profileCallback).attachToRecyclerView(listProfiles)
             listProfiles.adapter = profilesAdapter
         }
-
-        editName.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setName(it.toString())
-                } else {
-                    presenter.setName("")
-                }
-            }
-        }
-
-        editAge.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setAge(it.toString().toInt())
-                } else {
-                    presenter.setAge(0)
-                }
-            }
-        }
-
-        editWeight.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setWeight(it.toString().toFloat())
-                } else {
-                    presenter.setWeight(0.0F)
-                }
-            }
-        }
-
-        editHeight.textWatcher {
-            afterTextChanged {
-                if (!it.isNullOrEmpty()) {
-                    presenter.setHeight(it.toString().toFloat())
-                } else {
-                    presenter.setHeight(0.0F)
-                }
-            }
-        }
-
+        editName.afterTextChange { viewModel.setName(it.toString()) }
+        editAge.afterTextChange { viewModel.setAge(it.toString().toInt()) }
+        editWeight.afterTextChange { viewModel.setWeight(it.toString().toFloat()) }
+        editHeight.afterTextChange { viewModel.setHeight(it.toString().toFloat()) }
         setListeners()
     }
 
     private fun setListeners() {
-        buttonAddProfile.setOnClickListener {
-            presenter.addNewProfileClick()
-        }
-
-        radioMale.setOnClickListener {
-            presenter.setGender("M")
-        }
-
-        radioFemale.setOnClickListener {
-            presenter.setGender("F")
-        }
-
-        btnCreate.setOnClickListener {
-            presenter.onCreateBtnClick()
-        }
-
-        btnCancel.setOnClickListener {
-            presenter.onCancelClick()
-        }
-
-        bottomDialogBackground.setOnClickListener {
-            showExitDialog()
-        }
+        buttonAddProfile.setOnClickListener { viewModel.addNewProfileClick() }
+        radioMale.setOnClickListener { viewModel.setGender("M") }
+        radioFemale.setOnClickListener { viewModel.setGender("F") }
+        btnCreate.setOnClickListener {  } //viewModel.onCreateBtnClick() }
+//        btnCancel.setOnClickListener { viewModel.onCancelClick() }
+//        bottomDialogBackground.setOnClickListener { showExitDialog() }
     }
 
     private fun showExitDialog() {
-        if (presenter.checkProfileFilling()) {
-            AlertDialog.Builder(context!!)
-                .setMessage(getString(R.string.dialog_message_are_you_sure))
-                .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
-                    closeProfileDialog()
-                    dialog.dismiss()
-                }
-                .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
-                    dialog.dismiss()
-                }
-                .create()
-                .show()
-        } else {
-            closeProfileDialog()
-        }
+//        if (viewModel.checkProfileFilling()) {
+//            AlertDialog.Builder(requireContext())
+//                .setMessage(getString(R.string.dialog_message_are_you_sure))
+//                .setPositiveButton(getString(R.string.dialog_yes)) { dialog, _ ->
+//                    closeProfileDialog()
+//                    dialog.dismiss()
+//                }
+//                .setNegativeButton(getString(R.string.dialog_no)) { dialog, _ ->
+//                    dialog.dismiss()
+//                }
+//                .create()
+//                .show()
+//        } else {
+//            closeProfileDialog()
+//        }
     }
 
     private fun closeProfileDialog() {
@@ -151,8 +83,8 @@ class ProfilesFragment : BaseFragment(R.layout.fragment_profiles),
         hideProfileSettingDialog()
     }
 
-    override fun setProfilesList(newProfiles: ArrayList<Pair<String, Int>>) {
-        profilesAdapter.setProfileList(newProfiles)
+    fun setProfilesList(newProfiles: ArrayList<Pair<String, Int>>) {
+//        profilesAdapter.setProfileList(listOf(newProfiles))
         pbProfiles.visibility = View.GONE
         if (newProfiles.isEmpty()) {
             hideProfilesList()
@@ -161,40 +93,40 @@ class ProfilesFragment : BaseFragment(R.layout.fragment_profiles),
         }
     }
 
-    override fun showProfilesList() {
+    fun showProfilesList() {
         emptyListProfiles.visibility = View.GONE
         listProfiles.visibility = View.VISIBLE
     }
 
-    override fun hideProfilesList() {
+    fun hideProfilesList() {
         listProfiles.visibility = View.GONE
         emptyListProfiles.visibility = View.VISIBLE
     }
 
-    override fun showLoading() {
+    fun showLoading() {
         pbProfiles.visibility = View.VISIBLE
     }
 
-    override fun hideLoading() {
+    fun hideLoading() {
         pbProfiles.visibility = View.GONE
     }
 
-    override fun showSnackBar(profileName: String) {
+    fun showSnackBar(profileName: String) {
         Snackbar
             .make(profileListLayout, "Profile \"$profileName\" was deleted", Snackbar.LENGTH_LONG)
             .setActionTextColor(Color.YELLOW)
             .setAction("UNDO") {
-                presenter.undoDelete()
+                viewModel.undoDelete()
             }
             .show()
     }
 
-    override fun updateAdapter() {
+    fun updateAdapter() {
         profilesAdapter.notifyDataSetChanged()
     }
 
-    override fun hideProfileSettingDialog() {
-        newProfileBottomDialog.visibility = View.GONE
+    fun hideProfileSettingDialog() {
+//        newProfileBottomDialog.visibility = View.GONE
         editName.text.clear()
         editAge.text.clear()
         editWeight.text.clear()
@@ -203,14 +135,14 @@ class ProfilesFragment : BaseFragment(R.layout.fragment_profiles),
         hideKeyboard()
     }
 
-    override fun showProfileSettingDialog(profile: Profile) {
-        newProfileBottomDialog.visibility = View.VISIBLE
+    fun showProfileSettingDialog(profile: Profile) {
+//        newProfileBottomDialog.visibility = View.VISIBLE
 
-        toolbarNewProfile.title = if (profile.getName() == "") {
-            getString(R.string.toolbar_new_profile)
-        } else {
-            getString(R.string.toolbar_update_profile)
-        }
+//        toolbarNewProfile.title = if (profile.getName() == "") {
+//            getString(R.string.toolbar_new_profile)
+//        } else {
+//            getString(R.string.toolbar_update_profile)
+//        }
 
         if (profile.getName() == "") {
             editName.setText(profile.getName())

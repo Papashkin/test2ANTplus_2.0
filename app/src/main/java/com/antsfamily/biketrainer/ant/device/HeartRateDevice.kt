@@ -1,10 +1,11 @@
 package com.antsfamily.biketrainer.ant.device
 
+import android.os.Handler
+import android.os.Looper
 import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceState
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
 import com.dsi.ant.plugins.antplus.pccbase.AntPluginPcc
-import com.pawegio.kandroid.runOnUiThread
 
 /**
  * Base class to connects to Heart Rate Plugin
@@ -71,7 +72,7 @@ class HeartRateDevice(
 
         hrPcc?.let {
             it.subscribeHeartRateDataEvent { _, _, computedHeartRate, _, _, _ ->
-                runOnUiThread {
+                Handler(Looper.getMainLooper()).post {
                     getHearRate.invoke(computedHeartRate.toString())
                 }
             }

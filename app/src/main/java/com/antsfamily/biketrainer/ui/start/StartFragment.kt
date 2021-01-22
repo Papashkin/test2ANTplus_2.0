@@ -2,19 +2,18 @@ package com.antsfamily.biketrainer.ui.start
 
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.MainApplication.Companion.PERMISSION_FOR_APP
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.presentation.BaseFragment
-import com.antsfamily.biketrainer.presentation.start.StartPresenter
-import com.antsfamily.biketrainer.presentation.start.StartView
+import com.antsfamily.biketrainer.presentation.start.StartViewModel
+import com.antsfamily.biketrainer.presentation.withFactory
+import com.antsfamily.biketrainer.ui.BaseFragment
 import kotlinx.android.synthetic.main.fragment_start.*
 
+class StartFragment : BaseFragment(R.layout.fragment_start) {
 
-class StartFragment : BaseFragment(R.layout.fragment_start),
-    StartView {
-
-    private lateinit var presenter: StartPresenter
+    override val viewModel: StartViewModel by viewModels { withFactory(viewModelFactory)  }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         MainApplication.graph.inject(this)
@@ -23,23 +22,15 @@ class StartFragment : BaseFragment(R.layout.fragment_start),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        presenter =
-            StartPresenter(this)
-
         setListeners()
     }
 
     private fun setListeners() {
-        btnProfiles.setOnClickListener {
-            presenter.onProfileClick()
-        }
-
-        btnPrograms.setOnClickListener {
-            presenter.onProgramClick()
-        }
+        btnProfiles.setOnClickListener { viewModel.onProfileClick() }
+        btnPrograms.setOnClickListener { viewModel.onProgramClick() }
     }
 
-    override fun requestPermissions(permissions: Array<String>) {
+    fun requestPermissions(permissions: Array<String>) {
         requestPermissions(permissions, PERMISSION_FOR_APP)
     }
 

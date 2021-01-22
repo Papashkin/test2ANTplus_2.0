@@ -8,15 +8,9 @@ import android.graphics.Color
 import android.view.View
 import androidx.appcompat.app.AlertDialog
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.data.repositories.profiles.Profile
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
-//import io.reactivex.Flowable
-//import io.reactivex.Observable
-//import io.reactivex.Single
-//import io.reactivex.android.schedulers.AndroidSchedulers
-//import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.dialog_program.view.*
+import kotlinx.android.synthetic.main.dialog_loading.view.*
 import java.io.File
 import java.io.FileOutputStream
 import java.util.concurrent.TimeUnit
@@ -26,7 +20,7 @@ import java.util.concurrent.TimeUnit
  */
 fun showDialog(activity: Activity, text: String): Dialog? {
     if (!activity.isFinishing) {
-        val contentView = View.inflate(activity, R.layout.dialog_program, null)
+        val contentView = View.inflate(activity, R.layout.dialog_loading, null)
         val dialog = AlertDialog.Builder(activity).create()
         dialog.setCanceledOnTouchOutside(false)
         dialog.show()
@@ -59,18 +53,6 @@ fun Long.fullTimeFormat(): String {
     return String.format("%2d:%02d:%02d", hours, minutes, seconds)
 }
 
-//fun <T> Single<T>.workInAsinc(): Single<T> =
-//    this.observeOn(AndroidSchedulers.mainThread())
-//        .subscribeOn(Schedulers.io())
-
-//fun <T> Flowable<T>.workInAsinc(): Flowable<T> =
-//    this.observeOn(AndroidSchedulers.mainThread())
-//        .subscribeOn(Schedulers.io())
-
-//fun <T> Observable<T>.workInAsinc(): Observable<T> =
-//    this.observeOn(AndroidSchedulers.mainThread())
-//        .subscribeOn(Schedulers.io())
-
 /**
  * Установка стандартных параметров гистограммы
  */
@@ -91,7 +73,7 @@ fun BarChart.setCommonParams(data: BarData, timeLabels: List<String>) = this.als
     it.data.barWidth = 1f
     it.data.setValueTextSize(8f)
     it.data.setValueFormatter { _, entry, _, _ ->
-            timeLabels[entry.x.toInt()]
+        timeLabels[entry.x.toInt()]
     }
 }
 
@@ -116,8 +98,10 @@ fun BarChart.setWorkParams(data: BarData) = this.also {
 }
 
 fun String.convertToLatinScript(): String {
-    val russianScript = "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split(" ")
-    val latinScript = "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch \" y ' e yu ya".split(" ")
+    val russianScript =
+        "а б в г д е ё ж з и й к л м н о п р с т у ф х ц ч ш щ ъ ы ь э ю я".split(" ")
+    val latinScript =
+        "a b v g d e yo zh z i y k l m n o p r s t u f kh ts ch sh shch \" y ' e yu ya".split(" ")
     var convertedText = ""
 
     return try {
@@ -164,7 +148,3 @@ fun BarChart.saveProgramAsImage(name: String): Boolean {
         return false
     }
 }
-
-fun Profile.isFilled(): Boolean = this.getName().isNotEmpty() && this.getAge() != 0 && this.getWeight() != 0.0F && this.getHeight() != 0.0F && this.getGender() != ""
-
-fun Profile.isSomethingFilled(): Boolean = this.getName().isNotEmpty() || this.getAge() != 0 || this.getWeight() != 0.0F || this.getHeight() != 0.0F || this.getGender() != ""
