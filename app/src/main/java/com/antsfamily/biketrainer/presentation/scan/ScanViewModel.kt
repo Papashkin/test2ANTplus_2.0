@@ -14,6 +14,7 @@ import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.ant.device.SelectedDevice
 import com.antsfamily.biketrainer.ant.service.AntRadioServiceConnection
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import java.util.*
@@ -30,7 +31,7 @@ val deviceList: EnumSet<DeviceType> = EnumSet.of(
 )
 
 class ScanViewModel @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : StatefulViewModel<ScanViewModel.State>(State()) {
     private val TAG = ScanViewModel::class.java.simpleName.toUpperCase(Locale.getDefault())
 

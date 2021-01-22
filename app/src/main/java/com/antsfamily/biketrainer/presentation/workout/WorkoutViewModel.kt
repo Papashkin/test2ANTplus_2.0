@@ -18,12 +18,13 @@ import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 class WorkoutViewModel @Inject constructor(
-    private val context: Context
+    @ApplicationContext private val context: Context
 ) : StatefulViewModel<WorkoutViewModel.State>(State()) {
 
     data class State(
