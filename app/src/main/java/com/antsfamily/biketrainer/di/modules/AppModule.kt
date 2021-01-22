@@ -1,7 +1,6 @@
 package com.antsfamily.biketrainer.di.modules
 
 import android.content.Context
-import androidx.annotation.NonNull
 import androidx.room.Room
 import com.antsfamily.biketrainer.data.local.database.AntsBikeTrainerDatabase
 import com.antsfamily.biketrainer.data.local.repositories.ProfilesDao
@@ -10,36 +9,33 @@ import com.antsfamily.biketrainer.data.local.repositories.ProgramsDao
 import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
+@InstallIn(ApplicationComponent::class)
 @Module
-class AppModule(@NonNull private val context: Context) {
+object AppModule {
+
+//    @Provides
+//    fun provideContext(context: Context) = context
 
     @Provides
     @Singleton
-    fun getContext() = context
+    fun provideBikeTrainerDatabase(@ApplicationContext appContext: Context): AntsBikeTrainerDatabase =
+        Room.databaseBuilder(appContext, AntsBikeTrainerDatabase::class.java, "AntBikeTrainer")
+            .build()
 
     @Provides
-    @Singleton
-    fun getBikeTrainerDatabase(): AntsBikeTrainerDatabase = Room.databaseBuilder(
-        context,
-        AntsBikeTrainerDatabase::class.java,
-        "AntBikeTrainer"
-    ).build()
+    fun provideProfileDao(database: AntsBikeTrainerDatabase) = database.profileDao()
 
     @Provides
-    @Singleton
-    fun getProfileDao(database: AntsBikeTrainerDatabase) = database.profileDao()
+    fun provideProfilesRepository(dao: ProfilesDao) = ProfilesRepository(dao)
 
     @Provides
-    @Singleton
-    fun getProfilesRepository(dao: ProfilesDao) = ProfilesRepository(dao)
+    fun provideProgramDao(database: AntsBikeTrainerDatabase) = database.programsDao()
 
     @Provides
-    @Singleton
-    fun getProgramDao(database: AntsBikeTrainerDatabase) = database.programsDao()
-
-    @Provides
-    @Singleton
-    fun getProgramsRepository(dao: ProgramsDao) = ProgramsRepository(dao)
+    fun provideProgramsRepository(dao: ProgramsDao) = ProgramsRepository(dao)
 }

@@ -10,8 +10,11 @@ import com.antsfamily.biketrainer.presentation.start.StartViewModel
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import dagger.Binds
 import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import dagger.multibindings.IntoMap
 
+@InstallIn(ApplicationComponent::class)
 @Module
 abstract class ViewModelsModule {
 

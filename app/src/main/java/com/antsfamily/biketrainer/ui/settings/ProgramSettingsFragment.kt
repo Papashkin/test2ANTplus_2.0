@@ -8,12 +8,11 @@ import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.data.models.ProgramType
-import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.presentation.programSettings.ProgramSettingsViewModel
+import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.ui.util.afterTextChange
 import com.antsfamily.biketrainer.util.setCommonParams
@@ -25,8 +24,10 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_program_settings.*
 
+@AndroidEntryPoint
 class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings) {
     companion object {
         const val MODIFIED_PROGRAM_NAME = "modified program name"
@@ -44,11 +45,6 @@ class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings)
     }
 
     override val viewModel: ProgramSettingsViewModel by viewModels { withFactory(viewModelFactory) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        MainApplication.graph.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onPause() {
         super.onPause()

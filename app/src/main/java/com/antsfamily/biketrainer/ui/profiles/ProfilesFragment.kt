@@ -3,10 +3,8 @@ package com.antsfamily.biketrainer.ui.profiles
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
@@ -14,19 +12,16 @@ import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.ui.util.afterTextChange
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_profiles.*
 
+@AndroidEntryPoint
 class ProfilesFragment : BaseFragment(R.layout.fragment_profiles) {
 
     override val viewModel: ProfilesViewModel by viewModels { withFactory(viewModelFactory) }
 
     private lateinit var profilesAdapter: ProfilesAdapter
     private lateinit var profileCallback: ItemTouchHelper.Callback
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        MainApplication.graph.inject(this)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         toolbarProfiles.setNavigationIcon(R.drawable.ic_arrow_back_32)

@@ -7,7 +7,6 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.ItemTouchHelper
-import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.MainApplication.Companion.ACTION_WORK_SENDING
 import com.antsfamily.biketrainer.MainApplication.Companion.ARGS_PROGRAM
 import com.antsfamily.biketrainer.R
@@ -16,9 +15,11 @@ import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_programs.*
 import javax.inject.Inject
 
+@AndroidEntryPoint
 class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
     companion object {
         const val WORK = "it's time to work"
@@ -42,11 +43,6 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
 
     private var isTime2work: Boolean = false
     private var profileName: String = ""
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        MainApplication.graph.inject(this)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         arguments?.apply {

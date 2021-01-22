@@ -8,17 +8,18 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
-import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.TrainingParams
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.util.setWorkParams
+import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.github.mikephil.charting.data.BarData
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_workout.*
 
+@AndroidEntryPoint
 class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     companion object {
         const val DEVICES_LIST = "devices list"
@@ -39,11 +40,6 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     }
 
     override val viewModel: WorkoutViewModel by viewModels { withFactory(viewModelFactory) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        MainApplication.graph.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

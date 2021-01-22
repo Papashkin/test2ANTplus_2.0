@@ -13,9 +13,10 @@ import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_scan.*
 
-
+@AndroidEntryPoint
 class ScanFragment : BaseFragment(R.layout.fragment_scan) {
     companion object {
         const val SELECTED_PROGRAM = "selected program"
@@ -30,11 +31,6 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
     }
 
     override val viewModel: ScanViewModel by viewModels { withFactory(viewModelFactory) }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        MainApplication.graph.inject(this)
-        super.onCreate(savedInstanceState)
-    }
 
     private var program: String? = null
     private var profileName: String? = null
