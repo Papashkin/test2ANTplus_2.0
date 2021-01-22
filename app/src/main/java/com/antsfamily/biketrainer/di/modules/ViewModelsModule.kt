@@ -1,6 +1,7 @@
-package com.antsfamily.biketrainer.di
+package com.antsfamily.biketrainer.di.modules
 
 import androidx.lifecycle.ViewModel
+import com.antsfamily.biketrainer.di.ViewModelKey
 import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
 import com.antsfamily.biketrainer.presentation.programSettings.ProgramSettingsViewModel
 import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel

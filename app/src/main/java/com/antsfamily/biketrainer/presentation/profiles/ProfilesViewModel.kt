@@ -4,17 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.data.local.repositories.ProfilesRepository
-import com.antsfamily.biketrainer.util.navigation.FragmentScreens
+import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
-import java.lang.Exception
 import javax.inject.Inject
 
 class ProfilesViewModel @Inject constructor(
-    private val router: Router,
     private val profilesRepository: ProfilesRepository
 ) : StatefulViewModel<ProfilesViewModel.State>(State()) {
 
@@ -43,17 +39,13 @@ class ProfilesViewModel @Inject constructor(
     fun selectProfile(id: Int, isWorkingTime: Boolean) {
         if (isWorkingTime) {
             selectedProfile = profiles.value?.first { it.getId() == id }
-            router.navigateTo(
-                FragmentScreens.ProgramScreen(
-                    isWorkingTime,
-                    selectedProfile!!.getName()
-                )
-            )
+//            router.navigateTo(
+//                FragmentScreens.ProgramScreen(
+//                    isWorkingTime,
+//                    selectedProfile!!.getName()
+//                )
+//            )
         }
-    }
-
-    fun onBackPressed() {
-        router.exit()
     }
 
     fun clearValues() {

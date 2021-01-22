@@ -5,15 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
 import com.antsfamily.biketrainer.data.models.Program
-import com.antsfamily.biketrainer.util.navigation.FragmentScreens
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
-import java.lang.Exception
 import javax.inject.Inject
 
 class ProgramsViewModel @Inject constructor(
-    private val router: Router,
     private val programsRepository: ProgramsRepository
 ) : StatefulViewModel<ProgramsViewModel.State>(State()) {
 
@@ -28,12 +24,12 @@ class ProgramsViewModel @Inject constructor(
     val deletingSnackBar: MutableLiveData<String?> = MutableLiveData(null)
 
     fun addProgram() {
-        router.navigateTo(FragmentScreens.ProgramSettingsScreen(null))
+//        router.navigateTo(FragmentScreens.ProgramSettingsScreen(null))
         clearLiveDataValues()
     }
 
     fun onBackPressed() {
-        router.exit()
+//        router.exit()
     }
 
     fun clearValues() {
@@ -61,12 +57,12 @@ class ProgramsViewModel @Inject constructor(
     }
 
     fun onEditClick(id: Int) {
-        router.navigateTo(FragmentScreens.ProgramSettingsScreen(programs.value?.first { it.getId() == id }))
+//        router.navigateTo(FragmentScreens.ProgramSettingsScreen(programs.value?.first { it.getId() == id }))
     }
 
     fun setWorkOut(id: Int, profileName: String) {
         programs.value?.firstOrNull { it.getId() == id }?.let { selectedProgram ->
-            router.navigateTo(FragmentScreens.ScanScreen(profileName, selectedProgram))
+//            router.navigateTo(FragmentScreens.ScanScreen(profileName, selectedProgram))
         }
     }
 }

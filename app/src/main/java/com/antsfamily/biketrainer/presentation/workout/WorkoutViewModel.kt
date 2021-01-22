@@ -2,6 +2,12 @@ package com.antsfamily.biketrainer.presentation.workout
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.antsfamily.biketrainer.ant.device.BikeCadenceDevice
+import com.antsfamily.biketrainer.ant.device.BikeSpeedDistanceDevice
+import com.antsfamily.biketrainer.ant.device.FitnessEquipmentDevice
+import com.antsfamily.biketrainer.ant.device.HeartRateDevice
+import com.antsfamily.biketrainer.data.models.TrainingParams
+import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
@@ -9,35 +15,26 @@ import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle
-import com.antsfamily.biketrainer.ant.device.BikeCadenceDevice
-import com.antsfamily.biketrainer.ant.device.BikeSpeedDistanceDevice
-import com.antsfamily.biketrainer.ant.device.FitnessEquipmentDevice
-import com.antsfamily.biketrainer.ant.device.HeartRateDevice
-import com.antsfamily.biketrainer.data.models.TrainingParams
-import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
 
-
 class WorkoutViewModel @Inject constructor(
-    private val router: Router,
     private val context: Context
 ) : StatefulViewModel<WorkoutViewModel.State>(State()) {
 
     data class State(
-        val trainingParams: TrainingParams = TrainingParams()
+        val trainingParams: TrainingParams = TrainingParams(),
+        val trainingData: TrainingParams? = null
     )
 
     fun onBackClick() {
         closeAccess()
         clear()
         clearLiveDataValues()
-        router.exit()
     }
 
     private fun clear() {

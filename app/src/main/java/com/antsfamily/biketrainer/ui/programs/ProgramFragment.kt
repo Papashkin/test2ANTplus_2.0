@@ -17,6 +17,7 @@ import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_programs.*
+import javax.inject.Inject
 
 class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
     companion object {
@@ -34,15 +35,17 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
 
     override val viewModel: ProgramsViewModel by viewModels { withFactory(viewModelFactory) }
 
-    private lateinit var programsAdapter: ProgramsAdapter
+    @Inject
+    lateinit var programsAdapter: ProgramsAdapter
+
     private lateinit var programCallback: ItemTouchHelper.Callback
 
     private var isTime2work: Boolean = false
     private var profileName: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        MainApplication.graph.inject(this)
         super.onCreate(savedInstanceState)
+        MainApplication.graph.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,23 +66,12 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
     }
 
     private fun setAdapter() {
-        programsAdapter = ProgramsAdapter(
-            onDeleteClick = { position ->
-                viewModel.onDeleteClick(position)
-            },
-            onEditClick = {
-                viewModel.onEditClick(it)
-            },
-            onItemClick = {
-                if (isTime2work) {
-                    viewModel.setWorkOut(it, profileName)
-                }
-            })
-
-        programCallback =
-            ProgramsSwipeCallback(
-                programsAdapter
-            )
+        programsAdapter = ProgramsAdapter().apply {
+            setOnDeleteClickListener { viewModel.onDeleteClick(it) }
+            setOnEditClickListener { viewModel.onEditClick(it) }
+            setOnItemClickListener { viewModel.setWorkOut(it, profileName) }
+        }
+        programCallback = ProgramsSwipeCallback(programsAdapter)
         ItemTouchHelper(programCallback).attachToRecyclerView(listPrograms)
         listPrograms.adapter = programsAdapter
     }

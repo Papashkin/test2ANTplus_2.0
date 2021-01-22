@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main_nav_graph"
+        app:startDestination="@id/startFragment">
+
+    <fragment
+            android:id="@+id/startFragment"
+            android:name="com.antsfamily.biketrainer.ui.start.StartFragment"
+            android:label="StartFragment"
+            tools:layout="@layout/fragment_start" >
+        <action
+                android:id="@+id/action_startFragment_to_profilesFragment"
+                app:destination="@id/profilesFragment" />
+        <action
+                android:id="@+id/action_startFragment_to_programsFragment"
+                app:destination="@id/programsFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/profilesFragment"
+            android:name="com.antsfamily.biketrainer.ui.profiles.ProfilesFragment"
+            android:label="ProfilesFragment"
+            tools:layout="@layout/fragment_profiles"/>
+    <fragment
+            android:id="@+id/programSettingsFragment"
+            android:name="com.antsfamily.biketrainer.ui.settings.ProgramSettingsFragment"
+            android:label="ProgramSettingsFragment"
+            tools:layout="@layout/fragment_program_settings">
+        <argument android:name="programId" app:argType="integer" />
+    </fragment>
+    <fragment
+            android:id="@+id/programsFragment"
+            android:name="com.antsfamily.biketrainer.ui.programs.ProgramsFragment"
+            android:label="ProgramsFragment"
+            tools:layout="@layout/fragment_programs">
+        <action
+                android:id="@+id/action_programsFragment_to_programSettingsFragment"
+                app:destination="@id/programSettingsFragment" />
+        <action
+                android:id="@+id/action_programsFragment_to_scanFragment"
+                app:destination="@id/scanFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/scanFragment"
+            android:name="com.antsfamily.biketrainer.ui.scanning.ScanFragment"
+            android:label="ScanFragment"
+            tools:layout="@layout/fragment_scan">
+        <action
+                android:id="@+id/action_scanFragment_to_workoutFragment"
+                app:destination="@id/workoutFragment" />
+    </fragment>
+    <fragment
+            android:id="@+id/workoutFragment"
+            android:name="com.antsfamily.biketrainer.ui.workout.WorkoutFragment"
+            android:label="WorkoutFragment"
+            tools:layout="@layout/fragment_workout"/>
+</navigation>
