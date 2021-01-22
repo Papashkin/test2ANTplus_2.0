@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
-import com.antsfamily.biketrainer.data.models.ProgramType
 import com.antsfamily.biketrainer.data.models.Program
+import com.antsfamily.biketrainer.data.models.ProgramType
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.saveProgramAsImage
 import com.github.mikephil.charting.charts.BarChart
@@ -14,12 +14,10 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
 import java.io.File
 import javax.inject.Inject
 
 class ProgramSettingsViewModel @Inject constructor(
-    private val router: Router,
     private val programsRepository: ProgramsRepository
 ) : StatefulViewModel<ProgramSettingsViewModel.State>(State()) {
 
@@ -296,7 +294,7 @@ class ProgramSettingsViewModel @Inject constructor(
                     imagePath = programImagePath
                 )
             )
-            router.exit()
+//            router.exit()
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -315,7 +313,7 @@ class ProgramSettingsViewModel @Inject constructor(
                     imagePath = programImagePath
                 )
             )
-            router.exit()
+//            router.exit()
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -339,7 +337,7 @@ class ProgramSettingsViewModel @Inject constructor(
     }
 
     fun onExit() {
-        router.exit()
+//        router.exit()
     }
 
     fun clear() {

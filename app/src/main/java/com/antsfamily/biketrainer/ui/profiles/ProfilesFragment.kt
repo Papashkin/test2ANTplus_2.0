@@ -24,13 +24,13 @@ class ProfilesFragment : BaseFragment(R.layout.fragment_profiles) {
     private lateinit var profileCallback: ItemTouchHelper.Callback
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        MainApplication.graph.inject(this)
         super.onCreate(savedInstanceState)
+        MainApplication.graph.inject(this)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         toolbarProfiles.setNavigationIcon(R.drawable.ic_arrow_back_32)
-        toolbarProfiles.setNavigationOnClickListener { viewModel.onBackPressed() }
+        toolbarProfiles.setNavigationOnClickListener { } // viewModel.onBackPressed() }
         requireActivity().let {
             profilesAdapter = ProfilesAdapter(
                 onDeleteClick = { pos -> viewModel.onDeleteClick(pos) },

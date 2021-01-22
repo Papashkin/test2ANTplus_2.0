@@ -13,20 +13,23 @@ import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import java.io.File
 import java.util.*
+import javax.inject.Inject
 
-class ProgramsAdapter(
-    private val onEditClick: (id: Int)  -> Unit,
-    private val onDeleteClick: (position: Int) -> Unit,
-    private val onItemClick: (id: Int) -> Unit
-) : RecyclerView.Adapter<ProgramsAdapter.ProgramViewHolder>() {
+class ProgramsAdapter @Inject constructor() :
+    RecyclerView.Adapter<ProgramsAdapter.ProgramViewHolder>() {
 
     private var programs: ArrayList<Program> = arrayListOf()
     private var deletedPosition: Int = -1
 
+    private var onEditClick: ((id: Int) -> Unit)? = null
+    private var onDeleteClick: ((position: Int) -> Unit)? = null
+    private var onItemClick: ((id: Int) -> Unit)? = null
+
     private lateinit var deletedItem: Program
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
         return ProgramViewHolder(view)
     }
 
@@ -35,12 +38,24 @@ class ProgramsAdapter(
         deletedPosition = position
         programs.removeAt(position)
         notifyItemRemoved(position)
-        onDeleteClick.invoke(position)
+        onDeleteClick?.invoke(position)
     }
 
     fun editItem(position: Int) {
         notifyDataSetChanged()
-        onEditClick.invoke(programs[position].getId())
+        onEditClick?.invoke(programs[position].getId())
+    }
+
+    fun setOnEditClickListener(listener: (id: Int) -> Unit) {
+        onEditClick = listener
+    }
+
+    fun setOnDeleteClickListener(listener: (id: Int) -> Unit) {
+        onDeleteClick = listener
+    }
+
+    fun setOnItemClickListener(listener: (id: Int) -> Unit) {
+        onItemClick = listener
     }
 
 //    fun undoDelete() {
@@ -83,7 +98,7 @@ class ProgramsAdapter(
                 .into(programImage)
 
             programLayout.setOnClickListener {
-                onItemClick.invoke(program.getId())
+                onItemClick?.invoke(program.getId())
             }
         }
 

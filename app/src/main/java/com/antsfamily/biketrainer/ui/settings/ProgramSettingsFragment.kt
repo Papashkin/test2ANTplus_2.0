@@ -25,10 +25,9 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import kotlinx.android.synthetic.main.fragment_program_setting_new.*
+import kotlinx.android.synthetic.main.fragment_program_settings.*
 
-
-class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_setting_new) {
+class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings) {
     companion object {
         const val MODIFIED_PROGRAM_NAME = "modified program name"
         const val MODIFIED_PROGRAM_SETTING = "modified program setting"

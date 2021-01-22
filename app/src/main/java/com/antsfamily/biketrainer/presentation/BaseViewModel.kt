@@ -1,8 +1,10 @@
 package com.antsfamily.biketrainer.presentation
 
 import androidx.annotation.StringRes
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.antsfamily.biketrainer.presentation.navigation.Route
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -18,6 +20,14 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     val loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val keyboard: MutableLiveData<Boolean> = MutableLiveData(false)
     val toast: MutableLiveData<Any?> = MutableLiveData(null)
+
+    private val _navigationEvent = MutableLiveData<Event<Route>>()
+    val navigationEvent: LiveData<Event<Route>>
+        get() = _navigationEvent
+
+    fun navigateTo(route: Route) {
+        _navigationEvent.postValue(Event(route))
+    }
 
     fun showLoading() {
         loading.postValue(true)
@@ -42,7 +52,6 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     fun showToast(message: String) {
         toast.postValue(message)
     }
-
 
     fun clearLiveDataValues() {
         loading.postValue(false)

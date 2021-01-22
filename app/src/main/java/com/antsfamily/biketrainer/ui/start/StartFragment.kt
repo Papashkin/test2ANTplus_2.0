@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.viewModels
 import com.antsfamily.biketrainer.MainApplication
-import com.antsfamily.biketrainer.MainApplication.Companion.PERMISSION_FOR_APP
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.presentation.start.StartViewModel
 import com.antsfamily.biketrainer.presentation.withFactory
@@ -29,9 +28,4 @@ class StartFragment : BaseFragment(R.layout.fragment_start) {
         btnProfiles.setOnClickListener { viewModel.onProfileClick() }
         btnPrograms.setOnClickListener { viewModel.onProgramClick() }
     }
-
-    fun requestPermissions(permissions: Array<String>) {
-        requestPermissions(permissions, PERMISSION_FOR_APP)
-    }
-
 }

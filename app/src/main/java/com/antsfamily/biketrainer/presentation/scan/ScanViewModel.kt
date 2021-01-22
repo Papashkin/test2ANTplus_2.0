@@ -13,13 +13,11 @@ import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchRe
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.ant.device.SelectedDevice
 import com.antsfamily.biketrainer.ant.service.AntRadioServiceConnection
-import com.antsfamily.biketrainer.presentation.BaseViewModel
+import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import ru.terrakok.cicerone.Router
 import java.util.*
 import javax.inject.Inject
-
 
 val deviceList: EnumSet<DeviceType> = EnumSet.of(
     DeviceType.BIKE_CADENCE,
@@ -32,9 +30,8 @@ val deviceList: EnumSet<DeviceType> = EnumSet.of(
 )
 
 class ScanViewModel @Inject constructor(
-    private val router: Router,
     private val context: Context
-) : BaseViewModel() {
+) : StatefulViewModel<ScanViewModel.State>(State()) {
     private val TAG = ScanViewModel::class.java.simpleName.toUpperCase(Locale.getDefault())
 
     data class State(
@@ -43,6 +40,7 @@ class ScanViewModel @Inject constructor(
     )
 
     private var connection: AntRadioServiceConnection? = null
+
     init {
         connection = AntRadioServiceConnection(context)
         doBindChannelService()
@@ -52,7 +50,7 @@ class ScanViewModel @Inject constructor(
         startScanAsync().await()
     }
 
-//    private val foundedDevices: ArrayList<SelectedDevice> = arrayListOf()
+    //    private val foundedDevices: ArrayList<SelectedDevice> = arrayListOf()
     var devices: MutableLiveData<List<SelectedDevice>> = MutableLiveData(listOf())
     private val antCallback = object : MultiDeviceSearch.SearchCallbacks {
         override fun onSearchStopped(reason: RequestAccessResult) {
@@ -86,7 +84,8 @@ class ScanViewModel @Inject constructor(
             }
         }
     }
-//    private var search: MultiDeviceSearch? = null
+
+    //    private var search: MultiDeviceSearch? = null
     private fun startScanAsync() = async {
         try {
             showLoading()
@@ -134,7 +133,7 @@ class ScanViewModel @Inject constructor(
 
     fun onBackPressed() {
         doUnbindChannelService()
-        router.exit()
+//        router.exit()
     }
 
     fun clear() {

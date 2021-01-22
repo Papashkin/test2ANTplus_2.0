@@ -17,10 +17,9 @@ import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.util.setWorkParams
 import com.github.mikephil.charting.data.BarData
-import kotlinx.android.synthetic.main.fragment_work.*
+import kotlinx.android.synthetic.main.fragment_workout.*
 
-
-class WorkoutFragment : BaseFragment(R.layout.fragment_work) {
+class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     companion object {
         const val DEVICES_LIST = "devices list"
         const val PROGRAM_NAME = "program name"

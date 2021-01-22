@@ -4,7 +4,6 @@ import android.app.Application
 import com.antsfamily.biketrainer.di.AppComponent
 import com.antsfamily.biketrainer.di.DaggerAppComponent
 import com.antsfamily.biketrainer.di.modules.AppModule
-import com.antsfamily.biketrainer.di.modules.NavigationModule
 
 class MainApplication: Application() {
     companion object {
@@ -29,7 +28,6 @@ class MainApplication: Application() {
     private fun initDI() {
         graph = DaggerAppComponent.builder()
             .appModule(AppModule(applicationContext))
-            .navigationModule(NavigationModule())
             .build()
 
         graph.inject(this)
