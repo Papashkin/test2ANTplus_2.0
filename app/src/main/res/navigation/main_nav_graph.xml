@@ -9,7 +9,7 @@
             android:id="@+id/startFragment"
             android:name="com.antsfamily.biketrainer.ui.start.StartFragment"
             android:label="StartFragment"
-            tools:layout="@layout/fragment_start" >
+            tools:layout="@layout/fragment_start">
         <action
                 android:id="@+id/action_startFragment_to_profilesFragment"
                 app:destination="@id/profilesFragment" />
@@ -21,13 +21,16 @@
             android:id="@+id/profilesFragment"
             android:name="com.antsfamily.biketrainer.ui.profiles.ProfilesFragment"
             android:label="ProfilesFragment"
-            tools:layout="@layout/fragment_profiles"/>
+            tools:layout="@layout/fragment_profiles" />
     <fragment
             android:id="@+id/programSettingsFragment"
             android:name="com.antsfamily.biketrainer.ui.settings.ProgramSettingsFragment"
             android:label="ProgramSettingsFragment"
             tools:layout="@layout/fragment_program_settings">
-        <argument android:name="programId" app:argType="integer" />
+        <argument
+                android:name="programId"
+                app:argType="string"
+                app:nullable="true" />
     </fragment>
     <fragment
             android:id="@+id/programsFragment"
@@ -54,5 +57,15 @@
             android:id="@+id/workoutFragment"
             android:name="com.antsfamily.biketrainer.ui.workout.WorkoutFragment"
             android:label="WorkoutFragment"
-            tools:layout="@layout/fragment_workout"/>
+            tools:layout="@layout/fragment_workout">
+        <argument
+                android:name="devices"
+                app:argType="com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch$MultiDeviceSearchResult[]" />
+        <argument
+                android:name="program"
+                app:argType="string" />
+        <argument
+                android:name="profile"
+                app:argType="string" />
+    </fragment>
 </navigation>

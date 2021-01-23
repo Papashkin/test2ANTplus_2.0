@@ -85,7 +85,7 @@ class WorkoutViewModel @Inject constructor(
         // TODO: 15.01.2021
     }
 
-    fun setDevices(devices: ArrayList<MultiDeviceSearchResult>) {
+    fun setDevices(devices: List<MultiDeviceSearchResult>) {
         devices.forEach {
             if (it.antDeviceType == DeviceType.HEARTRATE && !isHRMInWork) {
                 setHeartRateAccess(it)

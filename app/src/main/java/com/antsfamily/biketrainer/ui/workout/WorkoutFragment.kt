@@ -5,8 +5,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.TrainingParams
 import com.antsfamily.biketrainer.presentation.EventObserver
@@ -14,46 +14,21 @@ import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.util.setWorkParams
-import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.github.mikephil.charting.data.BarData
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_workout.*
 
 @AndroidEntryPoint
 class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
-    companion object {
-        const val DEVICES_LIST = "devices list"
-        const val PROGRAM_NAME = "program name"
-        const val PROFILE_NAME = "profile name"
 
-        fun newInstance(
-            devices: ArrayList<MultiDeviceSearchResult>,
-            program: String,
-            profileName: String
-        ): WorkoutFragment = WorkoutFragment().apply {
-            this.arguments = bundleOf(
-                DEVICES_LIST to devices,
-                PROGRAM_NAME to program,
-                PROFILE_NAME to profileName
-            )
-        }
-    }
+    private val args: WorkoutFragmentArgs by navArgs()
 
     override val viewModel: WorkoutViewModel by viewModels { withFactory(viewModelFactory) }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let {
-            val devices =
-                it.getParcelableArrayList(DEVICES_LIST) ?: arrayListOf<MultiDeviceSearchResult>()
-            if (!devices.isNullOrEmpty()) {
-                viewModel.setDevices(devices)
-            }
-            val program = it.getString(PROGRAM_NAME)
-            if (program != null) {
-                viewModel.setProgram(program)
-            }
-        }
+        viewModel.setDevices(args.devices.toList())
+        viewModel.setProgram(args.program)
         initListeners()
         observeState()
         observeEvents()
