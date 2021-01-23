@@ -2,6 +2,7 @@ package com.antsfamily.biketrainer.ant.device
 
 import android.os.Handler
 import android.os.Looper
+import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc
 import com.dsi.ant.plugins.antplus.pcc.defines.EventFlag
@@ -11,17 +12,19 @@ import com.dsi.ant.plugins.antplus.pccbase.AntPluginPcc
 import com.dsi.ant.plugins.antplus.pccbase.AntPlusCommonPcc
 import java.math.BigDecimal
 import java.util.*
+import javax.inject.Inject
 
-class FitnessEquipmentDevice(
-    private val showToast: (text: String) -> Unit,
-    private val setDependencies: (name: String, packageName: String) -> Unit,
-    private val getPower: (power: String) -> Unit,
-    private val getCadence: (cadence: String) -> Unit,
-    private val getSpeed: (speed: String) -> Unit,
-    private val getDistance: (distance: String) -> Unit
-) {
+class FitnessEquipmentDevice @Inject constructor() {
+
     private var fePcc: AntPlusFitnessEquipmentPcc? = null
     private var subscriptionsDone = false
+    private var onShowToastListener: ((text: String) -> Unit)? = null
+    private var onSetDependenciesListener: ((name: String, packageName: String) -> Unit)? = null
+    private var onPowerReceiveListener: ((power: BigDecimal) -> Unit)? = null
+    private var onCadenceReceiveListener: ((cadence: BigDecimal) -> Unit)? = null
+    private var onSpeedReceiveListener: ((speed: BigDecimal) -> Unit)? = null
+    private var onDistanceReceiveListener: ((distance: BigDecimal) -> Unit)? = null
+
 //    private var settings: Settings
 //    private var files: ArrayList<FitFiles>
 
@@ -63,46 +66,17 @@ class FitnessEquipmentDevice(
 //        }
 //    }
 
-    private val requestFinishedReceiver = AntPlusCommonPcc.IRequestFinishedReceiver { requestStatus ->
+    private val requestFinishedReceiver = AntPlusCommonPcc.IRequestFinishedReceiver { status ->
         Handler(Looper.getMainLooper()).post {
-            when (requestStatus) {
-                RequestStatus.SUCCESS -> {
-                    showToast.invoke("Request Successfully Sent")
-                }
-                RequestStatus.FAIL_PLUGINS_SERVICE_VERSION -> {
-                    showToast.invoke("Plugin Service Upgrade Required?")
-                }
-                else -> {
-                    showToast.invoke("Request Failed to be Sent")
-                }
+            when (status) {
+                RequestStatus.SUCCESS -> showToast("Request Successfully Sent")
+                RequestStatus.FAIL_PLUGINS_SERVICE_VERSION -> showToast("Plugin Service Upgrade Required?")
+                else -> showToast("Request Failed to be Sent")
             }
         }
     }
 
-    /**
-     * @param basicResistance = BigDecimal("4.5"), as example
-     */
-    fun setBasicResistance(basicResistance: BigDecimal) {
-        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
-        val submitted = fePcc?.trainerMethods?.requestSetBasicResistance(basicResistance, requestFinishedReceiver)
-        submitted?.apply {
-            showToast.invoke("Request Could not be Made")
-        }
-    }
-
-    /**
-     * @param targetPower: BigDecimal("42.25") is the same as 42.25%
-     */
-    fun setTargetPower(targetPower: BigDecimal) {
-        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
-        val submitted = fePcc?.trainerMethods?.requestSetTargetPower(targetPower, requestFinishedReceiver)
-        submitted?.apply {
-            showToast.invoke("Request Could not be Made")
-        }
-    }
-
-
-    val mPluginAccessResultReceiver =
+    private val _pluginAccessResultReceiver =
         AntPluginPcc.IPluginAccessResultReceiver<AntPlusFitnessEquipmentPcc> { result, resultCode, _ ->
             when (resultCode) {
                 RequestAccessResult.SUCCESS -> {
@@ -111,33 +85,201 @@ class FitnessEquipmentDevice(
                         subscribeToEvents()
                     }
                 }
-                RequestAccessResult.CHANNEL_NOT_AVAILABLE -> {
-
-                    showToast.invoke("Channel Not Available")
-                }
+                RequestAccessResult.CHANNEL_NOT_AVAILABLE -> showToast("Channel Not Available")
                 RequestAccessResult.ADAPTER_NOT_DETECTED -> {
-                    showToast.invoke("ANT Adapter Not Available. Built-in ANT hardware or external adapter required.")
+                    showToast("ANT Adapter Not Available. Built-in ANT hardware or external adapter required.")
                 }
-                RequestAccessResult.BAD_PARAMS -> {
-                    showToast.invoke("Bad request parameters.")
-                }
+                RequestAccessResult.BAD_PARAMS -> showToast("Bad request parameters.")
                 RequestAccessResult.OTHER_FAILURE -> {
-                    showToast.invoke("RequestAccess failed. See logcat for details.")
+                    showToast("RequestAccess failed. See logcat for details.")
                 }
                 RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
-                    setDependencies.invoke(
+                    onSetDependenciesListener?.invoke(
                         AntPlusHeartRatePcc.getMissingDependencyName(),
                         AntPlusHeartRatePcc.getMissingDependencyPackageName()
                     )
                 }
                 RequestAccessResult.UNRECOGNIZED -> {
-                    showToast.invoke("Failed: UNRECOGNIZED.\nPluginLib Upgrade Required?")
+                    showToast("Failed: UNRECOGNIZED.\nPluginLib Upgrade Required?")
                 }
                 else -> {
-                    showToast.invoke("Unrecognized result: $resultCode")
+                    showToast("Unrecognized result: $resultCode")
                 }
             }
         }
+
+    //Receives state changes and shows it on the status display line
+    private val _deviceStateChangeReceiver = AntPluginPcc.IDeviceStateChangeReceiver {
+        Handler(Looper.getMainLooper()).post {
+            /**
+             * Note: The state here is the state of our data receiver channel which is closed
+             * until the ANTFS session is established
+             */
+        }
+    }
+
+    private val _fitnessEquipmentStateReceiver =
+        AntPlusFitnessEquipmentPcc.IFitnessEquipmentStateReceiver { _, _, equipmentType, equipmentState ->
+            Handler(Looper.getMainLooper()).post {
+                val wheelDiameter = BigDecimal("0.70") //0.70m wheel diameter
+
+                when (equipmentType) {
+                    AntPlusFitnessEquipmentPcc.EquipmentType.BIKE -> {
+                        if (!subscriptionsDone) {
+                            fePcc?.bikeMethods?.let {
+                                it.subscribeBikeDataEvent { _, _, instantaneousCadence, instantaneousPower ->
+                                    Handler(Looper.getMainLooper()).post {
+                                        onPowerReceiveListener?.invoke(instantaneousPower.toBigDecimal())
+                                        onCadenceReceiveListener?.invoke(instantaneousCadence.toBigDecimal())
+                                    }
+                                }
+                            }
+                        }
+                        subscriptionsDone = true
+                    }
+
+                    AntPlusFitnessEquipmentPcc.EquipmentType.TRAINER -> {
+                        if (!subscriptionsDone) {
+                            fePcc?.trainerMethods?.let {
+                                it.subscribeCalculatedTrainerPowerEvent { _, _, _, power ->
+                                    onPowerReceiveListener?.invoke(power)
+                                }
+
+                                it.subscribeCalculatedTrainerSpeedEvent(object :
+                                    AntPlusFitnessEquipmentPcc.CalculatedTrainerSpeedReceiver(
+                                        wheelDiameter
+                                    ) {
+                                    override fun onNewCalculatedTrainerSpeed(
+                                        timestamp: Long,
+                                        eventFlags: EnumSet<EventFlag>?,
+                                        source: AntPlusFitnessEquipmentPcc.TrainerDataSource?,
+                                        speed: BigDecimal?
+                                    ) {
+                                        Handler(Looper.getMainLooper()).post {
+                                            onSpeedReceiveListener?.invoke(speed.orZero())
+                                        }
+                                    }
+                                })
+
+                                it.subscribeCalculatedTrainerDistanceEvent(object :
+                                    AntPlusFitnessEquipmentPcc.CalculatedTrainerDistanceReceiver(
+                                        wheelDiameter
+                                    ) {
+                                    override fun onNewCalculatedTrainerDistance(
+                                        timestamp: Long,
+                                        flags: EnumSet<EventFlag>?,
+                                        source: AntPlusFitnessEquipmentPcc.TrainerDataSource?,
+                                        distance: BigDecimal?
+                                    ) {
+                                        Handler(Looper.getMainLooper()).post {
+                                            onDistanceReceiveListener?.invoke(distance.orZero())
+                                        }
+                                    }
+                                })
+
+                                it.subscribeRawTrainerDataEvent { _, _, count, instantCadence, instantPower, accumulatedPower ->
+                                    Handler(Looper.getMainLooper()).post {
+                                        //                                        tv_estTimestamp.text = timestamp.toString()
+//                                        textView_TrainerUpdateEventCount.text = count.toString()
+//                                        textView_TrainerInstantaneousCadence.text = if (instantCadence == -1) {
+//                                            "N/A"
+//                                        } else {
+//                                            "$instantCadence RPM"
+//                                        }
+//                                        textView_TrainerInstantaneousPower.text = if (instantPower == -1) {
+//                                            "N/A"
+//                                        } else {
+//                                            "$instantPower W"
+//                                        }
+//                                        textView_TrainerAccumulatedPower.text = if (accumulatedPower == -1) {
+//                                            "N/A"
+//                                        } else {
+//                                            "$accumulatedPower W"
+//                                        }
+                                    }
+                                }
+
+                                it.subscribeRawTrainerTorqueDataEvent { _, _, _, wheelTicks, wheelPeriod, torque ->
+                                    Handler(Looper.getMainLooper()).post { }
+                                }
+                            }
+                        }
+                        subscriptionsDone = true
+                    }
+
+                    AntPlusFitnessEquipmentPcc.EquipmentType.UNKNOWN -> {
+                    } //tv_feType.text = "UNKNOWN"
+                    AntPlusFitnessEquipmentPcc.EquipmentType.UNRECOGNIZED -> {
+                        showToast("UNRECOGNIZED type, PluginLib upgrade required?")
+                    }
+                    else -> {
+                        showToast("INVALID: $equipmentType")
+                    }
+                }
+
+                when (equipmentState) {
+                    AntPlusFitnessEquipmentPcc.EquipmentState.UNRECOGNIZED -> {
+                        showToast("Failed: UNRECOGNIZED. PluginLib Upgrade Required?")
+                    }
+                    else -> showToast("INVALID: $equipmentState")
+                }
+            }
+        }
+
+    val pluginAccessResultReceiver: AntPluginPcc.IPluginAccessResultReceiver<AntPlusFitnessEquipmentPcc>
+        get() = _pluginAccessResultReceiver
+
+    val deviceStateChangeReceiver: AntPluginPcc.IDeviceStateChangeReceiver
+        get() = _deviceStateChangeReceiver
+
+    val fitnessEquipmentStateReceiver: AntPlusFitnessEquipmentPcc.IFitnessEquipmentStateReceiver
+        get() = _fitnessEquipmentStateReceiver
+
+
+    fun setOnShowToastListener (listener: (text: String) -> Unit) {
+        onShowToastListener = listener
+    }
+    fun setOnSetDependenciesListener (listener: (name: String, packageName: String) -> Unit) {
+        onSetDependenciesListener = listener
+    }
+    fun setOnPowerReceiveListener (listener: (power: BigDecimal) -> Unit) {
+        onPowerReceiveListener = listener
+    }
+    fun setOnCadenceReceiveListener (listener: (cadence: BigDecimal) -> Unit) {
+        onCadenceReceiveListener = listener
+    }
+    fun setOnSpeedReceiveListener (listener: (speed: BigDecimal) -> Unit) {
+        onSpeedReceiveListener = listener
+    }
+    fun setOnDistanceReceiveListener (listener: (distance: BigDecimal) -> Unit) {
+        onDistanceReceiveListener = listener
+    }
+
+    /**
+     * @param basicResistance = BigDecimal("4.5"), as example
+     */
+    fun setBasicResistance(basicResistance: BigDecimal) {
+        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
+        val submitted = fePcc?.trainerMethods?.requestSetBasicResistance(
+            basicResistance,
+            requestFinishedReceiver
+        )
+        submitted?.apply {
+            showToast("Request Could not be Made")
+        }
+    }
+
+    /**
+     * @param targetPower: BigDecimal("42.25") is the same as 42.25%
+     */
+    fun setTargetPower(targetPower: BigDecimal) {
+        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
+        val submitted =
+            fePcc?.trainerMethods?.requestSetTargetPower(targetPower, requestFinishedReceiver)
+        submitted?.apply {
+            showToast("Request Could not be Made")
+        }
+    }
 
     private fun subscribeToEvents() {
         fePcc?.subscribeGeneralFitnessEquipmentDataEvent { _, _, _, cumulativeDistance, instantaneousSpeed,
@@ -185,9 +327,8 @@ class FitnessEquipmentDevice(
 //                        tv_heartRateSource.text = heartRateDataSource.toString()
                     }
                     AntPlusFitnessEquipmentPcc.HeartRateDataSource.UNRECOGNIZED -> {
-                        showToast.invoke("Failed: UNRECOGNIZED. PluginLib Upgrade Required?")
+                        showToast("Failed: UNRECOGNIZED. PluginLib Upgrade Required?")
                     }
-
                 }
             }
         }
@@ -241,117 +382,7 @@ class FitnessEquipmentDevice(
         }
     }
 
-    //Receives state changes and shows it on the status display line
-    val mDeviceStateChangeReceiver = AntPluginPcc.IDeviceStateChangeReceiver {
-        Handler(Looper.getMainLooper()).post {
-            /**
-             * Note: The state here is the state of our data receiver channel which is closed
-             * until the ANTFS session is established
-             */
-        }
+    private fun showToast(text: String) {
+        onShowToastListener?.invoke(text)
     }
-
-    val mFitnessEquipmentStateReceiver =
-        AntPlusFitnessEquipmentPcc.IFitnessEquipmentStateReceiver { _, _, equipmentType, equipmentState ->
-            Handler(Looper.getMainLooper()).post {
-                val wheelDiameter = BigDecimal("0.70") //0.70m wheel diameter
-
-                when (equipmentType) {
-                    AntPlusFitnessEquipmentPcc.EquipmentType.BIKE -> {
-                        if (!subscriptionsDone) {
-                            fePcc?.bikeMethods?.let {
-                                it.subscribeBikeDataEvent { _, _, instantaneousCadence, instantaneousPower ->
-                                    Handler(Looper.getMainLooper()).post {
-                                        getPower.invoke(instantaneousPower.toString())
-                                        getCadence.invoke(instantaneousCadence.toString())
-                                    }
-                                }
-                            }
-                        }
-                        subscriptionsDone = true
-                    }
-
-                    AntPlusFitnessEquipmentPcc.EquipmentType.TRAINER -> {
-                        if (!subscriptionsDone) {
-                            fePcc?.trainerMethods?.let {
-                                it.subscribeCalculatedTrainerPowerEvent { _, _, _, power ->
-                                    getPower.invoke(power.toString())
-                                }
-
-                                it.subscribeCalculatedTrainerSpeedEvent(object :
-                                    AntPlusFitnessEquipmentPcc.CalculatedTrainerSpeedReceiver(wheelDiameter) {
-                                    override fun onNewCalculatedTrainerSpeed(
-                                        timestamp: Long,
-                                        eventFlags: EnumSet<EventFlag>?,
-                                        source: AntPlusFitnessEquipmentPcc.TrainerDataSource?,
-                                        speed: BigDecimal?
-                                    ) {
-                                        Handler(Looper.getMainLooper()).post {
-                                            getSpeed.invoke(speed.toString())
-                                        }
-                                    }
-                                })
-
-                                it.subscribeCalculatedTrainerDistanceEvent(object :
-                                    AntPlusFitnessEquipmentPcc.CalculatedTrainerDistanceReceiver(wheelDiameter) {
-                                    override fun onNewCalculatedTrainerDistance(
-                                        timestamp: Long,
-                                        flags: EnumSet<EventFlag>?,
-                                        source: AntPlusFitnessEquipmentPcc.TrainerDataSource?,
-                                        distance: BigDecimal?
-                                    ) {
-                                        Handler(Looper.getMainLooper()).post {
-                                            getDistance.invoke(distance.toString())
-                                        }
-                                    }
-                                })
-
-                                it.subscribeRawTrainerDataEvent { _, _, count, instantCadence, instantPower, accumulatedPower ->
-                                    Handler(Looper.getMainLooper()).post {
-                                        //                                        tv_estTimestamp.text = timestamp.toString()
-//                                        textView_TrainerUpdateEventCount.text = count.toString()
-//                                        textView_TrainerInstantaneousCadence.text = if (instantCadence == -1) {
-//                                            "N/A"
-//                                        } else {
-//                                            "$instantCadence RPM"
-//                                        }
-//                                        textView_TrainerInstantaneousPower.text = if (instantPower == -1) {
-//                                            "N/A"
-//                                        } else {
-//                                            "$instantPower W"
-//                                        }
-//                                        textView_TrainerAccumulatedPower.text = if (accumulatedPower == -1) {
-//                                            "N/A"
-//                                        } else {
-//                                            "$accumulatedPower W"
-//                                        }
-                                    }
-                                }
-
-                                it.subscribeRawTrainerTorqueDataEvent { _, _, _, wheelTicks, wheelPeriod, torque ->
-                                    Handler(Looper.getMainLooper()).post { }
-                                }
-                            }
-                        }
-                        subscriptionsDone = true
-                    }
-
-                    AntPlusFitnessEquipmentPcc.EquipmentType.UNKNOWN -> {
-                    } //tv_feType.text = "UNKNOWN"
-                    AntPlusFitnessEquipmentPcc.EquipmentType.UNRECOGNIZED -> {
-                        showToast.invoke("UNRECOGNIZED type, PluginLib upgrade required?")
-                    }
-                    else -> {
-                        showToast.invoke("INVALID: $equipmentType")
-                    }
-                }
-
-                when (equipmentState) {
-                    AntPlusFitnessEquipmentPcc.EquipmentState.UNRECOGNIZED -> {
-                        showToast.invoke("Failed: UNRECOGNIZED. PluginLib Upgrade Required?")
-                    }
-                    else -> showToast.invoke("INVALID: $equipmentState")
-                }
-            }
-        }
 }

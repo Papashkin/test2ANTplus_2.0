@@ -14,22 +14,25 @@ import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
 import com.dsi.ant.plugins.antplus.pccbase.AntPluginPcc
 import com.dsi.ant.plugins.antplus.pccbase.AntPluginPcc.IPluginAccessResultReceiver
 import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle
+import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
 import java.util.*
+import javax.inject.Inject
 
-class BikeSpeedDistanceDevice(
-    private val context: Context,
-    private val getSpeed: (speed: String) -> Unit,
-    private val getDistance: (distance: String) -> Unit,
-    private val getCadence: (cadence: String) -> Unit,
-    private val showToast: (text: String) -> Unit,
-    private val setDependencies: (name: String, packageName: String) -> Unit
+class BikeSpeedDistanceDevice @Inject constructor(
+    @ApplicationContext private val context: Context
 ) {
+
     private var bsdPcc: AntPlusBikeSpeedDistancePcc? = null
     private var bcPcc: AntPlusBikeCadencePcc? = null
     private var bcReleaseHandle: PccReleaseHandle<AntPlusBikeCadencePcc>? = null
+    private var onCadenceReceiveListener: ((cadence: BigDecimal) -> Unit)? = null
+    private var onDistanceReceiveListener: ((distance: BigDecimal) -> Unit)? = null
+    private var onSpeedReceiveListener: ((speed: BigDecimal) -> Unit)? = null
+    private var onToastShowListener: ((text: String) -> Unit)? = null
+    private var onDependenciesSetListener: ((name: String, packageName: String) -> Unit)? = null
 
-    val mResultReceiver: IPluginAccessResultReceiver<AntPlusBikeSpeedDistancePcc> =
+    private val _resultReceiver: IPluginAccessResultReceiver<AntPlusBikeSpeedDistancePcc> =
         object : IPluginAccessResultReceiver<AntPlusBikeSpeedDistancePcc> {
             // Handle the result, connecting to events on success or reporting failure to user.
             override fun onResultReceived(
@@ -45,28 +48,28 @@ class BikeSpeedDistanceDevice(
                         }
                     }
                     RequestAccessResult.CHANNEL_NOT_AVAILABLE -> {
-                        showToast.invoke("Channel Not Available")
+                        showToast("Channel Not Available")
                     }
                     RequestAccessResult.ADAPTER_NOT_DETECTED -> {
-                        showToast.invoke("ANT Adapter Not Available.\nBuilt-in ANT hardware or external adapter required.")
+                        showToast("ANT Adapter Not Available.\nBuilt-in ANT hardware or external adapter required.")
                     }
                     RequestAccessResult.BAD_PARAMS -> {
-                        showToast.invoke("Bad request parameters.")
+                        showToast("Bad request parameters.")
                     }
                     RequestAccessResult.OTHER_FAILURE -> {
-                        showToast.invoke("RequestAccess failed. See logcat for details.")
+                        showToast("RequestAccess failed. See logcat for details.")
                     }
                     RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
-                        setDependencies.invoke(
+                        onDependenciesSetListener?.invoke(
                             AntPlusHeartRatePcc.getMissingDependencyName(),
                             AntPlusHeartRatePcc.getMissingDependencyPackageName()
                         )
                     }
                     RequestAccessResult.UNRECOGNIZED -> {
-                        showToast.invoke("Failed: UNRECOGNIZED.\nPluginLib Upgrade Required?")
+                        showToast("Failed: UNRECOGNIZED.\nPluginLib Upgrade Required?")
                     }
                     else -> {
-                        showToast.invoke("Unrecognized result: $resultCode")
+                        showToast("Unrecognized result: $resultCode")
                     }
                 }
             }
@@ -85,7 +88,12 @@ class BikeSpeedDistanceDevice(
                             speed: BigDecimal
                         ) {
                             Handler(Looper.getMainLooper()).post {
-                                getSpeed.invoke(speed.setScale(1, 0).toString())
+                                onSpeedReceiveListener?.invoke(
+                                    speed.setScale(
+                                        1,
+                                        BigDecimal.ROUND_HALF_DOWN
+                                    )
+                                )
                             }
                         }
                     })
@@ -98,15 +106,17 @@ class BikeSpeedDistanceDevice(
                             distance: BigDecimal
                         ) {
                             Handler(Looper.getMainLooper()).post {
-                                getDistance.invoke(distance.setScale(2, 0).toString())
+                                onDistanceReceiveListener?.invoke(
+                                    distance.setScale(2, BigDecimal.ROUND_HALF_DOWN)
+                                )
                             }
                         }
                     })
 
                 bsdPcc?.subscribeRawSpeedAndDistanceDataEvent { _, _, speed, distance ->
                     Handler(Looper.getMainLooper()).post {
-                        getSpeed.invoke(speed.toString())
-                        getDistance.invoke(distance.toString())
+                        onSpeedReceiveListener?.invoke(speed)
+                        onDistanceReceiveListener?.invoke(distance.toBigDecimal())
                     }
                 }
 
@@ -127,7 +137,7 @@ class BikeSpeedDistanceDevice(
                                         bcPcc?.let {
                                             it.subscribeCalculatedCadenceEvent { _, _, cadence ->
                                                 Handler(Looper.getMainLooper()).post {
-                                                    getCadence.invoke(cadence.toString())
+                                                    onCadenceReceiveListener?.invoke(cadence)
                                                 }
                                             }
                                         }
@@ -144,9 +154,7 @@ class BikeSpeedDistanceDevice(
                                     RequestAccessResult.DEPENDENCY_NOT_INSTALLED -> {
                                     }
 
-                                    else -> {
-                                        showToast.invoke("Unrecognized result: $resultCode")
-                                    }
+                                    else -> showToast("Unrecognized result: $resultCode")
                                 }
                             },
                             // Receives state changes and shows it on the status display line
@@ -179,11 +187,41 @@ class BikeSpeedDistanceDevice(
         }
 
     // Receives state changes and shows it on the status display line
-    val mDeviceStateChangeReceiver = AntPluginPcc.IDeviceStateChangeReceiver { newDeviceState ->
+    private val _deviceStateChangeReceiver = AntPluginPcc.IDeviceStateChangeReceiver { state ->
         Handler(Looper.getMainLooper()).post {
-            if (newDeviceState == DeviceState.DEAD) {
+            if (state == DeviceState.DEAD) {
                 bsdPcc = null
             }
         }
+    }
+
+    val resultReceiver: IPluginAccessResultReceiver<AntPlusBikeSpeedDistancePcc>
+        get() = _resultReceiver
+
+    val deviceStateChangeReceiver: AntPluginPcc.IDeviceStateChangeReceiver
+        get() = _deviceStateChangeReceiver
+
+    fun setOnCadenceReceiveListener(listener: (cadence: BigDecimal) -> Unit) {
+        onCadenceReceiveListener = listener
+    }
+
+    fun setOnDistanceReceiveListener(listener: (distance: BigDecimal) -> Unit) {
+        onDistanceReceiveListener = listener
+    }
+
+    fun setOnSpeedReceiveListener(listener: (speed: BigDecimal) -> Unit) {
+        onSpeedReceiveListener = listener
+    }
+
+    fun setOnToastShowListener(listener: (text: String) -> Unit) {
+        onToastShowListener = listener
+    }
+
+    fun setOnDependenciesSetListener(listener: (name: String, packageName: String) -> Unit) {
+        onDependenciesSetListener = listener
+    }
+
+    private fun showToast(text: String) {
+        onToastShowListener?.invoke(text)
     }
 }

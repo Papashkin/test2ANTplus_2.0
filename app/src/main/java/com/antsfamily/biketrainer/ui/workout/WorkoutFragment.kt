@@ -7,9 +7,9 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.TrainingParams
+import com.antsfamily.biketrainer.presentation.EventObserver
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
@@ -43,9 +43,9 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         arguments?.let {
-            val devices = it.getParcelableArrayList(DEVICES_LIST) ?: arrayListOf<MultiDeviceSearchResult>()
+            val devices =
+                it.getParcelableArrayList(DEVICES_LIST) ?: arrayListOf<MultiDeviceSearchResult>()
             if (!devices.isNullOrEmpty()) {
                 viewModel.setDevices(devices)
             }
@@ -54,38 +54,35 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
                 viewModel.setProgram(program)
             }
         }
-
         initListeners()
-        initObservers()
+        observeState()
+        observeEvents()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.onStop()
     }
 
     private fun initListeners() {
-        buttonBackToScan.setOnClickListener {
-            viewModel.onBackClick()
-        }
-        buttonStartWork.setOnClickListener {
-            viewModel.onStartClick()
-        }
-        buttonStopWork.setOnClickListener {
-            viewModel.onStopClick()
-        }
+        buttonBackToScan.setOnClickListener { viewModel.onBackClick() }
+        buttonStartWork.setOnClickListener { viewModel.onStartClick() }
+        buttonStopWork.setOnClickListener { viewModel.onStopClick() }
     }
 
-    private fun initObservers() {
-        viewModel.toast.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                if (it is Int) showToast(it) else showToast(it as String)
-            }
+    private fun observeEvents() {
+        viewModel.showSnackBarEvent.observe(viewLifecycleOwner, EventObserver {
+            showToast(it)
         })
-        viewModel.chartData.observe(viewLifecycleOwner, Observer {
-            if (it != null) setDataToChart(it.first, it.second)
-        })
-        viewModel.antPlusDialog.observe(viewLifecycleOwner, Observer {
+        viewModel.showDeviceDialogEvent.observe(viewLifecycleOwner, EventObserver {
             if (it != null) showDialog(it.first, it.second)
         })
-        viewModel.trainingData.observe(viewLifecycleOwner, Observer {
-            if (it != null) setTrainingData(it)
-        })
+    }
+
+    private fun observeState() {
+        viewModel.state.observe(viewLifecycleOwner) {
+
+        }
     }
 
     private var alertDialog: AlertDialog? = null
