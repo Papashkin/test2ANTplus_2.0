@@ -1,12 +1,14 @@
 package com.antsfamily.biketrainer.presentation.workout
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.ant.device.BikeCadenceDevice
 import com.antsfamily.biketrainer.ant.device.BikeSpeedDistanceDevice
 import com.antsfamily.biketrainer.ant.device.FitnessEquipmentDevice
 import com.antsfamily.biketrainer.ant.device.HeartRateDevice
-import com.antsfamily.biketrainer.data.models.TrainingParams
+import com.antsfamily.biketrainer.data.models.WorkoutCensorValues
+import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
@@ -20,35 +22,26 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
 
 class WorkoutViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val cadenceCensor: BikeCadenceDevice,
+    private val heartRateCensor: HeartRateDevice,
+    private val speedDistanceCensor: BikeSpeedDistanceDevice,
+    private val fitnessEquipmentCensor: FitnessEquipmentDevice
 ) : StatefulViewModel<WorkoutViewModel.State>(State()) {
 
     data class State(
-        val trainingParams: TrainingParams = TrainingParams(),
-        val trainingData: TrainingParams? = null
+        val censorsData: WorkoutCensorValues = WorkoutCensorValues(),
+        var chartData: Pair<BarData, ArrayList<Float>>? = null
     )
 
-    fun onBackClick() {
-        closeAccess()
-        clear()
-        clearLiveDataValues()
-    }
-
-    private fun clear() {
-        trainingData.postValue(null)
-        antPlusDialog.postValue(null)
-    }
-
-    private fun closeAccess() {
-        handleHeartRate?.close()
-        handleCadence?.close()
-        handleSpeedDistance?.close()
-        handleEquipment?.close()
-    }
+    private var _showDeviceDialogEvent = MutableLiveData<Event<Pair<String, String>?>>()
+    val showDeviceDialogEvent: LiveData<Event<Pair<String, String>?>>
+        get() = _showDeviceDialogEvent
 
     private val timer: Timer = Timer()
     private val task = object : TimerTask() {
@@ -56,23 +49,40 @@ class WorkoutViewModel @Inject constructor(
             displayTrainingData()
         }
     }
-
-    fun onStartClick() = launch {
-// TODO: 15.01.2021  
-    }
+    private var handleHeartRate: PccReleaseHandle<AntPlusHeartRatePcc>? = null
+    private var handleCadence: PccReleaseHandle<AntPlusBikeCadencePcc>? = null
+    private var handleSpeedDistance: PccReleaseHandle<AntPlusBikeSpeedDistancePcc>? = null
+    private var handleEquipment: PccReleaseHandle<AntPlusFitnessEquipmentPcc>? = null
+    private var isHRMInWork = false
+    private var isCadenceInWork = false
+    private var isSpeedInWork = false
+    private var isPowerInWork = false
+    private var timeDescriptors = arrayListOf<Float>()
+    private var programEntries = arrayListOf<BarEntry>()
+    private var workoutValues: WorkoutCensorValues = WorkoutCensorValues()
 
     init {
-        timer.schedule(task, 2_000, 3_000)
+        setupCadenceCensor()
+        setupHeartRateCensor()
+        setupSpeedDistanceCensor()
+        setupFitnessEquipmentCensor()
+        setupTimer()
     }
 
-//    private val trainingParams = TrainingParams()
-    var trainingData: MutableLiveData<TrainingParams?> = MutableLiveData(null)
-    fun displayTrainingData() = launch {
-//        trainingData.postValue(trainingParams)
+    fun onStop() {
+        closeAccess()
     }
 
     fun onStopClick() {
         timer.cancel()
+    }
+
+    fun onBackClick() {
+        // TODO: 23.01.2021
+    }
+
+    fun onStartClick() = launch {
+        // TODO: 15.01.2021
     }
 
     fun setDevices(devices: ArrayList<MultiDeviceSearchResult>) {
@@ -92,20 +102,7 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    private lateinit var heartRateCensor: HeartRateDevice
-    private var handleHeartRate: PccReleaseHandle<AntPlusHeartRatePcc>? = null
-    private var isHRMInWork = false
     private fun setHeartRateAccess(device: MultiDeviceSearchResult) = launch {
-        heartRateCensor = HeartRateDevice(
-            getHearRate = { heartRate ->
-                getHeartRateValue(heartRate)
-            },
-            showToast = { text ->
-                showToast(text)
-            },
-            setDependencies = { name, packageName ->
-                showDialog(name, packageName)
-            })
         handleHeartRate = AntPlusHeartRatePcc.requestAccess(
             context,
             device.antDeviceNumber,
@@ -116,131 +113,53 @@ class WorkoutViewModel @Inject constructor(
         isHRMInWork = true
     }
 
-    private lateinit var cadenceCensor: BikeCadenceDevice
-    private var handleCadence: PccReleaseHandle<AntPlusBikeCadencePcc>? = null
-    private var isCadenceInWork = false
     private fun setCadenceAccess(device: MultiDeviceSearchResult) = launch {
-        cadenceCensor = BikeCadenceDevice(
-            context,
-            getCadence = { cadence ->
-                getCadenceValue(cadence)
-            },
-            getSpeed = { speed ->
-                getSpeedValue(speed)
-            },
-            showToast = { text ->
-                showToast(text)
-            },
-            setDependencies = { name, packageName ->
-                showDialog(name, packageName)
-            })
-
         handleCadence = AntPlusBikeCadencePcc.requestAccess(
             context,
             device.antDeviceNumber,
             0,
             true,
-            cadenceCensor.mResultReceiver,
-            cadenceCensor.mDeviceStateChangeReceiver
+            cadenceCensor.resultReceiver,
+            cadenceCensor.deviceStateChangeReceiver
         )
         isCadenceInWork = true
     }
 
-    private lateinit var speedDistanceCensor: BikeSpeedDistanceDevice
-    private var handleSpeedDistance: PccReleaseHandle<AntPlusBikeSpeedDistancePcc>? = null
-    private var isSpeedInWork = false
     private fun setSpeedAccess(device: MultiDeviceSearchResult) = launch {
-        speedDistanceCensor = BikeSpeedDistanceDevice(
-            context,
-            getSpeed = { speed ->
-                if (!isCadenceInWork) getSpeedValue(speed)
-            },
-            getDistance = { distance ->
-                getDistanceValue(distance)
-            },
-            getCadence = { cadence ->
-                if (!isCadenceInWork) getCadenceValue(cadence)
-            },
-            showToast = { text ->
-                showToast(text)
-            },
-            setDependencies = { name, packageName ->
-                showDialog(name, packageName)
-            })
-
         handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
             context,
             device.antDeviceNumber,
             0,
             true,
-            speedDistanceCensor.mResultReceiver,
-            speedDistanceCensor.mDeviceStateChangeReceiver
+            speedDistanceCensor.resultReceiver,
+            speedDistanceCensor.deviceStateChangeReceiver
         )
         isSpeedInWork = true
     }
 
-    private lateinit var fitnessEquipmentCensor: FitnessEquipmentDevice
-    private var handleEquipment: PccReleaseHandle<AntPlusFitnessEquipmentPcc>? = null
-    private var isPowerInWork = false
     private fun setFitnessEquipmentAccess(device: MultiDeviceSearchResult) = launch {
-        fitnessEquipmentCensor = FitnessEquipmentDevice(
-            showToast = { text ->
-                showToast(text)
-            },
-            setDependencies = { name, packageName ->
-                showDialog(name, packageName)
-            },
-            getPower = { power ->
-                getPowerValue(power)
-            },
-            getCadence = { cadence ->
-                if (!isCadenceInWork or !isSpeedInWork) getCadenceValue(cadence)
-            },
-            getSpeed = { speed ->
-                if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(speed)
-            },
-            getDistance = { distance ->
-                if (!isSpeedInWork) getDistanceValue(distance)
-            })
-
         handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
             context,
             device.antDeviceNumber,
             0,
-            fitnessEquipmentCensor.mPluginAccessResultReceiver,
-            fitnessEquipmentCensor.mDeviceStateChangeReceiver,
-            fitnessEquipmentCensor.mFitnessEquipmentStateReceiver
+            fitnessEquipmentCensor.pluginAccessResultReceiver,
+            fitnessEquipmentCensor.deviceStateChangeReceiver,
+            fitnessEquipmentCensor.fitnessEquipmentStateReceiver
         )
         isPowerInWork = true
     }
 
-    private fun getHeartRateValue(hr: String) {
-//        trainingParams.heartRate = hr
+    private fun closeAccess() {
+        handleHeartRate?.close()
+        handleCadence?.close()
+        handleSpeedDistance?.close()
+        handleEquipment?.close()
     }
 
-    private fun getCadenceValue(cadence: String) {
-//        trainingParams.cadence = cadence
-    }
-
-    private fun getSpeedValue(speed: String) {
-//        trainingParams.speed = speed
-    }
-
-    private fun getDistanceValue(distance: String) {
-//        trainingParams.distance = distance
-    }
-
-    private fun getPowerValue(power: String) {
-//        trainingParams.power = power
-    }
-
-    var antPlusDialog: MutableLiveData<Pair<String, String>?> = MutableLiveData(null)
     private fun showDialog(name: String, packageName: String) {
-        antPlusDialog.postValue(Pair(name, packageName))
+        _showDeviceDialogEvent.postValue(Event(Pair(name, packageName)))
     }
 
-    private var timeDescriptors = arrayListOf<Float>()
-    private var programEntries = arrayListOf<BarEntry>()
     fun setProgram(program: String) {
         programEntries.clear()
         timeDescriptors.clear()
@@ -251,7 +170,6 @@ class WorkoutViewModel @Inject constructor(
     private fun decompileProgram(programLegend: String): ArrayList<BarEntry> {
         val entries = arrayListOf<BarEntry>()
         var count = 0
-
         programLegend.split("|").forEach { firstDecompiler ->
             if (firstDecompiler.isNotEmpty()) {
                 val timeAndPower = firstDecompiler.split("*")
@@ -263,12 +181,75 @@ class WorkoutViewModel @Inject constructor(
         return entries
     }
 
-    var chartData: MutableLiveData<Pair<BarData, ArrayList<Float>>?> = MutableLiveData(null)
     private fun updateChart() {
         val program = BarDataSet(programEntries, "")
         program.barBorderWidth = 0f
-        chartData.postValue(
-            Pair(BarData(program), timeDescriptors)
-        )
+        changeState { it.copy(chartData = Pair(BarData(program), timeDescriptors)) }
+    }
+
+    private fun setupCadenceCensor() {
+        cadenceCensor.apply {
+            setOnCadenceReceiveListener { cadence -> getCadenceValue(cadence) }
+            setOnSpeedReceiveListener { speed -> getSpeedValue(speed) }
+            setOnToastShowListener { showToast(it) }
+            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
+        }
+    }
+
+    private fun setupHeartRateCensor() {
+        heartRateCensor.apply {
+            setOnHeartRateReceiveListener { heartRate -> getHeartRateValue(heartRate) }
+            setOnToastShowListener { showToast(it) }
+            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
+        }
+    }
+
+    private fun setupSpeedDistanceCensor() {
+        speedDistanceCensor.apply {
+            setOnCadenceReceiveListener { cadence -> if (!isCadenceInWork) getCadenceValue(cadence) }
+            setOnDistanceReceiveListener { distance -> getDistanceValue(distance) }
+            setOnSpeedReceiveListener { speed -> if (!isCadenceInWork) getSpeedValue(speed) }
+            setOnToastShowListener { showToast(it) }
+            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
+        }
+    }
+
+    private fun setupFitnessEquipmentCensor() {
+        fitnessEquipmentCensor.apply {
+            setOnCadenceReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getCadenceValue(it) }
+            setOnDistanceReceiveListener { if (!isSpeedInWork) getDistanceValue(it) }
+            setOnPowerReceiveListener { getPowerValue(it) }
+            setOnSpeedReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(it) }
+            setOnShowToastListener { showToast(it) }
+            setOnSetDependenciesListener { name, packageName -> showDialog(name, packageName) }
+        }
+    }
+
+    private fun setupTimer() {
+        timer.schedule(task, 2_000, 3_000)
+    }
+
+    private fun displayTrainingData() = launch {
+        changeState { it.copy(censorsData = workoutValues) }
+    }
+
+    private fun getHeartRateValue(rate: Int) {
+        workoutValues.heartRate = rate
+    }
+
+    private fun getCadenceValue(cadence: BigDecimal) {
+        workoutValues.cadence = cadence
+    }
+
+    private fun getSpeedValue(speed: BigDecimal) {
+        workoutValues.speed = speed
+    }
+
+    private fun getDistanceValue(distance: BigDecimal) {
+        workoutValues.distance = distance
+    }
+
+    private fun getPowerValue(power: BigDecimal) {
+        workoutValues.power = power
     }
 }

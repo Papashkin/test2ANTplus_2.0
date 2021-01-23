@@ -31,7 +31,8 @@ val deviceList: EnumSet<DeviceType> = EnumSet.of(
 )
 
 class ScanViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val connection: AntRadioServiceConnection
 ) : StatefulViewModel<ScanViewModel.State>(State()) {
     private val TAG = ScanViewModel::class.java.simpleName.toUpperCase(Locale.getDefault())
 
@@ -40,10 +41,10 @@ class ScanViewModel @Inject constructor(
         var search: MultiDeviceSearch? = null
     )
 
-    private var connection: AntRadioServiceConnection? = null
+//    private var connection: AntRadioServiceConnection? = null
 
     init {
-        connection = AntRadioServiceConnection(context)
+//        connection = AntRadioServiceConnection(context)
         doBindChannelService()
     }
 

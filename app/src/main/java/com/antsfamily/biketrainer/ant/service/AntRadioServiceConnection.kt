@@ -12,10 +12,13 @@ import com.antsfamily.biketrainer.ant.channel.ChannelBroadcastListener
 import com.antsfamily.biketrainer.ant.channel.ChannelChangedListener
 import com.antsfamily.biketrainer.ant.channel.ChannelController
 import com.antsfamily.biketrainer.ant.channel.ChannelInfo
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class AntRadioServiceConnection @Inject constructor(private var context: Context) : ServiceConnection {
+class AntRadioServiceConnection @Inject constructor(
+    @ApplicationContext private var context: Context
+) : ServiceConnection {
     companion object {
         private const val TAG = "ChannelService"
         private val CHANNEL_LOCK = Object()
@@ -28,7 +31,6 @@ class AntRadioServiceConnection @Inject constructor(private var context: Context
     private var mBackgroundScanAcquired = false
     private var mAntRadioService: AntService? = null
     private var mAntChannelProvider: AntChannelProvider? = null
-
     private val broadcastListener = object : ChannelBroadcastListener {
         /**
          * [onBroadcastChanged] - Pass on the received channel info to activity for display
