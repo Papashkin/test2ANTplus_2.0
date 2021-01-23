@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="text_size_header1">48sp</dimen>
+    <dimen name="text_size_header2">36sp</dimen>
+    <dimen name="text_size_header3">32sp</dimen>
+    <dimen name="text_size_header4">30sp</dimen>
+    <dimen name="text_size_header5">28sp</dimen>
+    <dimen name="text_size_header6">26sp</dimen>
+    <dimen name="text_size_title1">24sp</dimen>
+    <dimen name="text_size_title2">20sp</dimen>
+    <dimen name="text_size_body1">16sp</dimen>
+    <dimen name="text_size_body2">14sp</dimen>
+    <dimen name="text_size_body3">12sp</dimen>
+    <dimen name="text_size_caption1">10sp</dimen>
+    <dimen name="text_size_caption2">8sp</dimen>
+
+    <dimen name="margin_tiny">2dp</dimen>
+    <dimen name="margin_small_extra">4dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_regular">10dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_large_extra">20dp</dimen>
+    <dimen name="margin_large_extra_extra">24dp</dimen>
+    <dimen name="margin_huge">48dp</dimen>
+
+    <dimen name="radius_small">8dp</dimen>
+    <dimen name="radius_regular">12dp</dimen>
+    <dimen name="radius_medium">16dp</dimen>
+    <dimen name="radius_large">32dp</dimen>
+    <dimen name="radius_huge">48dp</dimen>
+
+</resources>

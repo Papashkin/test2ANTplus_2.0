@@ -1,25 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorOnPrimary">@color/pure_white</item>
+        <item name="colorOnSurface">@color/pure_white</item>
     </style>
 
     <style name="MainToolbar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/full_black</item>
         <item name="android:textColor">#ffe500</item>
         <item name="android:elevation">6dp</item>
-    </style>
-
-
-
-    <style name="ProfileListLayout" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:background">@color/pure_white</item>
-        <item name="android:layout_margin">2dp</item>
-        <item name="android:elevation">4dp</item>
     </style>
 
     <style name="TitleText">

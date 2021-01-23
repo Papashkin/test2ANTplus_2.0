@@ -1,183 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/grey_800">
+        tools:context=".ui.start.StartFragment">
 
-    <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbarProfiles"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            style="@style/MainToolbar"
-            app:title="@string/app_name"
-            app:titleTextColor="@color/pure_white"
-            app:layout_constraintStart_toStartOf="parent"
+    <ImageView
+            android:id="@+id/cycling_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cycling_road"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/start_btn"
+            app:layout_constraintVertical_chainStyle="packed"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="ContentDescription" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutStart"
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/start_btn"
+            style="@style/Body1.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:focusable="true"
-            android:clickable="true"
-            android:background="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@id/toolbarProfiles">
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginVertical="@dimen/margin_medium"
+            android:background="@drawable/bg_button_rounded_small"
+            android:text="@string/start"
+            app:layout_constraintBottom_toTopOf="@id/profiles_btn"
+            app:layout_constraintTop_toBottomOf="@id/cycling_iv" />
 
-        <ImageView
-                android:id="@+id/imageStart"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_start"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <TextView
-                android:id="@+id/textStart"
-                style="@style/TitleText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                app:layout_constraintTop_toTopOf="@id/imageStart"
-                app:layout_constraintBottom_toBottomOf="@id/imageStart"
-                app:layout_constraintStart_toEndOf="@id/imageStart"
-                android:text="@string/start" />
-
-        <ImageView
-                android:id="@+id/btnStart"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_forward"
-                android:background="@android:color/transparent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/grey_500"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/textStart"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutProfiles"
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/profiles_btn"
+            style="@style/Body1.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@android:color/transparent"
-            android:focusable="true"
-            android:clickable="true"
-            app:layout_constraintTop_toBottomOf="@id/layoutStart">
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginVertical="@dimen/margin_medium"
+            android:background="@drawable/bg_button_rounded_small"
+            android:text="@string/profiles"
+            app:layout_constraintBottom_toTopOf="@id/programs_btn"
+            app:layout_constraintTop_toBottomOf="@id/start_btn" />
 
-        <ImageView
-                android:id="@+id/imageProfiles"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_profiles"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <TextView
-                android:id="@+id/textProfiles"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TitleText"
-                android:layout_marginStart="20dp"
-                app:layout_constraintTop_toTopOf="@id/imageProfiles"
-                app:layout_constraintBottom_toBottomOf="@id/imageProfiles"
-                app:layout_constraintStart_toEndOf="@id/imageProfiles"
-                android:text="@string/profiles" />
-
-        <ImageView
-                android:id="@+id/btnProfiles"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_forward"
-                android:background="@android:color/transparent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/grey_500"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/textProfiles"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutPrograms"
+    <com.google.android.material.button.MaterialButton
+            android:id="@+id/programs_btn"
+            style="@style/Body1.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:focusable="true"
-            android:clickable="true"
-            android:background="@android:color/transparent"
-            app:layout_constraintTop_toBottomOf="@id/layoutProfiles">
-
-        <ImageView
-                android:id="@+id/imagePrograms"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:src="@drawable/ic_programs"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <TextView
-                android:id="@+id/textPrograms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/TitleText"
-                android:layout_marginStart="20dp"
-                app:layout_constraintTop_toTopOf="@id/imagePrograms"
-                app:layout_constraintBottom_toBottomOf="@id/imagePrograms"
-                app:layout_constraintStart_toEndOf="@id/imagePrograms"
-                android:text="@string/programs" />
-
-        <ImageView
-                android:id="@+id/btnPrograms"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:padding="10dp"
-                android:src="@drawable/ic_forward"
-                android:background="@android:color/transparent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                tools:ignore="ContentDescription" />
-
-        <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/grey_500"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="@id/textPrograms"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@drawable/bg_button_rounded_small"
+            android:text="@string/programs"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/profiles_btn" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
