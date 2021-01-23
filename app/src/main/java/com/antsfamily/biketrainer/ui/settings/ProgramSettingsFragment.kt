@@ -4,12 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.data.models.ProgramType
 import com.antsfamily.biketrainer.presentation.programSettings.ProgramSettingsViewModel
 import com.antsfamily.biketrainer.presentation.withFactory
@@ -29,20 +27,8 @@ import kotlinx.android.synthetic.main.fragment_program_settings.*
 
 @AndroidEntryPoint
 class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings) {
-    companion object {
-        const val MODIFIED_PROGRAM_NAME = "modified program name"
-        const val MODIFIED_PROGRAM_SETTING = "modified program setting"
-        const val MODIFIED_PROGRAM_IMAGE_PATH = "modified program image path"
 
-        fun newInstance(program: Program?): ProgramSettingsFragment =
-            ProgramSettingsFragment().apply {
-                this.arguments = bundleOf(
-                    MODIFIED_PROGRAM_NAME to program?.getName(),
-                    MODIFIED_PROGRAM_IMAGE_PATH to program?.getImagePath(),
-                    MODIFIED_PROGRAM_SETTING to program?.getProgram()
-                )
-            }
-    }
+    private val args: ProgramSettingsFragmentArgs by navArgs()
 
     override val viewModel: ProgramSettingsViewModel by viewModels { withFactory(viewModelFactory) }
 
@@ -52,24 +38,9 @@ class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings)
         clearTextFields()
     }
 
-    private lateinit var modifiedProgram: Pair<String, String>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        this.arguments?.apply {
-            val programName = this.getString(MODIFIED_PROGRAM_NAME)
-            val programSetting = this.getString(MODIFIED_PROGRAM_SETTING)
-            val programImagePath = this.getString(MODIFIED_PROGRAM_IMAGE_PATH)
-
-            if (!programName.isNullOrBlank()) {
-                modifiedProgram = Pair(programName, programSetting!!)
-                editProgramName.setText(programName)
-                viewModel.onEditExistedProgramOpen(modifiedProgram, programImagePath)
-            } else {
-                viewModel.onNewProgramCreate()
-            }
-        }
-
+        args.programId?.let { viewModel.onEditProgram(it) } ?: viewModel.onNewProgramCreate()
         toolbarProgramSettings.setNavigationIcon(R.drawable.ic_arrow_back_32)
-
         initTextWatchers()
         initListeners()
         initObservers()
@@ -86,40 +57,18 @@ class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings)
     }
 
     private fun initListeners() {
-        toolbarProgramSettings.setNavigationOnClickListener {
-            viewModel.onBackPressed()
-        }
-
-        btnSegment.setOnClickListener {
-            viewModel.addProgramClick(ProgramType.SEGMENT)
-        }
-
-        btnIntervals.setOnClickListener {
-            viewModel.addProgramClick(ProgramType.INTERVAL)
-        }
-
-        btnUpstairs.setOnClickListener {
-            viewModel.addProgramClick(ProgramType.STEPS_UP)
-        }
-
-        btnDownstairs.setOnClickListener {
-            viewModel.addProgramClick(ProgramType.STEPS_DOWN)
-        }
-
+        toolbarProgramSettings.setNavigationOnClickListener { viewModel.onBackPressed() }
+        btnSegment.setOnClickListener { viewModel.addProgramClick(ProgramType.SEGMENT) }
+        btnIntervals.setOnClickListener { viewModel.addProgramClick(ProgramType.INTERVAL) }
+        btnUpstairs.setOnClickListener { viewModel.addProgramClick(ProgramType.STEPS_UP) }
+        btnDownstairs.setOnClickListener { viewModel.addProgramClick(ProgramType.STEPS_DOWN) }
         buttonSaveProgram.setOnClickListener {
             chartProgram?.data?.setDrawValues(false)
             chartProgram?.legend?.isEnabled = false
             viewModel.onSaveClick()
         }
-
-        btnAdd.setOnClickListener {
-            viewModel.onAddClick()
-        }
-
-        btnCancel.setOnClickListener {
-            viewModel.onCancelClick()
-        }
-
+        btnAdd.setOnClickListener { viewModel.onAddClick() }
+        btnCancel.setOnClickListener { viewModel.onCancelClick() }
         chartProgram.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {}
 
@@ -130,32 +79,32 @@ class ProgramSettingsFragment : BaseFragment(R.layout.fragment_program_settings)
     }
 
     private fun initObservers() {
-        viewModel.keyboard.observe(viewLifecycleOwner, Observer {
+        viewModel.keyboard.observe(viewLifecycleOwner) {
             if (it) showKeyboard() else hideKeyboard()
-        })
-        viewModel.loading.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.loading.observe(viewLifecycleOwner) {
             if (it) showLoading() else hideLoading()
-        })
-        viewModel.toast.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.toast.observe(viewLifecycleOwner) {
             if (it != null) {
                 if (it is Int) showToast(it) else showToast(it as String)
             }
-        })
-        viewModel.programDialog.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.programDialog.observe(viewLifecycleOwner) {
             if (it) showProgramBottomDialog() else hideProgramBottomDialog()
-        })
-        viewModel.barChart.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.barChart.observe(viewLifecycleOwner) {
             if (it != null) updateChart(it.first, it.second)
-        })
-        viewModel.programTypeAndData.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.programTypeAndData.observe(viewLifecycleOwner) {
             setProgramType(it.first, it.second, it.third)
-        })
-        viewModel.chartGetter.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.chartGetter.observe(viewLifecycleOwner) {
             if (it) getChart()
-        })
-        viewModel.backDialog.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.backDialog.observe(viewLifecycleOwner) {
             if (it) showBackDialog()
-        })
+        }
     }
 
     private fun initBottomSheetCallback() {

@@ -365,6 +365,10 @@ class ProgramSettingsViewModel @Inject constructor(
 //        isNewProgram = true
     }
 
+    fun onEditProgram(id: String) {
+
+    }
+
     fun onEditExistedProgramOpen(program: Pair<String, String>, imagePath: String?) {
 //        isNewProgram = false
 //        programName = program.first

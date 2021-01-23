@@ -1,8 +1,14 @@
-package com.antsfamily.biketrainer.presentation.navigation
+package com.antsfamily.biketrainer.navigation
+
+import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 
 sealed class Route
 object StartToProfile : Route()
 object StartToPrograms : Route()
-class ProgramToProgramSettings(val programId: Int) : Route()
+class ProgramToProgramSettings(val programId: String?) : Route()
 object ProgramToScan : Route()
-object ScanToWorkout : Route()
+class ScanToWorkout(
+    val devices: List<MultiDeviceSearch.MultiDeviceSearchResult>,
+    val program: String,
+    val profile: String
+) : Route()

@@ -1,8 +1,8 @@
 package com.antsfamily.biketrainer.presentation.start
 
 import com.antsfamily.biketrainer.presentation.BaseViewModel
-import com.antsfamily.biketrainer.presentation.navigation.StartToProfile
-import com.antsfamily.biketrainer.presentation.navigation.StartToPrograms
+import com.antsfamily.biketrainer.navigation.StartToProfile
+import com.antsfamily.biketrainer.navigation.StartToPrograms
 import javax.inject.Inject
 
 class StartViewModel @Inject constructor() : BaseViewModel() {

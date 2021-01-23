@@ -12,7 +12,7 @@ import com.antsfamily.biketrainer.navigation.mapToDirection
 import com.antsfamily.biketrainer.presentation.BaseViewModel
 import com.antsfamily.biketrainer.presentation.EventObserver
 import com.antsfamily.biketrainer.presentation.ViewModelFactory
-import com.antsfamily.biketrainer.presentation.navigation.Route
+import com.antsfamily.biketrainer.navigation.Route
 import javax.inject.Inject
 
 abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
