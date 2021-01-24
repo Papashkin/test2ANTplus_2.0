@@ -25,12 +25,20 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     val navigationEvent: LiveData<Event<Route>>
         get() = _navigationEvent
 
+    private val _navigationBackEvent = MutableLiveData<Event<Unit>>()
+    val navigationBackEvent: LiveData<Event<Unit>>
+        get() = _navigationBackEvent
+
     private val _showSnackBarEvent = MutableLiveData<Event<String>>()
     val showSnackBarEvent: LiveData<Event<String>>
         get() = _showSnackBarEvent
 
     fun navigateTo(route: Route) {
         _navigationEvent.postValue(Event(route))
+    }
+
+    fun navigateBack() {
+        _navigationBackEvent.postValue(Event(Unit))
     }
 
     fun showLoading() {

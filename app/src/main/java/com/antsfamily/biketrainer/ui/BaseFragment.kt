@@ -54,9 +54,16 @@ abstract class BaseFragment(@LayoutRes layoutId: Int) : Fragment(layoutId) {
         viewModel.navigationEvent.observe(viewLifecycleOwner, EventObserver {
             navigateTo(it)
         })
+        viewModel.navigationBackEvent.observe(viewLifecycleOwner, EventObserver {
+            navigateBack()
+        })
     }
 
     private fun navigateTo(route: Route) {
         findNavController().navigate(route.mapToDirection())
+    }
+
+    private fun navigateBack() {
+        findNavController().navigateUp()
     }
 }

@@ -3,10 +3,20 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorOnPrimary">@color/pure_white</item>
-        <item name="colorOnSurface">@color/pure_white</item>
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--        <item name="colorOnPrimary">@color/pure_white</item>-->
+<!--        <item name="colorSurface">@color/pure_white</item>-->
+<!--        <item name="colorOnSurface">@color/full_black</item>-->
+        <item name="colorPrimary">#009688</item>
+        <item name="colorSecondary">#F9FBE7</item>
+        <item name="colorPrimaryDark">#00796B</item>
+        <item name="colorAccent">#CDDC39</item>
+        <item name="android:textColorPrimary">#212121</item>
+        <item name="android:textColorSecondary">#757575</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorSurface">#BDCDBD</item>
+        <item name="colorOnSurface">#212121</item>
     </style>
 
     <style name="MainToolbar" parent="Base.Theme.AppCompat.Light.DarkActionBar">

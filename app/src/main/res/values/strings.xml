@@ -57,7 +57,7 @@
     <string name="program_type_3_steps_down">3 Steps down</string>
 
     <!-- ====== Programs list ====== -->
-    <string name="programs_empty_list">You didn\'t create any programs.\nPlease click the \"plus\" in top of the screen to create one.</string>
+    <string name="programs_empty_list">Whoops! \nWe didn\'t find any programs you created.</string>
 
     <!-- ====== Toolbars ====== -->
     <string name="toolbar_select_profile">Choose the profile</string>

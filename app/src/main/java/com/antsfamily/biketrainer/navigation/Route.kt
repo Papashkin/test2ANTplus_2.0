@@ -12,3 +12,4 @@ class ScanToWorkout(
     val program: String,
     val profile: String
 ) : Route()
+object ProfileToCreateProfile: Route()

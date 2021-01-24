@@ -2,16 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/profileSwipeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/grey_800">
+        android:layout_height="wrap_content">
 
     <ImageView
-            android:id="@+id/iconProfile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="16dp"
+            android:id="@+id/icon_iv"
+            android:layout_width="@dimen/profile_item_icon_size"
+            android:layout_height="@dimen/profile_item_icon_size"
+            android:layout_margin="@dimen/margin_small"
+            android:background="@drawable/bg_circle_on_primary"
             android:src="@drawable/ic_profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -19,22 +18,21 @@
             tools:ignore="ContentDescription" />
 
     <TextView
-            android:id="@+id/textProfileName"
-            style="@style/TitleText"
+            android:id="@+id/name_tv"
+            style="@style/Body1.onSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            app:layout_constraintBottom_toBottomOf="@id/iconProfile"
-            app:layout_constraintStart_toEndOf="@id/iconProfile"
-            app:layout_constraintTop_toTopOf="@id/iconProfile"
-            tools:text="profile 1" />
+            android:layout_marginStart="@dimen/margin_regular"
+            app:layout_constraintBottom_toBottomOf="@id/icon_iv"
+            app:layout_constraintStart_toEndOf="@id/icon_iv"
+            app:layout_constraintTop_toTopOf="@id/icon_iv"
+            tools:text="profile Test" />
 
     <View
-            android:layout_width="0dp"
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/grey_500"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@id/textProfileName" />
+            android:background="?attr/colorSurface"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

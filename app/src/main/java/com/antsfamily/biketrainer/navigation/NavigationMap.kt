@@ -15,4 +15,6 @@ fun Route.mapToDirection(): NavDirections = when (this) {
     is ScanToWorkout -> ScanFragmentDirections.actionScanFragmentToWorkoutFragment(
         devices.toTypedArray(), program, profile
     )
+    // TODO rework it, create new screen and fix the navigation
+    is ProfileToCreateProfile -> StartFragmentDirections.actionStartFragmentToProgramsFragment()
 }
