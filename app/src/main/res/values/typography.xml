@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Header1" parent="TextAppearance.AppCompat">
+    <style name="Header1" parent="TextAppearance.MaterialComponents.Headline1">
         <item name="android:textSize">@dimen/text_size_header1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Header1.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
-    <style name="Header2" parent="TextAppearance.AppCompat">
+    <style name="Header2" parent="TextAppearance.MaterialComponents.Headline2">
         <item name="android:textSize">@dimen/text_size_header2</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Header2.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
-    <style name="Header3" parent="TextAppearance.AppCompat">
+    <style name="Header2.Bold.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Header3" parent="TextAppearance.MaterialComponents.Headline3">
         <item name="android:textSize">@dimen/text_size_header3</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Header3.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
-    <style name="Header4" parent="TextAppearance.AppCompat">
+    <style name="Header4" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="android:textSize">@dimen/text_size_header4</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Header4.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
-    <style name="Body1" parent="TextAppearance.AppCompat">
+    <style name="Header4.Bold.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textSize">@dimen/text_size_body1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Body1.onSurface">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
@@ -51,23 +63,27 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
-    <style name="Body2" parent="TextAppearance.AppCompat">
+    <style name="Body2" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/text_size_body2</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
     <style name="Body2.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
-    <style name="Body3" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/text_size_body3</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
+    <style name="Body2.onSurface">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
-    <style name="Body3.Bold">
+    <style name="Caption" parent="TextAppearance.MaterialComponents.Caption">
+        <item name="android:textSize">@dimen/text_size_caption1</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Caption.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
