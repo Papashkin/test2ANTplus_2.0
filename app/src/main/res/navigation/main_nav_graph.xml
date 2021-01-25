@@ -21,7 +21,11 @@
             android:id="@+id/profilesFragment"
             android:name="com.antsfamily.biketrainer.ui.profiles.ProfilesFragment"
             android:label="ProfilesFragment"
-            tools:layout="@layout/fragment_profiles" />
+            tools:layout="@layout/fragment_profiles" >
+        <action
+                android:id="@+id/action_profilesFragment_to_createProfileFragment"
+                app:destination="@id/createProfileFragment" />
+    </fragment>
     <fragment
             android:id="@+id/programSettingsFragment"
             android:name="com.antsfamily.biketrainer.ui.settings.ProgramSettingsFragment"
@@ -68,4 +72,9 @@
                 android:name="profile"
                 app:argType="string" />
     </fragment>
+    <fragment
+            android:id="@+id/createProfileFragment"
+            android:name="com.antsfamily.biketrainer.ui.createprofile.CreateProfileFragment"
+            android:label="fragment_create_profile"
+            tools:layout="@layout/fragment_create_profile" />
 </navigation>

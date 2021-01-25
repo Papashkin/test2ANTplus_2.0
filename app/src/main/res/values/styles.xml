@@ -8,20 +8,16 @@
 <!--        <item name="colorOnPrimary">@color/pure_white</item>-->
 <!--        <item name="colorSurface">@color/pure_white</item>-->
 <!--        <item name="colorOnSurface">@color/full_black</item>-->
-        <item name="colorPrimary">#009688</item>
-        <item name="colorSecondary">#F9FBE7</item>
-        <item name="colorPrimaryDark">#00796B</item>
-        <item name="colorAccent">#CDDC39</item>
-        <item name="android:textColorPrimary">#212121</item>
-        <item name="android:textColorSecondary">#757575</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="colorSurface">#BDCDBD</item>
-        <item name="colorOnSurface">#212121</item>
+        <item name="colorPrimary">@color/color_central</item>
+        <item name="colorOnPrimary">@color/pure_white</item>
+        <item name="colorSurface">@color/color_deeper</item>
+        <item name="colorOnSurface">@color/full_black</item>
+        <item name="colorAccent">@color/color_lighter</item>
+        <item name="colorOnBackground">@color/color_overside</item>
     </style>
 
     <style name="MainToolbar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
         <item name="android:background">@color/full_black</item>
-        <item name="android:textColor">#ffe500</item>
         <item name="android:elevation">6dp</item>
     </style>
 

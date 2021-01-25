@@ -236,7 +236,7 @@ class ProgramSettingsViewModel @Inject constructor(
 
     private fun checkProgramName(programValues: String) = launch {
         try {
-            showLoading()
+//            showLoading()
 //            val programWithSameName = programsRepository.getProgramByName(programName)
 //            if (programWithSameName == null) {
 //                chartGetter.postValue(true)
@@ -248,7 +248,7 @@ class ProgramSettingsViewModel @Inject constructor(
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            hideLoading()
+//            hideLoading()
         }
     }
 
@@ -393,4 +393,7 @@ class ProgramSettingsViewModel @Inject constructor(
         }
         return entries
     }
+
+    private fun showLoading() {}
+    private fun hideLoading() {}
 }

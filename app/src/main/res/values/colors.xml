@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#4FC3F7</color>
-    <color name="colorAccent">#D81B60</color>
-    <color name="full_black">#000000</color>
-    <color name="pure_white">#ffffff</color>
     <color name="green_700">#388E3C</color>
     <color name="red_700">#D32F2F</color>
     <color name="grey_700">#616161</color>
@@ -14,4 +10,10 @@
     <color name="light_blue_300">#4FC3F7</color>
     <color name="yellow">#ffe500</color>
 
+    <color name="color_central">#7d52ff</color>
+    <color name="color_deeper">#E7EAEA</color>
+    <color name="color_lighter">#b581ff</color>
+    <color name="color_overside">#ffa8ff</color>
+    <color name="full_black">#000000</color>
+    <color name="pure_white">#ffffff</color>
 </resources>

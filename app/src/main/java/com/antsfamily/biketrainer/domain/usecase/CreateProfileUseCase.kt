@@ -6,12 +6,12 @@ import com.antsfamily.biketrainer.domain.BaseUseCase
 import com.antsfamily.biketrainer.domain.Result
 import javax.inject.Inject
 
-class GetProfileUseCase @Inject constructor(
+class CreateProfileUseCase @Inject constructor(
     private val profileRepository: ProfilesRepository
-) : BaseUseCase<Unit, Result<List<Profile>, Error>>() {
+) : BaseUseCase<Profile, Result<Unit, Error>>() {
 
-    override suspend fun run(params: Unit): Result<List<Profile>, Error> = try {
-        Result.Success(profileRepository.getAllProfiles())
+    override suspend fun run(params: Profile): Result<Unit, Error> = try {
+        Result.Success(profileRepository.insertProfile(params))
     } catch (e: Exception) {
         Result.Failure(Error("Epic fail"))
     }

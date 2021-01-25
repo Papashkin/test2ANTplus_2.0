@@ -41,13 +41,17 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
         _navigationBackEvent.postValue(Event(Unit))
     }
 
-    fun showLoading() {
-        loading.postValue(true)
+    fun showSnackbar(message: String) {
+        _showSnackBarEvent.postValue(Event(message))
     }
 
-    fun hideLoading() {
-        loading.postValue(false)
-    }
+//    fun showLoading() {
+//        loading.postValue(true)
+//    }
+
+//    fun hideLoading() {
+//        loading.postValue(false)
+//    }
 
     fun showKeyboard() {
         keyboard.postValue(true)

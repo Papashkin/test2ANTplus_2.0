@@ -18,11 +18,12 @@
     <dimen name="margin_tiny">2dp</dimen>
     <dimen name="margin_small_extra">4dp</dimen>
     <dimen name="margin_small">8dp</dimen>
-    <dimen name="margin_regular">10dp</dimen>
-    <dimen name="margin_medium">12dp</dimen>
-    <dimen name="margin_large">16dp</dimen>
-    <dimen name="margin_large_extra">20dp</dimen>
-    <dimen name="margin_large_extra_extra">24dp</dimen>
+    <dimen name="margin_pre_regular">10dp</dimen>
+    <dimen name="margin_regular">12dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_large">20dp</dimen>
+    <dimen name="margin_large_extra">24dp</dimen>
+    <dimen name="margin_large_extra_extra">32dp</dimen>
     <dimen name="margin_huge">48dp</dimen>
 
     <dimen name="radius_small">8dp</dimen>

@@ -49,6 +49,10 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 
+    <style name="Header4.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
     <style name="Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textSize">@dimen/text_size_body1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
