@@ -1,68 +1,67 @@
 package com.antsfamily.biketrainer.presentation.programs
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.liveData
-import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
 import com.antsfamily.biketrainer.data.models.Program
+import com.antsfamily.biketrainer.domain.Result
+import com.antsfamily.biketrainer.domain.usecase.GetProgramsUseCase
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ProgramsViewModel @Inject constructor(
-    private val programsRepository: ProgramsRepository
+    private val getProgramsUseCase: GetProgramsUseCase
 ) : StatefulViewModel<ProgramsViewModel.State>(State()) {
 
     data class State(
-        var programToDelete: Program? = null,
-        var deletePosition: Int = -1
+        val isLoading: Boolean = true,
+        val programs: List<Program> = emptyList(),
+        val isProgramsVisible: Boolean = false,
+        val isEmptyProgramsVisible: Boolean = false
     )
 
-    val programs: LiveData<List<Program>> = liveData {
-        emitSource(programsRepository.getAllPrograms())
-    }
-    val deletingSnackBar: MutableLiveData<String?> = MutableLiveData(null)
-
-    fun addProgram() {
-//        router.navigateTo(FragmentScreens.ProgramSettingsScreen(null))
-        clearLiveDataValues()
+    init {
+        getPrograms()
     }
 
-    fun onBackPressed() {
-//        router.exit()
+    fun onAddProgramClick() {
+        // TODO: add navigation to "Create program" screen.
     }
 
-    fun clearValues() {
-        deletingSnackBar.postValue(null)
-        clearLiveDataValues()
+    fun onProgramClick(item: Program) {
+
     }
 
-    fun onDeleteClick(position: Int) = launch {
-        try {
-//            deletePosition = position
-//            programToDelete = programs.value?.get(position)
-//            programsRepository.removeProgram(programToDelete!!)
-//            deletingSnackBar.postValue(programToDelete?.getName())
-        } catch (e: Exception) {
-            e.printStackTrace()
+    fun onLongProgramClick(item: Program) {
+
+    }
+
+    fun onBackClick() {
+        navigateBack()
+    }
+
+    private fun getPrograms() {
+        getProgramsUseCase(Unit, ::handleProgramResult)
+    }
+
+    private fun handleProgramResult(result: Result<List<Program>, Error>) {
+        hideLoading()
+        when (result) {
+            is Result.Success -> handleSuccessResult(result.successData)
+            is Result.Failure -> showSnackbar(result.errorData.message ?: "Something went wrong :(")
         }
     }
 
-    fun undoDelete() = launch {
-//        try {
-//            programsRepository.insertProgram(programToDelete!!)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
+    private fun handleSuccessResult(data: List<Program>) {
+        changeState { it.copy(
+            programs = data,
+            isProgramsVisible = data.isNotEmpty(),
+            isEmptyProgramsVisible = data.isEmpty()
+        ) }
     }
 
-    fun onEditClick(id: Int) {
-//        router.navigateTo(FragmentScreens.ProgramSettingsScreen(programs.value?.first { it.getId() == id }))
+    private fun showLoading() {
+        changeState { it.copy(isLoading = true) }
     }
 
-    fun setWorkOut(id: Int, profileName: String) {
-        programs.value?.firstOrNull { it.getId() == id }?.let { selectedProgram ->
-//            router.navigateTo(FragmentScreens.ScanScreen(profileName, selectedProgram))
-        }
+    private fun hideLoading() {
+        changeState { it.copy(isLoading = false) }
     }
 }
