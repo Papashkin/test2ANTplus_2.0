@@ -7,10 +7,13 @@ import kotlinx.coroutines.launch
 
 abstract class BaseUseCase<in Params, out Type> where Type : Any {
 
-    abstract suspend fun run(params: Params): Result<Type, Error>
+    private val mainDispatcher = Dispatchers.Main
+    private val backgroundDispatcher = Dispatchers.IO
 
-    operator fun invoke(params: Params, onResult: (Result<Type, Error>) -> Unit = {}) {
-        val job = GlobalScope.async(Dispatchers.IO) { run(params) }
-        GlobalScope.launch(Dispatchers.Main) { onResult(job.await()) }
+    abstract suspend fun run(params: Params): Type
+
+    operator fun invoke(params: Params, onResult: (Type) -> Unit = {}) {
+        val job = GlobalScope.async(backgroundDispatcher) { run(params) }
+        GlobalScope.launch(mainDispatcher) { onResult(job.await()) }
     }
 }

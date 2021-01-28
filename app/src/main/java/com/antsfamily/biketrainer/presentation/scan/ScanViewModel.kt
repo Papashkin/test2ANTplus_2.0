@@ -144,4 +144,7 @@ class ScanViewModel @Inject constructor(
         connectButtonVisibility.postValue(false)
         devices.postValue(listOf())
     }
+
+    private fun showLoading() {}
+    private fun hideLoading() {}
 }

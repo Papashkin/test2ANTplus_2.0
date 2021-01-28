@@ -86,4 +86,16 @@
     <string name="dialog_save_program_question">You have unsaved data. Do you want to save it?</string>
     <string name="dialog_program_saving">Program saving …</string>
 
+    <!-- ====== Create profile ====== -->
+    <string name="gender_male">Male</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_invalid">Don\'t know</string>
+    <string name="create_profile_create_new_profile">Create new profile</string>
+    <string name="create_profile_username">Username</string>
+    <string name="create_profile_age">Age</string>
+    <string name="create_profile_height">Height (sm)</string>
+    <string name="create_profile_weight">Weight (kg)</string>
+    <string name="create_profile_gender">Gender</string>
+    <string name="create_profile_create">Create</string>
+
 </resources>

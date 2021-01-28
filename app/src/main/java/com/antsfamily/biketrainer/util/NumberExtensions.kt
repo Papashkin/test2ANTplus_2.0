@@ -4,4 +4,5 @@ import java.math.BigDecimal
 
 fun BigDecimal?.orZero() = this ?: BigDecimal.ZERO
 
-fun Number?.orZero() = this ?: 0
+@Suppress("UNCHECKED_CAST")
+fun <T : Number> T?.orZero() = this ?: 0 as T

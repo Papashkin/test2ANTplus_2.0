@@ -9,7 +9,7 @@
             android:id="@+id/icon_iv"
             android:layout_width="@dimen/profile_item_icon_size"
             android:layout_height="@dimen/profile_item_icon_size"
-            android:layout_margin="@dimen/margin_small"
+            android:layout_margin="@dimen/margin_large_extra"
             android:background="@drawable/bg_circle_on_primary"
             android:src="@drawable/ic_profile"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -19,10 +19,10 @@
 
     <TextView
             android:id="@+id/name_tv"
-            style="@style/Body1.onSurface"
+            style="@style/Header4.onSurface"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_regular"
+            android:layout_marginStart="@dimen/margin_medium"
             app:layout_constraintBottom_toBottomOf="@id/icon_iv"
             app:layout_constraintStart_toEndOf="@id/icon_iv"
             app:layout_constraintTop_toTopOf="@id/icon_iv"
@@ -32,7 +32,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="?attr/colorSurface"
+            android:background="#e7eaea"
             app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

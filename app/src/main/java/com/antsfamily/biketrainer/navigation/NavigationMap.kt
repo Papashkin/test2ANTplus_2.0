@@ -1,6 +1,7 @@
 package com.antsfamily.biketrainer.navigation
 
 import androidx.navigation.NavDirections
+import com.antsfamily.biketrainer.ui.profiles.ProfilesFragmentDirections
 import com.antsfamily.biketrainer.ui.programs.ProgramsFragmentDirections
 import com.antsfamily.biketrainer.ui.scanning.ScanFragmentDirections
 import com.antsfamily.biketrainer.ui.start.StartFragmentDirections
@@ -15,6 +16,5 @@ fun Route.mapToDirection(): NavDirections = when (this) {
     is ScanToWorkout -> ScanFragmentDirections.actionScanFragmentToWorkoutFragment(
         devices.toTypedArray(), program, profile
     )
-    // TODO rework it, create new screen and fix the navigation
-    is ProfileToCreateProfile -> StartFragmentDirections.actionStartFragmentToProgramsFragment()
+    is ProfileToCreateProfile -> ProfilesFragmentDirections.actionProfilesFragmentToCreateProfileFragment()
 }

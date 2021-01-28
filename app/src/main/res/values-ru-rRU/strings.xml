@@ -86,4 +86,15 @@
     <string name="dialog_save_program_question">Есть несохраненные данные. Хотите их сохранить?</string>
     <string name="dialog_program_saving">Сохранение программы …</string>
 
+    <!-- ====== Create profile ====== -->
+    <string name="gender_male">Мужчина</string>
+    <string name="gender_female">Женщина</string>
+    <string name="gender_invalid">Не определился</string>
+    <string name="create_profile_create_new_profile">Создать акаунт</string>
+    <string name="create_profile_username">Псведоним</string>
+    <string name="create_profile_age">Возраст</string>
+    <string name="create_profile_height">Рост (см)</string>
+    <string name="create_profile_weight">Вес (кг)</string>
+    <string name="create_profile_gender">Пол</string>
+    <string name="create_profile_create">Создать</string>
 </resources>
