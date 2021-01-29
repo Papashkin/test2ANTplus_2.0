@@ -7,7 +7,6 @@
         tools:context=".ui.profiles.ProfilesFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/profileListLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -33,30 +32,23 @@
                 app:layout_constraintStart_toEndOf="@id/back_btn"
                 app:layout_constraintTop_toTopOf="@id/back_btn" />
 
-        <androidx.core.widget.NestedScrollView
-                android:id="@+id/content_sv"
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/profiles_rv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_marginTop="@dimen/margin_regular"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/title_tv">
-
-            <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/profiles_rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:itemCount="7"
-                    tools:listitem="@layout/card_profile_info" />
-
-        </androidx.core.widget.NestedScrollView>
+                app:layout_constraintTop_toBottomOf="@id/title_tv"
+                tools:itemCount="17"
+                tools:listitem="@layout/card_profile_info" />
 
         <TextView
                 android:id="@+id/emptyListProfiles"
                 style="@style/Body1.onSurface"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:gravity="center"
@@ -96,183 +88,5 @@
                 android:layout_gravity="center"
                 android:indeterminateTint="?attr/colorPrimary" />
     </FrameLayout>
-
-    <!--    <View-->
-    <!--            android:id="@+id/viewBottomSheetBackground"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:alpha="0.0"-->
-    <!--            android:background="#88000000" />-->
-
-    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-    <!--            android:id="@+id/newProfileBottomSheet"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="500dp"-->
-    <!--            android:background="@drawable/shape_new_profile_dialog"-->
-    <!--            app:behavior_hideable="true"-->
-    <!--            app:behavior_peekHeight="0dp"-->
-    <!--            app:layout_behavior="@string/bottom_sheet_behavior"-->
-    <!--            app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--            app:layout_constraintEnd_toEndOf="parent"-->
-    <!--            app:layout_constraintStart_toStartOf="parent">-->
-
-    <!--        <TextView-->
-    <!--                android:id="@+id/textName"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="10dp"-->
-    <!--                android:layout_marginTop="15dp"-->
-    <!--                android:paddingBottom="8dp"-->
-    <!--                android:text="@string/profile_setting_name"-->
-    <!--                android:textColor="@color/full_black"-->
-    <!--                android:textSize="18sp"-->
-    <!--                app:layout_constraintStart_toStartOf="parent"-->
-    <!--                app:layout_constraintTop_toTopOf="parent" />-->
-
-    <!--        <EditText-->
-    <!--                android:id="@+id/editName"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="4dp"-->
-    <!--                android:backgroundTint="@color/full_black"-->
-    <!--                android:ems="9"-->
-    <!--                android:inputType="text"-->
-    <!--                android:text=""-->
-    <!--                android:textSize="16sp"-->
-    <!--                app:layout_constraintBottom_toBottomOf="@id/textName"-->
-    <!--                app:layout_constraintStart_toEndOf="@id/textName"-->
-    <!--                tools:ignore="Autofill,LabelFor" />-->
-
-    <!--        <TextView-->
-    <!--                android:id="@+id/textAge"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_gravity="center_vertical"-->
-    <!--                android:layout_marginStart="10dp"-->
-    <!--                android:layout_marginTop="20dp"-->
-    <!--                android:paddingBottom="8dp"-->
-    <!--                android:text="@string/profile_setting_age"-->
-    <!--                android:textColor="@color/full_black"-->
-    <!--                android:textSize="18sp"-->
-    <!--                app:layout_constraintStart_toStartOf="parent"-->
-    <!--                app:layout_constraintTop_toBottomOf="@id/textName" />-->
-
-    <!--        <EditText-->
-    <!--                android:id="@+id/editAge"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="4dp"-->
-    <!--                android:backgroundTint="@color/full_black"-->
-    <!--                android:ems="3"-->
-    <!--                android:inputType="number"-->
-    <!--                android:text=""-->
-    <!--                android:textSize="16sp"-->
-    <!--                app:layout_constraintBottom_toBottomOf="@id/textAge"-->
-    <!--                app:layout_constraintStart_toEndOf="@id/textAge"-->
-    <!--                tools:ignore="Autofill,LabelFor" />-->
-
-    <!--        <TextView-->
-    <!--                android:id="@+id/textGender"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="10dp"-->
-    <!--                android:layout_marginTop="20dp"-->
-    <!--                android:paddingTop="3dp"-->
-    <!--                android:text="@string/profile_setting_gender"-->
-    <!--                android:textColor="@color/full_black"-->
-    <!--                android:textSize="18sp"-->
-    <!--                app:layout_constraintStart_toStartOf="parent"-->
-    <!--                app:layout_constraintTop_toBottomOf="@id/textAge" />-->
-
-    <!--        <RadioGroup-->
-    <!--                android:id="@+id/groupGender"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="4dp"-->
-    <!--                android:orientation="vertical"-->
-    <!--                app:layout_constraintStart_toEndOf="@id/textGender"-->
-    <!--                app:layout_constraintTop_toTopOf="@id/textGender">-->
-
-    <!--            <RadioButton-->
-    <!--                    android:id="@+id/radioMale"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:text="@string/profile_setting_gender_male"-->
-    <!--                    android:textSize="16sp" />-->
-
-    <!--            <RadioButton-->
-    <!--                    android:id="@+id/radioFemale"-->
-    <!--                    android:layout_width="wrap_content"-->
-    <!--                    android:layout_height="wrap_content"-->
-    <!--                    android:text="@string/profile_setting_gender_female"-->
-    <!--                    android:textSize="16sp" />-->
-
-    <!--        </RadioGroup>-->
-
-    <!--        <TextView-->
-    <!--                android:id="@+id/textWeight"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="10dp"-->
-    <!--                android:layout_marginTop="10dp"-->
-    <!--                android:paddingBottom="8dp"-->
-    <!--                android:text="@string/profile_setting_weight"-->
-    <!--                android:textColor="@color/full_black"-->
-    <!--                android:textSize="18sp"-->
-    <!--                app:layout_constraintStart_toStartOf="parent"-->
-    <!--                app:layout_constraintTop_toBottomOf="@id/groupGender" />-->
-
-    <!--        <EditText-->
-    <!--                android:id="@+id/editWeight"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="4dp"-->
-    <!--                android:backgroundTint="@color/full_black"-->
-    <!--                android:ems="4"-->
-    <!--                android:inputType="numberDecimal"-->
-    <!--                android:text=""-->
-    <!--                android:textSize="16sp"-->
-    <!--                app:layout_constraintBottom_toBottomOf="@id/textWeight"-->
-    <!--                app:layout_constraintStart_toEndOf="@id/textWeight"-->
-    <!--                tools:ignore="Autofill,LabelFor" />-->
-
-    <!--        <TextView-->
-    <!--                android:id="@+id/textHeight"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="30dp"-->
-    <!--                android:text="@string/profile_setting_height"-->
-    <!--                android:textColor="@color/full_black"-->
-    <!--                android:textSize="18sp"-->
-    <!--                app:layout_constraintStart_toEndOf="@id/editWeight"-->
-    <!--                app:layout_constraintTop_toTopOf="@id/textWeight" />-->
-
-    <!--        <EditText-->
-    <!--                android:id="@+id/editHeight"-->
-    <!--                android:layout_width="wrap_content"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_marginStart="4dp"-->
-    <!--                android:backgroundTint="@color/full_black"-->
-    <!--                android:ems="4"-->
-    <!--                android:inputType="numberDecimal"-->
-    <!--                android:text=""-->
-    <!--                android:textSize="16sp"-->
-    <!--                app:layout_constraintStart_toEndOf="@id/textHeight"-->
-    <!--                app:layout_constraintTop_toTopOf="@id/editWeight"-->
-    <!--                tools:ignore="Autofill,LabelFor" />-->
-
-    <!--        <Button-->
-    <!--                android:id="@+id/btnCreate"-->
-    <!--                android:layout_width="match_parent"-->
-    <!--                android:layout_height="wrap_content"-->
-    <!--                android:layout_margin="20dp"-->
-    <!--                android:background="@drawable/shape_button"-->
-    <!--                android:text="@string/save"-->
-    <!--                android:textAllCaps="false"-->
-    <!--                android:textSize="18sp"-->
-    <!--                app:layout_constraintStart_toStartOf="parent"-->
-    <!--                app:layout_constraintTop_toBottomOf="@+id/editHeight" />-->
-
-    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

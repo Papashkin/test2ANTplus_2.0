@@ -1,104 +1,70 @@
 package com.antsfamily.biketrainer.ui.programs
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.Program
+import com.antsfamily.biketrainer.databinding.CardProgramInfoBinding
 import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.squareup.picasso.MemoryPolicy
 import com.squareup.picasso.Picasso
 import java.io.File
-import java.util.*
 import javax.inject.Inject
 
 class ProgramsAdapter @Inject constructor() :
     RecyclerView.Adapter<ProgramsAdapter.ProgramViewHolder>() {
 
-    private var programs: ArrayList<Program> = arrayListOf()
-    private var deletedPosition: Int = -1
+    var items: List<Program> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
-    private var onEditClick: ((id: Int) -> Unit)? = null
-    private var onDeleteClick: ((position: Int) -> Unit)? = null
-    private var onItemClick: ((id: Int) -> Unit)? = null
-
-    private lateinit var deletedItem: Program
+    private var onItemClickListener: ((item: Program) -> Unit)? = null
+    private var onLongItemClickListener: ((item: Program) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
-        val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.card_program_info, parent, false)
-        return ProgramViewHolder(view)
+        val binding =
+            CardProgramInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return ProgramViewHolder(binding)
     }
 
-    fun removeItem(position: Int) {
-        deletedItem = programs[position]
-        deletedPosition = position
-        programs.removeAt(position)
-        notifyItemRemoved(position)
-        onDeleteClick?.invoke(position)
+    fun setOnItemClickListener(listener: (item: Program) -> Unit) {
+        onItemClickListener = listener
     }
 
-    fun editItem(position: Int) {
-        notifyDataSetChanged()
-        onEditClick?.invoke(programs[position].getId())
+    fun setOnLongItemClickListener(listener: (item: Program) -> Unit) {
+        onLongItemClickListener = listener
     }
 
-    fun setOnEditClickListener(listener: (id: Int) -> Unit) {
-        onEditClick = listener
-    }
-
-    fun setOnDeleteClickListener(listener: (id: Int) -> Unit) {
-        onDeleteClick = listener
-    }
-
-    fun setOnItemClickListener(listener: (id: Int) -> Unit) {
-        onItemClick = listener
-    }
-
-//    fun undoDelete() {
-//        programs.add(deletedPosition, deletedItem)
-//        notifyDataSetChanged()
-//    }
-
-    override fun getItemCount(): Int = programs.size
+    override fun getItemCount(): Int = items.size
 
     override fun onBindViewHolder(holder: ProgramViewHolder, position: Int) {
-        holder.bind(this.programs[position])
+        holder.bind(items[position])
     }
 
-    fun setProgramList(newPrograms: List<Program>) {
-        programs.clear()
-        programs.addAll(newPrograms)
-        notifyDataSetChanged()
-    }
+    inner class ProgramViewHolder(private val binding: CardProgramInfoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    inner class ProgramViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val programName = view.findViewById<TextView>(R.id.textProgramName)
-        private val avgPower = view.findViewById<TextView>(R.id.textAveragePower)
-        private val duration = view.findViewById<TextView>(R.id.textDuration)
-        private val programImage = view.findViewById<ImageView>(R.id.imageProgram)
-        private val maxPower = view.findViewById<TextView>(R.id.textMaxPower)
-        private val programLayout = view.findViewById<View>(R.id.clProgram)
+        fun bind(item: Program) {
+            val programSource = item.getProgram()
+            with(binding) {
+                programNameTv.text = item.getName()
+                programDurationTv.text = getTotalTime(programSource)
+                programMaxPowerTv.text = getMaxPower(programSource)
+                programAvgPowerTv.text = getAveragePower(programSource)
 
-        fun bind(program: Program) {
+                Picasso.get()
+                    .load(File(item.getImagePath()))
+                    .fit()
+                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+                    .into(programIv)
 
-            val programSource = program.getProgram()
-            programName.text = program.getName()
-            avgPower.text = getAveragePower(programSource)
-            maxPower.text = getMaxPower(programSource)
-            duration.text = getTotalTime(programSource)
-
-            Picasso.get()
-                .load(File(program.getImagePath()))
-                .fit()
-                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                .into(programImage)
-
-            programLayout.setOnClickListener {
-                onItemClick?.invoke(program.getId())
+                root.setOnClickListener { onItemClickListener?.invoke(item) }
+                root.setOnLongClickListener {
+                    onLongItemClickListener?.invoke(item)
+                    true
+                }
             }
         }
 
@@ -115,8 +81,7 @@ class ProgramsAdapter @Inject constructor() :
                     count += 1
                 }
             }
-
-            return "Average power: ${avgPower / count} W"
+            return "${avgPower/count} W avg"
         }
 
         private fun getMaxPower(program: String): CharSequence {
@@ -129,9 +94,8 @@ class ProgramsAdapter @Inject constructor() :
                     }
                 }
             }
-            return "Max power: $maxPower W"
+            return "$maxPower W max"
         }
-
 
         private fun getTotalTime(program: String): CharSequence {
             var count = 0.0f
@@ -140,7 +104,7 @@ class ProgramsAdapter @Inject constructor() :
                     count += it.split("*").first().toFloat()
                 }
             }
-            return "Total time: ${count.toLong().fullTimeFormat()}"
+            return count.toLong().fullTimeFormat()
         }
     }
 

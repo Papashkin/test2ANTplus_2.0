@@ -12,17 +12,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Singleton
 
 @InstallIn(ApplicationComponent::class)
 @Module
 object AppModule {
 
-//    @Provides
-//    fun provideContext(context: Context) = context
-
     @Provides
-    @Singleton
     fun provideBikeTrainerDatabase(@ApplicationContext appContext: Context): AntsBikeTrainerDatabase =
         Room.databaseBuilder(appContext, AntsBikeTrainerDatabase::class.java, "AntBikeTrainer")
             .build()
