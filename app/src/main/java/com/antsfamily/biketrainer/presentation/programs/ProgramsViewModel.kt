@@ -3,6 +3,7 @@ package com.antsfamily.biketrainer.presentation.programs
 import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProgramsUseCase
+import com.antsfamily.biketrainer.navigation.ProgramToCreateProgram
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import javax.inject.Inject
 
@@ -22,7 +23,7 @@ class ProgramsViewModel @Inject constructor(
     }
 
     fun onAddProgramClick() {
-        // TODO: add navigation to "Create program" screen.
+        navigateTo(ProgramToCreateProgram)
     }
 
     fun onProgramClick(item: Program) {

@@ -27,26 +27,18 @@
                 app:destination="@id/createProfileFragment" />
     </fragment>
     <fragment
-            android:id="@+id/programSettingsFragment"
-            android:name="com.antsfamily.biketrainer.ui.settings.ProgramSettingsFragment"
+            android:id="@+id/createProgramFragment"
+            android:name="com.antsfamily.biketrainer.ui.createprogram.CreateProgramFragment"
             android:label="ProgramSettingsFragment"
-            tools:layout="@layout/fragment_program_settings">
-        <argument
-                android:name="programId"
-                app:argType="string"
-                app:nullable="true" />
-    </fragment>
+            tools:layout="@layout/fragment_create_program" />
     <fragment
             android:id="@+id/programsFragment"
             android:name="com.antsfamily.biketrainer.ui.programs.ProgramsFragment"
             android:label="ProgramsFragment"
             tools:layout="@layout/fragment_programs">
         <action
-                android:id="@+id/action_programsFragment_to_programSettingsFragment"
-                app:destination="@id/programSettingsFragment" />
-        <action
-                android:id="@+id/action_programsFragment_to_scanFragment"
-                app:destination="@id/scanFragment" />
+                android:id="@+id/action_programsFragment_to_createProgramFragment"
+                app:destination="@id/createProgramFragment" />
     </fragment>
     <fragment
             android:id="@+id/scanFragment"

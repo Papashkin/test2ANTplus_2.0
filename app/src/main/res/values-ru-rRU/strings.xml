@@ -39,8 +39,8 @@
     <string name="profiles_empty_list">Нет ни одного профиля.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
 
     <!-- ====== Настройки программы ====== -->
-    <string name="program_settings_name">Название программы</string>
-    <string name="program_settings_name_hint">название программы</string>
+    <string name="programs_title">Программы</string>
+    <string name="program_settings_name_hint">Название программы</string>
     <string name="program_settings_time">Время (мин)</string>
     <string name="program_settings_rest_time">Отдых (мин)</string>
     <string name="program_settings_power">Мощность (Вт)</string>
@@ -52,7 +52,7 @@
 
     <!-- ====== Типы программ ====== -->
     <string name="program_type_segment">Сегмент</string>
-    <string name="program_type_intervals">Интервалы</string>
+    <string name="program_type_intervals">Интервал</string>
     <string name="program_type_3_steps_up">Лесенка вверх</string>
     <string name="program_type_3_steps_down">Лесенка вниз</string>
 
@@ -60,12 +60,6 @@
     <string name="programs_empty_list">Вы ещё не создали ни одной программы.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
 
     <!-- ====== Тулбары ====== -->
-    <string name="toolbar_programs">Программы</string>
-    <string name="toolbar_new_program">Новая программа</string>
-    <string name="toolbar_select_profile">Выберите профиль</string>
-    <string name="toolbar_new_profile">Создание нового профиля</string>
-    <string name="toolbar_update_profile">Изменение профиля</string>
-    <string name="toolbar_select_program">Выберите программу</string>
     <string name="toolbar_devices">Устройства:</string>
 
     <!-- ====== Сохранение данных ====== -->
@@ -86,7 +80,7 @@
     <string name="dialog_save_program_question">Есть несохраненные данные. Хотите их сохранить?</string>
     <string name="dialog_program_saving">Сохранение программы …</string>
 
-    <!-- ====== Create profile ====== -->
+    <!-- ====== Создание профиля ====== -->
     <string name="gender_male">Мужчина</string>
     <string name="gender_female">Женщина</string>
     <string name="gender_invalid">Не определился</string>
@@ -97,4 +91,9 @@
     <string name="create_profile_weight">Вес (кг)</string>
     <string name="create_profile_gender">Пол</string>
     <string name="create_profile_create">Создать</string>
+
+    <!-- ====== Создание программы ====== -->
+    <string name="create_program_create">Создать</string>
+    <string name="create_program_add_segment_question">Какой сегмент Вы бы хотели добавить?</string>
+    <string name="create_program_title">Создание програмы</string>
 </resources>
