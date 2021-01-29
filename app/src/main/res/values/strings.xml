@@ -39,8 +39,8 @@
     <string name="profiles_empty_list">You didn\'t create any profiles.\nPlease click the \"plus\" in top of the screen to create one.</string>
 
     <!-- ====== Program settings ====== -->
-    <string name="program_settings_name">Program Name</string>
-    <string name="program_settings_name_hint">program name</string>
+    <string name="programs_title">Programs</string>
+    <string name="program_settings_name_hint">Program name</string>
     <string name="program_settings_time">Time (min)</string>
     <string name="program_settings_rest_time">Rest time (min)</string>
     <string name="program_settings_power">Power (W)</string>
@@ -60,12 +60,6 @@
     <string name="programs_empty_list">Whoops! \nWe didn\'t find any programs you created.</string>
 
     <!-- ====== Toolbars ====== -->
-    <string name="toolbar_select_profile">Choose the profile</string>
-    <string name="toolbar_programs">Programs</string>
-    <string name="toolbar_new_program">New program</string>
-    <string name="toolbar_new_profile">New profile settings</string>
-    <string name="toolbar_update_profile">Update existed profile</string>
-    <string name="toolbar_select_program">Choose the program</string>
     <string name="toolbar_devices">Devices:</string>
 
     <!-- ====== Data saving ====== -->
@@ -97,5 +91,8 @@
     <string name="create_profile_weight">Weight (kg)</string>
     <string name="create_profile_gender">Gender</string>
     <string name="create_profile_create">Create</string>
+    <string name="create_program_create">Create</string>
+    <string name="create_program_add_segment_question">What kind of segment you want to add?</string>
+    <string name="create_program_title">Create new program</string>
 
 </resources>

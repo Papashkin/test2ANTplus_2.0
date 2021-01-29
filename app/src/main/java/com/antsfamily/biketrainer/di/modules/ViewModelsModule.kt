@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.antsfamily.biketrainer.di.ViewModelKey
 import com.antsfamily.biketrainer.presentation.createprofile.CreateProfileViewModel
 import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
-import com.antsfamily.biketrainer.presentation.programSettings.ProgramSettingsViewModel
+import com.antsfamily.biketrainer.presentation.programSettings.CreateProgramViewModel
 import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.presentation.start.StartViewModel
@@ -36,8 +36,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ProgramSettingsViewModel::class)
-    abstract fun bindProgramSettingsViewModel(viewModel: ProgramSettingsViewModel): ViewModel
+    @ViewModelKey(CreateProgramViewModel::class)
+    abstract fun bindProgramSettingsViewModel(viewModel: CreateProgramViewModel): ViewModel
 
     @Binds
     @IntoMap

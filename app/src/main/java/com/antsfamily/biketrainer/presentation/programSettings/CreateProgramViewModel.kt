@@ -1,11 +1,13 @@
 package com.antsfamily.biketrainer.presentation.programSettings
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
 import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.data.models.ProgramType
+import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.saveProgramAsImage
 import com.github.mikephil.charting.charts.BarChart
@@ -17,20 +19,14 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-class ProgramSettingsViewModel @Inject constructor(
+class CreateProgramViewModel @Inject constructor(
     private val programsRepository: ProgramsRepository
-) : StatefulViewModel<ProgramSettingsViewModel.State>(State()) {
+) : StatefulViewModel<CreateProgramViewModel.State>(State()) {
 
     data class State(
-        var programName: String = "",
-        var programIdFromDb: Int = -1,
-        var powerTemp: Float = 0.0f,
-        var restPowerTemp: Float = 0.0f,
-        var duration: Float = 0.0f,
-        var restDuration: Float = 0.0f,
-        var intervalCount: Int = 0,
-        var programType: ProgramType = ProgramType.SEGMENT,
-        var isNewProgram: Boolean = true,
+        val isLoading: Boolean = false,
+        var programName: String? = null,
+        var programNameError: String? = null,
         var entries: ArrayList<BarEntry> = arrayListOf(),
         var selectedEntry: BarEntry? = null,
         var timeDescriptors: ArrayList<Float> = arrayListOf()
@@ -53,11 +49,49 @@ class ProgramSettingsViewModel @Inject constructor(
 //    private var selectedEntry: BarEntry? = null
 //    private var timeDescriptors: ArrayList<Float> = arrayListOf()
 
+    private val _showSegmentBottomDialog = MutableLiveData<Event<ProgramType>>()
+    val showSegmentBottomDialog: LiveData<Event<ProgramType>>
+        get() = _showSegmentBottomDialog
+
     var barChart: MutableLiveData<Pair<BarData, ArrayList<Float>>?> = MutableLiveData(null)
-    var programTypeAndData: MutableLiveData<Triple<ProgramType, Float?, Float?>> = MutableLiveData(Triple(ProgramType.SEGMENT, null, null))
+    var programTypeAndData: MutableLiveData<Triple<ProgramType, Float?, Float?>> =
+        MutableLiveData(Triple(ProgramType.SEGMENT, null, null))
     var programDialog: MutableLiveData<Boolean> = MutableLiveData(false)
     var backDialog: MutableLiveData<Boolean> = MutableLiveData(false)
     var chartGetter: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    fun onBackClick() {
+        navigateBack()
+    }
+
+    fun onProgramNameChange() {
+        changeState { it.copy(programNameError = null) }
+    }
+
+    fun onIntervalsClick() {
+        showSegmentBottomDialog(ProgramType.INTERVAL)
+    }
+
+    fun onSegmentClick() {
+        showSegmentBottomDialog(ProgramType.SEGMENT)
+    }
+
+    fun onUpstairsClick() {
+        showSegmentBottomDialog(ProgramType.STEPS_UP)
+    }
+
+    fun onDownstairsClick() {
+        showSegmentBottomDialog(ProgramType.STEPS_DOWN)
+    }
+
+    fun onCreateClick(name: String) {
+        // TODO: add implementation of new program creating
+    }
+
+
+    private fun showSegmentBottomDialog(type: ProgramType) {
+        _showSegmentBottomDialog.postValue(Event(type))
+    }
 
     fun setProgramName(text: String) {
 //        programName = text

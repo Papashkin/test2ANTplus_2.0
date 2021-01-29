@@ -9,10 +9,7 @@ import com.antsfamily.biketrainer.ui.start.StartFragmentDirections
 fun Route.mapToDirection(): NavDirections = when (this) {
     is StartToProfile -> StartFragmentDirections.actionStartFragmentToProfilesFragment()
     is StartToPrograms -> StartFragmentDirections.actionStartFragmentToProgramsFragment()
-    is ProgramToProgramSettings -> ProgramsFragmentDirections.actionProgramsFragmentToProgramSettingsFragment(
-        programId
-    )
-    is ProgramToScan -> ProgramsFragmentDirections.actionProgramsFragmentToScanFragment()
+    is ProgramToCreateProgram -> ProgramsFragmentDirections.actionProgramsFragmentToCreateProgramFragment()
     is ScanToWorkout -> ScanFragmentDirections.actionScanFragmentToWorkoutFragment(
         devices.toTypedArray(), program, profile
     )
