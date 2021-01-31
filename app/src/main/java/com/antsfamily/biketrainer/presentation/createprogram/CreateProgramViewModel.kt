@@ -1,14 +1,19 @@
-package com.antsfamily.biketrainer.presentation.programSettings
+package com.antsfamily.biketrainer.presentation.createprogram
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
 import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.data.models.ProgramType
-import com.antsfamily.biketrainer.presentation.Event
+import com.antsfamily.biketrainer.data.models.workouts.WorkoutIntervalParams
+import com.antsfamily.biketrainer.data.models.workouts.WorkoutSegmentParams
+import com.antsfamily.biketrainer.data.models.workouts.WorkoutStairsParams
+import com.antsfamily.biketrainer.navigation.CreateProgramToAddInterval
+import com.antsfamily.biketrainer.navigation.CreateProgramToAddSegment
+import com.antsfamily.biketrainer.navigation.CreateProgramToAddStairs
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
+import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.antsfamily.biketrainer.util.saveProgramAsImage
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
@@ -29,14 +34,15 @@ class CreateProgramViewModel @Inject constructor(
         var programNameError: String? = null,
         var entries: ArrayList<BarEntry> = arrayListOf(),
         var selectedEntry: BarEntry? = null,
-        var timeDescriptors: ArrayList<Float> = arrayListOf()
+        var timeDescriptors: ArrayList<Float> = arrayListOf(),
+        var barChart: Pair<BarData, ArrayList<Long>>? = null
     )
 
     private lateinit var program: BarDataSet
     private lateinit var programChart: BarChart
     private lateinit var programImagePath: String
 
-//    private var programName: String = ""
+    //    private var programName: String = ""
 //    private var programIdFromDb = -1
 //    private var powerTemp: Float = 0.0f
 //    private var restPowerTemp: Float = 0.0f
@@ -45,13 +51,10 @@ class CreateProgramViewModel @Inject constructor(
 //    private var intervalCount = 0
 //    private var programType = ProgramType.SEGMENT
 //    private var isNewProgram: Boolean = true
-//    private var entries: ArrayList<BarEntry> = arrayListOf()
-//    private var selectedEntry: BarEntry? = null
-//    private var timeDescriptors: ArrayList<Float> = arrayListOf()
+    private var entries: ArrayList<BarEntry> = arrayListOf()
 
-    private val _showSegmentBottomDialog = MutableLiveData<Event<ProgramType>>()
-    val showSegmentBottomDialog: LiveData<Event<ProgramType>>
-        get() = _showSegmentBottomDialog
+    //    private var selectedEntry: BarEntry? = null
+    private var timeDescriptors: ArrayList<Long> = arrayListOf()
 
     var barChart: MutableLiveData<Pair<BarData, ArrayList<Float>>?> = MutableLiveData(null)
     var programTypeAndData: MutableLiveData<Triple<ProgramType, Float?, Float?>> =
@@ -69,28 +72,51 @@ class CreateProgramViewModel @Inject constructor(
     }
 
     fun onIntervalsClick() {
-        showSegmentBottomDialog(ProgramType.INTERVAL)
+        navigateTo(CreateProgramToAddInterval)
     }
 
     fun onSegmentClick() {
-        showSegmentBottomDialog(ProgramType.SEGMENT)
+        navigateTo(CreateProgramToAddSegment)
     }
 
     fun onUpstairsClick() {
-        showSegmentBottomDialog(ProgramType.STEPS_UP)
+        navigateTo(CreateProgramToAddStairs(ProgramType.STEPS_UP))
     }
 
     fun onDownstairsClick() {
-        showSegmentBottomDialog(ProgramType.STEPS_DOWN)
+        navigateTo(CreateProgramToAddStairs(ProgramType.STEPS_DOWN))
     }
 
     fun onCreateClick(name: String) {
         // TODO: add implementation of new program creating
     }
 
+    fun onSegmentAdd(segment: WorkoutSegmentParams?) {
+        segment?.let {
+            setSegment(it)
+            updateChart()
+        }
+    }
 
-    private fun showSegmentBottomDialog(type: ProgramType) {
-        _showSegmentBottomDialog.postValue(Event(type))
+    fun onIntervalAdd(interval: WorkoutIntervalParams?) {
+        interval?.let {
+            setInterval(it)
+            updateChart()
+        }
+    }
+
+    fun onStairsUpAdd(stairs: WorkoutStairsParams?) {
+        stairs?.let {
+            setStairsUp(it)
+            updateChart()
+        }
+    }
+
+    fun onStairsDownAdd(stairs: WorkoutStairsParams?) {
+        stairs?.let {
+            setStairsDown(it)
+            updateChart()
+        }
     }
 
     fun setProgramName(text: String) {
@@ -181,25 +207,46 @@ class CreateProgramViewModel @Inject constructor(
         prepareToSave()
     }
 
-    private fun setInterval(duration: Float, power: Float) {
-//        entries.add(BarEntry(entries.size.toFloat(), power))
-//        timeDescriptors.add(duration)
+    private fun setSegment(workout: WorkoutSegmentParams) {
+        entries.add(BarEntry(entries.size.toFloat(), workout.power.toFloat()))
+        timeDescriptors.add(workout.duration)
+    }
+
+    private fun setInterval(workout: WorkoutIntervalParams) {
+        for (interval in 0 until workout.times) {
+            setSegment(WorkoutSegmentParams(workout.peakPower, workout.restDuration))
+            setSegment(WorkoutSegmentParams(workout.restPower, workout.restDuration))
+        }
+    }
+
+    private fun setStairsUp(workout: WorkoutStairsParams) {
+        val middlePower = (workout.endPower + workout.startPower) / 2
+        val durationForEachStep = workout.duration / 3
+        setSegment(WorkoutSegmentParams(workout.startPower, durationForEachStep))
+        setSegment(WorkoutSegmentParams(middlePower, durationForEachStep))
+        setSegment(WorkoutSegmentParams(workout.endPower, durationForEachStep))
+    }
+
+    private fun setStairsDown(workout: WorkoutStairsParams) {
+        val middlePower = (workout.endPower + workout.startPower) / 2
+        val durationForEachStep = workout.duration / 3
+        setSegment(WorkoutSegmentParams(workout.endPower, durationForEachStep))
+        setSegment(WorkoutSegmentParams(middlePower, durationForEachStep))
+        setSegment(WorkoutSegmentParams(workout.startPower, durationForEachStep))
     }
 
     private fun updateChart() {
-//        program =
-//            BarDataSet(entries, "Total time: ${timeDescriptors.sum().toLong().fullTimeFormat()}")
+        program =
+            BarDataSet(entries, "Total time: ${timeDescriptors.sum().fullTimeFormat()}")
         program.barBorderWidth = 0f
-//        barChart.postValue(Pair(BarData(program), timeDescriptors))
-        clearData()
-        hideKeyboard()
+        changeState { it.copy(barChart = Pair(BarData(program), timeDescriptors)) }
     }
 
     private fun updateBarEntry(duration: Float, power: Float) {
 //        val index = entries.indexOf(selectedEntry)
 //        entries[index].y = power
 //        timeDescriptors[index] = duration
-        updateChart()
+//        updateChart()
     }
 
     private fun checkAddFab(): Boolean {

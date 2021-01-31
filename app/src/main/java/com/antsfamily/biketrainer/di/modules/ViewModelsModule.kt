@@ -3,8 +3,11 @@ package com.antsfamily.biketrainer.di.modules
 import androidx.lifecycle.ViewModel
 import com.antsfamily.biketrainer.di.ViewModelKey
 import com.antsfamily.biketrainer.presentation.createprofile.CreateProfileViewModel
+import com.antsfamily.biketrainer.presentation.createprogram.AddIntervalBottomSheetViewModel
+import com.antsfamily.biketrainer.presentation.createprogram.AddSegmentBottomSheetViewModel
+import com.antsfamily.biketrainer.presentation.createprogram.AddStairsBottomSheetViewModel
 import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
-import com.antsfamily.biketrainer.presentation.programSettings.CreateProgramViewModel
+import com.antsfamily.biketrainer.presentation.createprogram.CreateProgramViewModel
 import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.presentation.start.StartViewModel
@@ -53,4 +56,19 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(WorkoutViewModel::class)
     abstract fun bindWorkViewModel(viewModel: WorkoutViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddSegmentBottomSheetViewModel::class)
+    abstract fun bindAddSegmentBottomSheetViewModel(viewModel: AddSegmentBottomSheetViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddIntervalBottomSheetViewModel::class)
+    abstract fun bindAddIntervalBottomSheetViewModel(viewModel: AddIntervalBottomSheetViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(AddStairsBottomSheetViewModel::class)
+    abstract fun bindAddStairsBottomSheetViewModel(viewModel: AddStairsBottomSheetViewModel): ViewModel
 }

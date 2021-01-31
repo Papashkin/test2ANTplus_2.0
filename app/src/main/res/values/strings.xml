@@ -94,5 +94,21 @@
     <string name="create_program_create">Create</string>
     <string name="create_program_add_segment_question">What kind of segment you want to add?</string>
     <string name="create_program_title">Create new program</string>
+    <string name="add_segment_duration">Duration</string>
+    <string name="add_segment_add">Add</string>
+    <string name="add_segment_power">Power, W</string>
+    <string name="add_segment_title">Add segment</string>
+    <string name="add_interval_title">Add interval</string>
+    <string name="add_interval_peak_power">Peak power, W</string>
+    <string name="add_interval_rest_power">Rest power, W</string>
+    <string name="add_interval_peak_power_duration">Peak power duration</string>
+    <string name="add_interval_rest_power_duration">Rest power duration</string>
+    <string name="add_interval_count_of_repeat">Count of repeat</string>
+    <string name="add_interval_add">Add</string>
+    <string name="add_stairs_title">Add stairs</string>
+    <string name="add_stairs_start_power">Start power, W</string>
+    <string name="add_stairs_end_power">End power, W</string>
+    <string name="add_stairs_duration">Duration</string>
+    <string name="add_stairs_add">Add</string>
 
 </resources>
