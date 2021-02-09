@@ -1,3 +1,5 @@
 package com.antsfamily.biketrainer.data.models.workouts
 
-data class WorkoutSegmentParams(val power: Int, val duration: Long)
+import java.io.Serializable
+
+data class WorkoutSegmentParams(val power: Int, val duration: Long): Serializable

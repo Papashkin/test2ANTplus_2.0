@@ -53,8 +53,8 @@ class AddStairsBottomSheetViewModel @Inject constructor(
     private fun isValid(startPower: Int, endPower: Int, duration: Long): Boolean {
         val isStartPowerValid = startPower > 0
         val isEndPowerValid = endPower > 0
-        val isStairsUpWorkout = (stairsType == ProgramType.STEPS_UP) and (startPower < endPower)
-        val isStairsDownWorkout = (stairsType == ProgramType.STEPS_DOWN) and (startPower > endPower)
+        val isStairsUpWorkout = if (stairsType == ProgramType.STEPS_UP) startPower < endPower else true
+        val isStairsDownWorkout = if (stairsType == ProgramType.STEPS_DOWN) startPower > endPower else true
         val isDurationValid = duration > MINIMUM_DURATION
 
         if (!isDurationValid) {
