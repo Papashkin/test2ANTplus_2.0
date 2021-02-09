@@ -21,7 +21,7 @@
             android:id="@+id/profilesFragment"
             android:name="com.antsfamily.biketrainer.ui.profiles.ProfilesFragment"
             android:label="ProfilesFragment"
-            tools:layout="@layout/fragment_profiles" >
+            tools:layout="@layout/fragment_profiles">
         <action
                 android:id="@+id/action_profilesFragment_to_createProfileFragment"
                 app:destination="@id/createProfileFragment" />
@@ -30,7 +30,17 @@
             android:id="@+id/createProgramFragment"
             android:name="com.antsfamily.biketrainer.ui.createprogram.CreateProgramFragment"
             android:label="ProgramSettingsFragment"
-            tools:layout="@layout/fragment_create_program" />
+            tools:layout="@layout/fragment_create_program">
+        <action
+                android:id="@+id/action_createProgramFragment_to_addSegmentBottomSheetDialogFragment"
+                app:destination="@id/addSegmentBottomSheetDialogFragment" />
+        <action
+                android:id="@+id/action_createProgramFragment_to_addStairsBottomSheetDialogFragment"
+                app:destination="@id/addStairsBottomSheetDialogFragment" />
+        <action
+                android:id="@+id/action_createProgramFragment_to_addIntervalBottomSheetDialogFragment"
+                app:destination="@id/addIntervalBottomSheetDialogFragment" />
+    </fragment>
     <fragment
             android:id="@+id/programsFragment"
             android:name="com.antsfamily.biketrainer.ui.programs.ProgramsFragment"
@@ -69,4 +79,23 @@
             android:name="com.antsfamily.biketrainer.ui.createprofile.CreateProfileFragment"
             android:label="fragment_create_profile"
             tools:layout="@layout/fragment_create_profile" />
+    <dialog
+            android:id="@+id/addSegmentBottomSheetDialogFragment"
+            android:name="com.antsfamily.biketrainer.ui.createprogram.dialog.AddSegmentBottomSheetDialogFragment"
+            android:label="AddSegmentBottomSheetDialogFragment"
+            tools:layout="@layout/bottom_sheet_fragment_add_segment" />
+    <dialog
+            android:id="@+id/addIntervalBottomSheetDialogFragment"
+            android:name="com.antsfamily.biketrainer.ui.createprogram.dialog.AddIntervalBottomSheetDialogFragment"
+            android:label="AddIntervalBottomSheetDialogFragment"
+            tools:layout="@layout/bottom_sheet_fragment_add_interval" />
+    <dialog
+            android:id="@+id/addStairsBottomSheetDialogFragment"
+            android:name="com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment"
+            android:label="AddStairsBottomSheetDialogFragment"
+            tools:layout="@layout/bottom_sheet_fragment_add_stairs">
+        <argument
+                android:name="type"
+                app:argType="com.antsfamily.biketrainer.data.models.ProgramType" />
+    </dialog>
 </navigation>

@@ -72,9 +72,9 @@ fun BarChart.setCommonParams(data: BarData, timeLabels: List<String>) = this.als
     it.data = data
     it.data.barWidth = 1f
     it.data.setValueTextSize(8f)
-    it.data.setValueFormatter { _, entry, _, _ ->
-        timeLabels[entry.x.toInt()]
-    }
+//    it.data.setValueFormatter { _, entry, _, _ ->
+//        timeLabels[entry.x.toInt()]
+//    }
 }
 
 

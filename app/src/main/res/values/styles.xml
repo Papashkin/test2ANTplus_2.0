@@ -2,18 +2,14 @@
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
-<!--        <item name="colorOnPrimary">@color/pure_white</item>-->
-<!--        <item name="colorSurface">@color/pure_white</item>-->
-<!--        <item name="colorOnSurface">@color/full_black</item>-->
         <item name="colorPrimary">@color/color_central</item>
         <item name="colorOnPrimary">@color/pure_white</item>
         <item name="colorSurface">@color/color_deeper</item>
         <item name="colorOnSurface">@color/full_black</item>
         <item name="colorAccent">@color/color_lighter</item>
         <item name="colorOnBackground">@color/color_overside</item>
+        <item name="android:colorBackground">@color/color_deeper</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
     </style>
 
     <style name="MainToolbar" parent="Base.Theme.AppCompat.Light.DarkActionBar">
@@ -25,6 +21,24 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Large</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/pure_white</item>
+    </style>
+
+    <!-- Bottom sheet -->
+    <style name="AppBottomSheetDialogTheme" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
+        <item name="bottomSheetStyle">@style/RoundedBottomSheet</item>
+        <item name="android:colorBackground">@color/color_deeper</item>
+    </style>
+
+    <style name="RoundedBottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet_dialog</item>
+    </style>
+
+    <!-- Input text fields -->
+    <style name="TextInputField" parent="@style/Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="android:colorBackground">@color/color_deeper</item>
+        <item name="boxStrokeWidth">0dp</item>
+        <item name="boxStrokeWidthFocused">0dp</item>
+        <item name="errorIconDrawable">@null</item>
     </style>
 
 </resources>

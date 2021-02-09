@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_bottom_sheet_dialog">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        <TextView
+                android:id="@+id/title_tv"
+                style="@style/Body1.onSurface"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_large"
+                android:gravity="center"
+                android:text="@string/add_stairs_title"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                app:layout_constraintTop_toBottomOf="@id/title_tv">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/start_power_til"
+                        style="@style/TextInputField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:hint="@string/add_stairs_start_power"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/start_power_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_text_field_rounded_small"
+                            android:inputType="number" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/end_power_til"
+                        style="@style/TextInputField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:hint="@string/add_stairs_end_power"
+                        app:layout_constraintTop_toBottomOf="@id/start_power_til">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/end_power_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_text_field_rounded_small"
+                            android:inputType="number" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.antsfamily.biketrainer.ui.createprogram.view.DurationView
+                        android:id="@+id/duration_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        app:layout_constraintTop_toBottomOf="@id/end_power_til"
+                        app:title="@string/add_stairs_duration" />
+
+                <com.google.android.material.button.MaterialButton
+                        android:id="@+id/add_btn"
+                        style="@style/Body1.Bold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_large"
+                        android:layout_marginVertical="@dimen/margin_medium"
+                        android:background="@drawable/bg_button_rounded_small"
+                        android:text="@string/add_stairs_add"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/duration_view"
+                        app:layout_constraintVertical_bias="1" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
