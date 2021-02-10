@@ -21,9 +21,6 @@ import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDi
 import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.REQUEST_KEY_STAIRS_UP
 import com.antsfamily.biketrainer.ui.util.afterTextChange
 import com.antsfamily.biketrainer.util.mapDistinct
-import com.antsfamily.biketrainer.util.setCommonParams
-import com.antsfamily.biketrainer.util.timeFormat
-import com.github.mikephil.charting.data.BarData
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -44,9 +41,15 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
     private fun observeState(binding: FragmentCreateProgramBinding) {
         with(binding) {
             viewModel.state.mapDistinct { it.programNameError }
-                .observe(viewLifecycleOwner) { programNameEt.error = it }
-            viewModel.state.mapDistinct { it.barChart }
-                .observe(viewLifecycleOwner) { it?.let { updateChart(it) } }
+                .observe(viewLifecycleOwner) { programNameTil.error = it }
+            viewModel.state.mapDistinct { it.barItem }
+                .observe(viewLifecycleOwner) { workoutChart.item = it }
+            viewModel.state.mapDistinct { it.isEmptyBarChartVisible }
+                .observe(viewLifecycleOwner) { workoutChart.isEmptyDataVisible = it }
+            viewModel.state.mapDistinct { it.isBarChartVisible }
+                .observe(viewLifecycleOwner) { workoutChart.isBarChartVisible = it }
+            viewModel.state.mapDistinct { it.workoutError }
+                .observe(viewLifecycleOwner) { workoutChart.error = it }
         }
     }
 
@@ -80,61 +83,4 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
             REQUEST_KEY_STAIRS_DOWN, viewLifecycleOwner
         ) { _, bundle -> viewModel.onStairsDownAdd(bundle[KEY_STAIRS_DOWN] as? WorkoutStairsParams) }
     }
-
-//    private fun initObservers() {
-//        viewModel.keyboard.observe(viewLifecycleOwner) {
-//            if (it) showKeyboard() else hideKeyboard()
-//        }
-//        viewModel.loading.observe(viewLifecycleOwner) {
-//            if (it) showLoading() else hideLoading()
-//        }
-//        viewModel.toast.observe(viewLifecycleOwner) {
-//            if (it != null) {
-//                if (it is Int) showToast(it) else showToast(it as String)
-//            }
-//        }
-//        viewModel.programDialog.observe(viewLifecycleOwner) {
-//            if (it) showProgramBottomDialog() else hideProgramBottomDialog()
-//        }
-//        viewModel.barChart.observe(viewLifecycleOwner) {
-//            if (it != null) updateChart(it.first, it.second)
-//        }
-//        viewModel.programTypeAndData.observe(viewLifecycleOwner) {
-//            setProgramType(it.first, it.second, it.third)
-//        }
-//        viewModel.chartGetter.observe(viewLifecycleOwner) {
-//            if (it) getChart()
-//        }
-//        viewModel.backDialog.observe(viewLifecycleOwner) {
-//            if (it) showBackDialog()
-//        }
-//    }
-
-    private fun FragmentCreateProgramBinding.updateChart(data: Pair<BarData, ArrayList<Long>>?) {
-        data?.let { (data, duration) ->
-            programChart.visibility = View.VISIBLE
-            val timeLabels = duration.map { it.timeFormat() }
-            programChart.setCommonParams(data, timeLabels)
-            programChart.invalidate()
-        }
-    }
-
-//    private fun getChart() {
-//        viewModel.getProgramImagePath(chartProgram)
-//    }
-
-//    private fun showBackDialog() {
-//        val alertDialog = AlertDialog.Builder(requireContext())
-//        alertDialog.setMessage(getString(R.string.dialog_save_program_question))
-//        alertDialog.setCancelable(false)
-//        alertDialog.setPositiveButton(resources.getText(R.string.dialog_yes)) { dialog, _ ->
-//            viewModel.onSaveClick()
-//            dialog.dismiss()
-//        }
-//        alertDialog.setNegativeButton(resources.getText(R.string.dialog_no)) { dialog, _ ->
-//            viewModel.onExit()
-//            dialog.dismiss()
-//        }
-//        alertDialog.create().show()
-//    }
 }

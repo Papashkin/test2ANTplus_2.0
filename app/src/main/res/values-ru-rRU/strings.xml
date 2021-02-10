@@ -112,4 +112,5 @@
     <string name="add_stairs_end_power">End power, W</string>
     <string name="add_stairs_duration">Duration</string>
     <string name="add_stairs_add">Add</string>
+    <string name="workout_chart_empty_message">There is nothing to show :(</string>
 </resources>

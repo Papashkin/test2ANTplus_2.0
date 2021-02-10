@@ -45,9 +45,11 @@
                             android:id="@+id/peak_power_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:maxLines="1"
                             android:background="@drawable/bg_text_field_rounded_small"
-                            android:inputType="number" />
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:nextFocusForward="@id/rest_power_et" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -55,10 +57,10 @@
                         android:id="@+id/peak_power_duration_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:title="@string/add_interval_peak_power_duration"
-                        android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginHorizontal="@dimen/margin_large"
-                        app:layout_constraintTop_toBottomOf="@id/peak_power_til" />
+                        android:layout_marginTop="@dimen/margin_small"
+                        app:layout_constraintTop_toBottomOf="@id/peak_power_til"
+                        app:title="@string/add_interval_peak_power_duration" />
 
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/rest_power_til"
@@ -72,11 +74,13 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/rest_power_et"
-                            android:maxLines="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_text_field_rounded_small"
-                            android:inputType="number" />
+                            android:imeOptions="actionNext"
+                            android:inputType="number"
+                            android:maxLines="1"
+                            android:nextFocusForward="@id/times_et" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -84,10 +88,10 @@
                         android:id="@+id/rest_power_duration_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        app:title="@string/add_interval_rest_power_duration"
-                        android:layout_marginTop="@dimen/margin_small"
                         android:layout_marginHorizontal="@dimen/margin_large"
-                        app:layout_constraintTop_toBottomOf="@id/rest_power_til" />
+                        android:layout_marginTop="@dimen/margin_small"
+                        app:layout_constraintTop_toBottomOf="@id/rest_power_til"
+                        app:title="@string/add_interval_rest_power_duration" />
 
                 <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/times_til"
@@ -101,11 +105,12 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/times_et"
-                            android:maxLines="1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@drawable/bg_text_field_rounded_small"
-                            android:inputType="number" />
+                            android:imeOptions="actionDone"
+                            android:inputType="number"
+                            android:maxLines="1" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

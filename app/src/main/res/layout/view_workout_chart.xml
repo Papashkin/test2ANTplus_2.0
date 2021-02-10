@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/workout_bc"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/workout_chart_height"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/empty_data_fl"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/workout_chart_height"
+            app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+                android:id="@+id/empty_data_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_empty_data"
+                app:layout_constraintBottom_toTopOf="@id/empty_data_tv"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:ignore="ContentDescription" />
+
+        <TextView
+                android:id="@+id/empty_data_tv"
+                style="@style/Body2.onSurface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_small_extra"
+                android:text="@string/workout_chart_empty_message"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/empty_data_iv" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/workout_data_barrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="workout_bc, empty_data_fl" />
+
+    <TextView
+            android:id="@+id/error_tv"
+            style="@style/Body2.onError"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small_extra"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/workout_data_barrier"
+            tools:text="Something very strange occured here :O"
+            tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
