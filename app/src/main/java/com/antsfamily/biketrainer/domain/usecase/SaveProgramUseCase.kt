@@ -6,13 +6,13 @@ import com.antsfamily.biketrainer.domain.BaseUseCase
 import com.antsfamily.biketrainer.domain.Result
 import javax.inject.Inject
 
-class GetProgramsUseCase @Inject constructor(
+class SaveProgramUseCase @Inject constructor(
     private val programsRepository: ProgramsRepository
-) : BaseUseCase<Unit, Result<List<Program>, Error>>() {
+) : BaseUseCase<Program, Result<Unit, Error>>() {
 
-    override suspend fun run(params: Unit): Result<List<Program>, Error> = try {
-        Result.Success(programsRepository.getAllPrograms())
+    override suspend fun run(params: Program): Result<Unit, Error> = try {
+        Result.Success(programsRepository.insertProgram(params))
     } catch (e: Exception) {
-        Result.Failure(Error("Epic fail"))
+        Result.Failure(Error("Epic fail :("))
     }
 }

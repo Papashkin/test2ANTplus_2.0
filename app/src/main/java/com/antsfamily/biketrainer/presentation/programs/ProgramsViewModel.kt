@@ -1,6 +1,6 @@
 package com.antsfamily.biketrainer.presentation.programs
 
-import com.antsfamily.biketrainer.data.models.Program
+import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProgramsUseCase
 import com.antsfamily.biketrainer.navigation.ProgramToCreateProgram
