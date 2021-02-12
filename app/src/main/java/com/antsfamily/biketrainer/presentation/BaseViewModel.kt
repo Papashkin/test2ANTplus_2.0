@@ -21,6 +21,10 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     val keyboard: MutableLiveData<Boolean> = MutableLiveData(false)
     val toast: MutableLiveData<Any?> = MutableLiveData(null)
 
+    private val _showToastEvent = MutableLiveData<Event<String>>(null)
+    val showToastEvent: LiveData<Event<String>>
+        get() = _showToastEvent
+
     private val _navigationEvent = MutableLiveData<Event<Route>>()
     val navigationEvent: LiveData<Event<Route>>
         get() = _navigationEvent
@@ -62,17 +66,9 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     }
 
     fun showToast(@StringRes id: Int) {
-        toast.postValue(id)
     }
 
     fun showToast(message: String) {
-        toast.postValue(message)
+        _showToastEvent.postValue(Event(message))
     }
-
-    fun clearLiveDataValues() {
-        loading.postValue(false)
-        keyboard.postValue(false)
-        toast.postValue(null)
-    }
-
 }

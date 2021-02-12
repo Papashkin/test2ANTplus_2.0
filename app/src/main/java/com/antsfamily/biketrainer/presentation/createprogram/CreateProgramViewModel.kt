@@ -1,20 +1,20 @@
 package com.antsfamily.biketrainer.presentation.createprogram
 
 import com.antsfamily.biketrainer.MainApplication
-import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
-import com.antsfamily.biketrainer.data.models.Program
 import com.antsfamily.biketrainer.data.models.ProgramType
+import com.antsfamily.biketrainer.data.models.program.Program
+import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutIntervalParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutSegmentParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutStairsParams
+import com.antsfamily.biketrainer.domain.Result
+import com.antsfamily.biketrainer.domain.usecase.SaveProgramUseCase
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddInterval
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddSegment
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddStairs
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.ui.createprogram.model.WorkoutItem
-import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ import java.util.*
 import javax.inject.Inject
 
 class CreateProgramViewModel @Inject constructor(
-    private val programsRepository: ProgramsRepository
+    private val saveProgramUseCase: SaveProgramUseCase
 ) : StatefulViewModel<CreateProgramViewModel.State>(State()) {
 
     data class State(
@@ -36,12 +36,8 @@ class CreateProgramViewModel @Inject constructor(
         val workoutError: String? = null
     )
 
-    private lateinit var program: BarDataSet
     private lateinit var programChart: BarChart
-    private lateinit var programImagePath: String
-
-    private var entries: ArrayList<BarEntry> = arrayListOf()
-    private var timeDescriptors: ArrayList<Long> = arrayListOf()
+    private var dataSet: MutableList<ProgramData> = mutableListOf()
 
     fun onBackClick() {
         navigateBack()
@@ -69,7 +65,7 @@ class CreateProgramViewModel @Inject constructor(
 
     fun onCreateClick(name: String) {
         if (isValid(name)) {
-            prepareToSave()
+            saveProgram(name)
         }
     }
 
@@ -101,14 +97,8 @@ class CreateProgramViewModel @Inject constructor(
         }
     }
 
-    fun onSaveClick() {
-        // TODO: 09.02.2021  
-        prepareToSave()
-    }
-
     private fun setSegment(workout: WorkoutSegmentParams) {
-        entries.add(BarEntry(entries.size.toFloat(), workout.power.toFloat()))
-        timeDescriptors.add(workout.duration)
+        dataSet.add(ProgramData(workout.power, workout.duration))
     }
 
     private fun setInterval(workout: WorkoutIntervalParams) {
@@ -127,20 +117,25 @@ class CreateProgramViewModel @Inject constructor(
     }
 
     private fun updateChart() {
-        program = BarDataSet(entries, "Total time: ${timeDescriptors.sum().fullTimeFormat()}")
+        val workoutItem = WorkoutItem(
+            entries = dataSet.mapIndexed { index, programData ->
+                BarEntry(index.toFloat(), programData.power.toFloat())
+            },
+            labels = dataSet.map { it.duration }
+        )
         changeState {
             it.copy(
-                barItem = WorkoutItem(program, timeDescriptors),
-                isEmptyBarChartVisible = entries.isEmpty(),
-                isBarChartVisible = entries.isNotEmpty(),
+                barItem = workoutItem,
+                isEmptyBarChartVisible = it.barItem == null,
+                isBarChartVisible = it.barItem != null,
                 workoutError = null
             )
         }
     }
 
     private fun isValid(name: String): Boolean {
-        val isNameValid = !name.isNullOrBlank()
-        val isWorkoutValid = entries.isNotEmpty()
+        val isNameValid = name.isNotBlank()
+        val isWorkoutValid = dataSet.isNotEmpty()
 
         if (!isNameValid) {
             changeState { it.copy(programNameError = "Program name is invalid") }
@@ -152,48 +147,29 @@ class CreateProgramViewModel @Inject constructor(
         return isNameValid && isWorkoutValid
     }
 
-    private fun prepareToSave() {
-        var programValues = ""
-//        for (i in entries.indices) {
-//            programValues += "${timeDescriptors[i]}*${entries[i].y}|"
-//        }
-//        if (isNewProgram) {
-//            checkProgramName(programValues)
-//        } else {
-//            getProgramId(programValues)
-//        }
+    private fun saveProgram(name: String) {
+        showLoading()
+        saveProgramUseCase(
+            Program(Random().nextInt(), name, dataSet),
+            ::handleSaveProgramResult
+        )
     }
 
-    private fun checkProgramName(programValues: String) = launch {
-        try {
-//            showLoading()
-//            val programWithSameName = programsRepository.getProgramByName(programName)
-//            if (programWithSameName == null) {
-//                chartGetter.postValue(true)
-//                saveImageAsync(programValues).await()
-//            } else {
-//                showToast(R.string.program_settings_this_program_is_existed)
-//                hideLoading()
-//            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-//            hideLoading()
+    private fun handleSaveProgramResult(result: Result<Unit, Error>) {
+        when (result) {
+            is Result.Success -> {
+                showToast("Program was successfully saved")
+                refreshState()
+            }
+            is Result.Failure -> {
+                showToast("Something went wrong. Please try it again later or change the name of the program")
+            }
         }
+        hideLoading()
     }
 
-    private fun getProgramId(programValues: String) = launch {
-        try {
-            showLoading()
-//            val id = programsRepository.getProgramIdByName(programName)
-//            programIdFromDb = id
-//            chartGetter.postValue(true) // view.getChart()
-            saveImageAsync(programValues).await()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            hideLoading()
-        }
+    private fun refreshState() {
+        changeState { State() }
     }
 
     private fun saveImageAsync(programValues: String) = async {
@@ -213,42 +189,23 @@ class CreateProgramViewModel @Inject constructor(
     }
 
     private fun insertToDb(values: String) = launch {
-        try {
-            showLoading()
-            programsRepository.insertProgram(
-                Program(
-                    id = 0,
-                    name = "",
-//                    name = programName,
-                    program = values,
-                    imagePath = programImagePath
-                )
-            )
-//            router.exit()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            hideLoading()
-        }
-    }
-
-    private fun updateInDb(values: String) = launch {
-        try {
-            showLoading()
-            programsRepository.updateProgram(
-                Program(
-                    id = 2, // programIdFromDb,
-                    name = "", //programName,
-                    program = values,
-                    imagePath = programImagePath
-                )
-            )
-//            router.exit()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            hideLoading()
-        }
+//        try {
+//            showLoading()
+//            programsRepository.insertProgram(
+//                Program(
+//                    id = 0,
+//                    name = "",
+////                    name = programName,
+//                    program = values,
+//                    imagePath = programImagePath
+//                )
+//            )
+////            router.exit()
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        } finally {
+//            hideLoading()
+//        }
     }
 
     fun getProgramImagePath(chart: BarChart) {
@@ -258,31 +215,11 @@ class CreateProgramViewModel @Inject constructor(
 //        programImagePath = "${file.absolutePath}/${programName.convertToLatinScript()}.png"
     }
 
-    fun onEditExistedProgramOpen(program: Pair<String, String>, imagePath: String?) {
-//        isNewProgram = false
-//        programName = program.first
-//        programImagePath = imagePath!!
-//        entries = decompileProgram(program.second)
-//        updateChart()
+    private fun showLoading() {
+        changeState { it.copy(isLoading = true) }
     }
 
-    private fun decompileProgram(programLegend: String): ArrayList<BarEntry> {
-        val entries = arrayListOf<BarEntry>()
-//        timeDescriptors.clear()
-        entries.clear()
-        var count = 0
-
-        programLegend.split("|").forEach { firstDecompiler ->
-            if (firstDecompiler.isNotEmpty()) {
-                val timeAndPower = firstDecompiler.split("*")
-//                timeDescriptors.add(timeAndPower.first().toFloat())
-                entries.add(BarEntry(count.toFloat(), timeAndPower.last().toFloat()))
-                count += 1
-            }
-        }
-        return entries
+    private fun hideLoading() {
+        changeState { it.copy(isLoading = false) }
     }
-
-    private fun showLoading() {}
-    private fun hideLoading() {}
 }

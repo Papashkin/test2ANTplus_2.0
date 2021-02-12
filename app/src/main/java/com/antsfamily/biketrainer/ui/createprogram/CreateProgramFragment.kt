@@ -2,12 +2,14 @@ package com.antsfamily.biketrainer.ui.createprogram
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutIntervalParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutSegmentParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutStairsParams
 import com.antsfamily.biketrainer.databinding.FragmentCreateProgramBinding
+import com.antsfamily.biketrainer.presentation.EventObserver
 import com.antsfamily.biketrainer.presentation.createprogram.CreateProgramViewModel
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
@@ -40,6 +42,8 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
 
     private fun observeState(binding: FragmentCreateProgramBinding) {
         with(binding) {
+            viewModel.state.mapDistinct { it.isLoading }
+                .observe(viewLifecycleOwner) { loadingView.isVisible = it }
             viewModel.state.mapDistinct { it.programNameError }
                 .observe(viewLifecycleOwner) { programNameTil.error = it }
             viewModel.state.mapDistinct { it.barItem }
@@ -54,7 +58,9 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
     }
 
     private fun observeEvents() {
-        // TODO implement
+        viewModel.showToastEvent.observe(viewLifecycleOwner, EventObserver {
+            showToast(it)
+        })
     }
 
     private fun bindInteractions(binding: FragmentCreateProgramBinding) {

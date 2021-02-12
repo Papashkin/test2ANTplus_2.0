@@ -10,6 +10,7 @@ import com.antsfamily.biketrainer.databinding.ViewWorkoutChartBinding
 import com.antsfamily.biketrainer.ui.createprogram.model.WorkoutItem
 import com.antsfamily.biketrainer.util.timeFormat
 import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 
@@ -69,17 +70,20 @@ class WorkoutChart @JvmOverloads constructor(
             emptyDataFl.isVisible = item == null
             workoutBc.isVisible = item != null
             item?.let {
-                val dataSet = it.dataSet.apply {
+                val program = BarDataSet(it.entries, "Total time: ${it.getTotalTime()}").apply {
                     barBorderWidth = BAR_CHAT_VALUE_BORDER_WIDTH
-                    stackLabels = it.labels.map { it.timeFormat() }.toTypedArray()
+                    stackLabels = it.getLabelInTimeFormat().toTypedArray()
                     color = R.color.color_central
                     isHighlightEnabled = false
                 }
                 workoutBc.apply {
-                    data = BarData(dataSet)
-                    data.barWidth = BAR_CHAT_VALUE_WIDTH
-                    data.setValueTextSize(BAR_CHAT_VALUE_TEXT_SIZE)
-                    xAxis.valueFormatter = object: ValueFormatter() {
+                    data = BarData(program).apply {
+                        barWidth = BAR_CHAT_VALUE_WIDTH
+                        setValueTextSize(BAR_CHAT_VALUE_TEXT_SIZE)
+                    }
+//                    data.barWidth = BAR_CHAT_VALUE_WIDTH
+//                    data.setValueTextSize(BAR_CHAT_VALUE_TEXT_SIZE)
+                    xAxis.valueFormatter = object : ValueFormatter() {
                         override fun getBarLabel(entry: BarEntry): String =
                             it.labels[entry.x.toInt()].timeFormat()
                     }

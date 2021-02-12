@@ -5,14 +5,13 @@ import android.view.View
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
-import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.ant.device.SelectedDevice
-import com.antsfamily.biketrainer.data.models.Program
-import com.antsfamily.biketrainer.presentation.withFactory
+import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
+import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
+import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_scan.*
 
@@ -24,7 +23,7 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
 
         fun newInstance(profileName: String, program: Program): ScanFragment = ScanFragment().apply {
             arguments = bundleOf(
-                SELECTED_PROGRAM to program.getProgram(),
+                SELECTED_PROGRAM to program.getData(),
                 SELECTED_PROFILE to profileName
             )
         }

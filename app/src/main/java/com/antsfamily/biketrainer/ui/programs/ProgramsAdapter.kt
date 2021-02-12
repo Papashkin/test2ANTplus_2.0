@@ -3,12 +3,10 @@ package com.antsfamily.biketrainer.ui.programs
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.antsfamily.biketrainer.data.models.Program
+import com.antsfamily.biketrainer.data.models.program.Program
+import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.databinding.CardProgramInfoBinding
 import com.antsfamily.biketrainer.util.fullTimeFormat
-import com.squareup.picasso.MemoryPolicy
-import com.squareup.picasso.Picasso
-import java.io.File
 import javax.inject.Inject
 
 class ProgramsAdapter @Inject constructor() :
@@ -47,18 +45,18 @@ class ProgramsAdapter @Inject constructor() :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: Program) {
-            val programSource = item.getProgram()
+            val programSource = item.getData()
             with(binding) {
                 programNameTv.text = item.getName()
                 programDurationTv.text = getTotalTime(programSource)
                 programMaxPowerTv.text = getMaxPower(programSource)
                 programAvgPowerTv.text = getAveragePower(programSource)
 
-                Picasso.get()
-                    .load(File(item.getImagePath()))
-                    .fit()
-                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-                    .into(programIv)
+//                Picasso.get()
+//                    .load(File(item.getImagePath()))
+//                    .fit()
+//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
+//                    .into(programIv)
 
                 root.setOnClickListener { onItemClickListener?.invoke(item) }
                 root.setOnLongClickListener {
@@ -68,44 +66,18 @@ class ProgramsAdapter @Inject constructor() :
             }
         }
 
-        /**
-         * (<time>*<power>|<time>*<power>|...)
-         */
-        private fun getAveragePower(program: String): CharSequence {
-            var avgPower = 0L
-            var count = 0
-            program.split("|").forEach {
-                val power = it.split("*").last()
-                if (power.isNotEmpty()) {
-                    avgPower += power.toBigDecimal().toLong()
-                    count += 1
-                }
-            }
-            return "${avgPower/count} W avg"
+        private fun getAveragePower(data: List<ProgramData>): String {
+            val avgPower = data.map { it.power }.sum().div(data.size)
+            return "$avgPower W avg"
         }
 
-        private fun getMaxPower(program: String): CharSequence {
-            var maxPower = 0L
-            program.split("|").forEach {
-                val power = it.split("*").last()
-                if (power.isNotEmpty()) {
-                    if (power.toBigDecimal().toLong() > maxPower) {
-                        maxPower = power.toBigDecimal().toLong()
-                    }
-                }
-            }
+        private fun getMaxPower(data: List<ProgramData>): String {
+            val maxPower = data.maxOf { it.power }
             return "$maxPower W max"
         }
 
-        private fun getTotalTime(program: String): CharSequence {
-            var count = 0.0f
-            program.split("|").forEach {
-                if (it.isNotEmpty()) {
-                    count += it.split("*").first().toFloat()
-                }
-            }
-            return count.toLong().fullTimeFormat()
-        }
+        private fun getTotalTime(data: List<ProgramData>): String =
+            data.map { it.duration }.sum().fullTimeFormat()
     }
 
 }
