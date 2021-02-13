@@ -3,10 +3,15 @@ package com.antsfamily.biketrainer.ui.programs
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.databinding.CardProgramInfoBinding
 import com.antsfamily.biketrainer.util.fullTimeFormat
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import javax.inject.Inject
 
 class ProgramsAdapter @Inject constructor() :
@@ -44,20 +49,18 @@ class ProgramsAdapter @Inject constructor() :
     inner class ProgramViewHolder(private val binding: CardProgramInfoBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        private val emptyFormatter = object : ValueFormatter() {
+            override fun getBarLabel(entry: BarEntry): String = ""
+        }
+
         fun bind(item: Program) {
-            val programSource = item.getData()
+            val data = item.getData()
             with(binding) {
                 programNameTv.text = item.getName()
-                programDurationTv.text = getTotalTime(programSource)
-                programMaxPowerTv.text = getMaxPower(programSource)
-                programAvgPowerTv.text = getAveragePower(programSource)
-
-//                Picasso.get()
-//                    .load(File(item.getImagePath()))
-//                    .fit()
-//                    .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-//                    .into(programIv)
-
+                programDurationTv.text = getTotalTime(data)
+                programMaxPowerTv.text = getMaxPower(data)
+                programAvgPowerTv.text = getAveragePower(data)
+                createChart(data)
                 root.setOnClickListener { onItemClickListener?.invoke(item) }
                 root.setOnLongClickListener {
                     onLongItemClickListener?.invoke(item)
@@ -66,18 +69,47 @@ class ProgramsAdapter @Inject constructor() :
             }
         }
 
-        private fun getAveragePower(data: List<ProgramData>): String {
-            val avgPower = data.map { it.power }.sum().div(data.size)
-            return "$avgPower W avg"
-        }
+        private fun getAveragePower(data: List<ProgramData>): String =
+            data.map { it.power }.sum().div(data.size).toString()
 
-        private fun getMaxPower(data: List<ProgramData>): String {
-            val maxPower = data.maxOf { it.power }
-            return "$maxPower W max"
-        }
+        private fun getMaxPower(data: List<ProgramData>): String =
+            data.maxOf { it.power }.toString()
 
         private fun getTotalTime(data: List<ProgramData>): String =
             data.map { it.duration }.sum().fullTimeFormat()
+
+        private fun createChart(data: List<ProgramData>) {
+            val entries = data.mapIndexed { index, _data ->
+                BarEntry(index.toFloat(), _data.power.toFloat())
+            }
+            with(binding.programBc) {
+                setScaleEnabled(false)
+                setTouchEnabled(true)
+                description.isEnabled = false
+                legend.isEnabled = false
+                xAxis.isEnabled = false
+                axisLeft.isEnabled = false
+                axisRight.isEnabled = false
+                setDrawGridBackground(false)
+                setDrawBorders(false)
+                this.data = BarData(
+                    BarDataSet(entries, "").apply {
+                        barBorderWidth = BAR_BORDER_WIDTH
+                        valueFormatter = emptyFormatter
+                        color = R.color.color_central
+                        stackLabels = emptyArray()
+                        isHighlightEnabled = false
+                    }
+                ).apply { barWidth = BAR_WIDTH }
+                animateXY(X_ANIMATION, Y_ANIMATION)
+            }
+        }
     }
 
+    companion object {
+        private const val BAR_BORDER_WIDTH = 0f
+        private const val BAR_WIDTH = 1f
+        private const val Y_ANIMATION = 900
+        private const val X_ANIMATION = 700
+    }
 }
