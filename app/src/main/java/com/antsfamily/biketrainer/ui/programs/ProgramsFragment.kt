@@ -32,18 +32,14 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
 
     private fun observeState(binding: FragmentProgramsBinding) {
         with(binding) {
-            viewModel.state.mapDistinct { it.isLoading }.observe(viewLifecycleOwner) {
-                loadingView.isVisible = it
-            }
-            viewModel.state.mapDistinct { it.isProgramsVisible }.observe(viewLifecycleOwner) {
-                programsRv.isVisible = it
-            }
-            viewModel.state.mapDistinct { it.isEmptyProgramsVisible }.observe(viewLifecycleOwner) {
-                emptyProgramsListTv.isVisible = it
-            }
-            viewModel.state.mapDistinct { it.programs }.observe(viewLifecycleOwner) {
-                programsAdapter.items = it
-            }
+            viewModel.state.mapDistinct { it.isLoading }
+                .observe(viewLifecycleOwner) { loadingView.isVisible = it }
+            viewModel.state.mapDistinct { it.isProgramsVisible }.
+            observe(viewLifecycleOwner) { programsRv.isVisible = it }
+            viewModel.state.mapDistinct { it.isEmptyProgramsVisible }
+                .observe(viewLifecycleOwner) { emptyProgramsListTv.isVisible = it }
+            viewModel.state.mapDistinct { it.programs }
+                .observe(viewLifecycleOwner) { programsAdapter.items = it }
         }
     }
 
@@ -55,6 +51,7 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
         with(binding) {
             backBtn.setOnClickListener { viewModel.onBackClick() }
             addProgramBtn.setOnClickListener { viewModel.onAddProgramClick() }
+            programsRv.canScrollVertically(1)
             programsRv.adapter = programsAdapter.apply {
                 setOnItemClickListener { viewModel.onProgramClick(it) }
                 setOnLongItemClickListener { viewModel.onLongProgramClick(it) }

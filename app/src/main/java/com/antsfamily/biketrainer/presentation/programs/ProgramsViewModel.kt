@@ -51,11 +51,13 @@ class ProgramsViewModel @Inject constructor(
     }
 
     private fun handleSuccessResult(data: List<Program>) {
-        changeState { it.copy(
-            programs = data,
-            isProgramsVisible = data.isNotEmpty(),
-            isEmptyProgramsVisible = data.isEmpty()
-        ) }
+        changeState {
+            it.copy(
+                programs = data,
+                isProgramsVisible = data.isNotEmpty(),
+                isEmptyProgramsVisible = data.isEmpty()
+            )
+        }
     }
 
     private fun showLoading() {

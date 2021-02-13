@@ -2,45 +2,59 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tool="http://schemas.android.com/tools"
-        android:id="@+id/clProgram"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/margin_tiny"
-        android:layout_marginVertical="@dimen/margin_small_extra"
-        android:background="@drawable/bg_view_surface_rounded_medium"
+        android:layout_marginVertical="@dimen/margin_pre_regular"
+        android:background="@drawable/bg_view_on_primary_rounded_medium"
+        android:layout_marginHorizontal="@dimen/margin_large"
         android:clickable="true"
-        android:elevation="1dp">
+        android:elevation="4dp">
 
-    <ImageView
-            android:id="@+id/program_iv"
+    <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/program_bc"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:background="@drawable/bg_view_surface_rounded_medium"
-            android:padding="@dimen/margin_small_extra"
+            android:layout_height="150dp"
+            android:background="@drawable/bg_view_surface_top_rounded_medium"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tool:ignore="ContentDescription"
-            tool:src="@tools:sample/avatars" />
+            tool:ignore="ContentDescription" />
 
     <TextView
             android:id="@+id/program_name_tv"
-            style="@style/Body1.onSurface"
+            style="@style/Title1.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/margin_small"
-            android:layout_marginTop="@dimen/margin_small_extra"
+            android:layout_marginHorizontal="@dimen/margin_regular"
+            android:layout_marginTop="@dimen/margin_regular"
             android:ellipsize="end"
-            android:gravity="center"
             android:maxLines="1"
-            app:layout_constraintTop_toBottomOf="@id/program_iv"
+            app:layout_constraintTop_toBottomOf="@id/program_bc"
             tool:text="Awesome workout" />
 
     <TextView
+            android:id="@+id/program_duration_hint_tv"
+            style="@style/Caption.onSurface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_pre_regular"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/margin_pre_regular"
+            android:paddingVertical="@dimen/margin_small_extra"
+            android:text="@string/card_program_total_time"
+            app:layout_constraintBottom_toTopOf="@id/program_duration_tv"
+            app:layout_constraintEnd_toEndOf="@id/program_duration_tv"
+            app:layout_constraintStart_toStartOf="@id/program_duration_tv"
+            app:layout_constraintTop_toBottomOf="@id/program_name_tv"
+            app:layout_constraintVertical_bias="1" />
+
+    <TextView
             android:id="@+id/program_duration_tv"
+            style="@style/Body2.Bold.onSurface"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_pre_regular"
+            android:layout_marginHorizontal="@dimen/margin_regular"
+            android:layout_marginBottom="@dimen/margin_small"
             android:background="@drawable/bg_badge"
             android:gravity="center"
             android:paddingHorizontal="@dimen/margin_pre_regular"
@@ -49,14 +63,32 @@
             app:layout_constraintEnd_toStartOf="@id/program_avg_power_tv"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/program_name_tv"
+            app:layout_constraintTop_toBottomOf="@id/program_duration_hint_tv"
             tool:text="@tools:sample/date/hhmmss" />
 
     <TextView
+            android:id="@+id/program_avg_power_hint_tv"
+            style="@style/Caption.onSurface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_pre_regular"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/margin_pre_regular"
+            android:paddingVertical="@dimen/margin_small_extra"
+            android:text="@string/card_program_power_avg"
+            app:layout_constraintBottom_toTopOf="@id/program_avg_power_tv"
+            app:layout_constraintEnd_toEndOf="@id/program_avg_power_tv"
+            app:layout_constraintStart_toStartOf="@id/program_avg_power_tv"
+            app:layout_constraintTop_toBottomOf="@id/program_name_tv"
+            app:layout_constraintVertical_bias="1" />
+
+    <TextView
             android:id="@+id/program_avg_power_tv"
+            style="@style/Body2.Bold.onSurface"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_pre_regular"
+            android:layout_marginHorizontal="@dimen/margin_regular"
+            android:layout_marginBottom="@dimen/margin_small"
             android:background="@drawable/bg_badge"
             android:gravity="center"
             android:paddingHorizontal="@dimen/margin_pre_regular"
@@ -65,14 +97,32 @@
             app:layout_constraintEnd_toStartOf="@id/program_max_power_tv"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/program_duration_tv"
-            app:layout_constraintTop_toBottomOf="@id/program_name_tv"
+            app:layout_constraintTop_toBottomOf="@id/program_avg_power_hint_tv"
             tool:text="222 W avg" />
 
     <TextView
+            android:id="@+id/program_max_power_hint_tv"
+            style="@style/Caption.onSurface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_pre_regular"
+            android:gravity="center"
+            android:paddingHorizontal="@dimen/margin_pre_regular"
+            android:paddingVertical="@dimen/margin_small_extra"
+            android:text="@string/card_program_power_max"
+            app:layout_constraintBottom_toTopOf="@id/program_max_power_tv"
+            app:layout_constraintEnd_toEndOf="@id/program_max_power_tv"
+            app:layout_constraintStart_toStartOf="@id/program_max_power_tv"
+            app:layout_constraintTop_toBottomOf="@id/program_name_tv"
+            app:layout_constraintVertical_bias="1" />
+
+    <TextView
             android:id="@+id/program_max_power_tv"
+            style="@style/Body2.Bold.onSurface"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_pre_regular"
+            android:layout_marginHorizontal="@dimen/margin_regular"
+            android:layout_marginBottom="@dimen/margin_small"
             android:background="@drawable/bg_badge"
             android:gravity="center"
             android:paddingHorizontal="@dimen/margin_pre_regular"
@@ -82,7 +132,7 @@
             app:layout_constraintHorizontal_chainStyle="spread_inside"
             app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toEndOf="@id/program_avg_power_tv"
-            app:layout_constraintTop_toBottomOf="@id/program_name_tv"
+            app:layout_constraintTop_toBottomOf="@id/program_max_power_hint_tv"
             tool:text="999 W max" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

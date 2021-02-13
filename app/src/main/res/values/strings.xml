@@ -70,16 +70,6 @@
     <string name="new_profile_failed_to_create">New profile creating failed. Please try it again</string>
     <string name="new_profile_existed">Profile with the same name is existed</string>
 
-    <!-- ====== Dialog ====== -->
-    <string name="dialog_message_are_you_sure">Are you sure?</string>
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
-    <string name="dialog_empty_program_name">Please insert the program name</string>
-    <string name="dialog_ok">OK</string>
-    <string name="dialog_cancel">Cancel</string>
-    <string name="dialog_save_program_question">You have unsaved data. Do you want to save it?</string>
-    <string name="dialog_program_saving">Program saving …</string>
-
     <!-- ====== Create profile ====== -->
     <string name="gender_male">Male</string>
     <string name="gender_female">Female</string>
@@ -94,6 +84,8 @@
     <string name="create_program_create">Create</string>
     <string name="create_program_add_segment_question">What kind of segment you want to add?</string>
     <string name="create_program_title">Create new program</string>
+
+    <!-- ====== Add segment ====== -->
     <string name="add_segment_duration">Duration</string>
     <string name="add_segment_add">Add</string>
     <string name="add_segment_power">Power, W</string>
@@ -111,5 +103,10 @@
     <string name="add_stairs_duration">Duration</string>
     <string name="add_stairs_add">Add</string>
     <string name="workout_chart_empty_message">There is nothing to show :(</string>
+
+    <!-- ====== Program card ====== -->
+    <string name="card_program_total_time">Total time</string>
+    <string name="card_program_power_avg">Avg power</string>
+    <string name="card_program_power_max">Max power</string>
 
 </resources>
