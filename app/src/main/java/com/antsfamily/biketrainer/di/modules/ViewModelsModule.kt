@@ -10,6 +10,7 @@ import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
 import com.antsfamily.biketrainer.presentation.createprogram.CreateProgramViewModel
 import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
+import com.antsfamily.biketrainer.presentation.splash.SplashViewModel
 import com.antsfamily.biketrainer.presentation.start.StartViewModel
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import dagger.Binds
@@ -21,6 +22,11 @@ import dagger.multibindings.IntoMap
 @InstallIn(ApplicationComponent::class)
 @Module
 abstract class ViewModelsModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SplashViewModel::class)
+    abstract fun bindSplashViewModel(viewModel: SplashViewModel) : ViewModel
 
     @Binds
     @IntoMap

@@ -4,6 +4,7 @@ import com.antsfamily.biketrainer.data.models.ProgramType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 
 sealed class Route
+object SplashToStart : Route()
 object StartToProfile : Route()
 object StartToPrograms : Route()
 
