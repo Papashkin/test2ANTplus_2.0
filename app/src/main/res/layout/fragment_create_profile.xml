@@ -10,29 +10,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <ImageView
-                android:id="@+id/back_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_regular"
-                android:layout_marginTop="@dimen/margin_regular"
-                android:padding="@dimen/margin_small_extra"
-                android:src="@drawable/ic_arrow_back_32"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:ignore="ContentDescription" />
-
         <TextView
                 android:id="@+id/create_profile_title_tv"
                 style="@style/Header4.Bold.onSurface"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_regular"
                 android:text="@string/create_profile_create_new_profile"
-                app:layout_constraintBottom_toBottomOf="@id/back_btn"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/back_btn"
-                app:layout_constraintTop_toTopOf="@id/back_btn" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         <ScrollView
                 android:id="@+id/content_sv"
@@ -164,9 +152,9 @@
                         android:background="@drawable/bg_button_rounded_small"
                         android:text="@string/create_profile_create"
                         android:textAllCaps="false"
-                        app:layout_constraintVertical_bias="1"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/gender_til"
-                        app:layout_constraintBottom_toBottomOf="parent" />
+                        app:layout_constraintVertical_bias="1" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

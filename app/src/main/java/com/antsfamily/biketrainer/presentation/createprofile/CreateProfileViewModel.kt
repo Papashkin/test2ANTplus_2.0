@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.CreateProfileUseCase
+import com.antsfamily.biketrainer.navigation.CreateProfileToStart
 import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.orZero
@@ -61,10 +62,6 @@ class CreateProfileViewModel @Inject constructor(
         genderIndex = null
     }
 
-    fun onBackButtonClick() {
-        navigateBack()
-    }
-
     fun onCreateClick(
         username: String?,
         age: Int,
@@ -112,7 +109,13 @@ class CreateProfileViewModel @Inject constructor(
     ) {
         createProfileUseCase(
             Profile(
-                getRandomId(), username, age, gender.orEmpty(), weight.toFloat(), height.toFloat()
+                getRandomId(),
+                username,
+                age,
+                gender.orEmpty(),
+                weight.toFloat(),
+                height.toFloat(),
+                true
             )
         ) { handleResult(it) }
     }
@@ -122,7 +125,7 @@ class CreateProfileViewModel @Inject constructor(
         when (result) {
             is Result.Success -> {
                 _clearFieldsEvent.postValue(Event(Unit))
-                showSnackbar("Profile was created successfully")
+                navigateTo(CreateProfileToStart)
             }
             is Result.Failure -> {
                 showSnackbar(result.errorData.message ?: "Something went wrong :(")

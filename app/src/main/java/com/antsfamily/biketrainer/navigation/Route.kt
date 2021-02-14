@@ -5,10 +5,10 @@ import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 
 sealed class Route
 object SplashToStart : Route()
+object SplashToCreateProfile : Route()
+object CreateProfileToStart: Route()
 object StartToProfile : Route()
 object StartToPrograms : Route()
-
-object ProfileToCreateProfile: Route()
 
 class ScanToWorkout(
     val devices: List<MultiDeviceSearch.MultiDeviceSearchResult>,

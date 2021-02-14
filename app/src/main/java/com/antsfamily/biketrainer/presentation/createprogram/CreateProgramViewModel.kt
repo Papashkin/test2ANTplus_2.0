@@ -1,6 +1,5 @@
 package com.antsfamily.biketrainer.presentation.createprogram
 
-import com.antsfamily.biketrainer.MainApplication
 import com.antsfamily.biketrainer.data.models.ProgramType
 import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.data.models.program.ProgramData
@@ -14,11 +13,7 @@ import com.antsfamily.biketrainer.navigation.CreateProgramToAddSegment
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddStairs
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.ui.createprogram.model.WorkoutItem
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarEntry
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
-import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -36,7 +31,6 @@ class CreateProgramViewModel @Inject constructor(
         val workoutError: String? = null
     )
 
-    private lateinit var programChart: BarChart
     private var dataSet: MutableList<ProgramData> = mutableListOf()
 
     fun onBackClick() {
@@ -170,49 +164,6 @@ class CreateProgramViewModel @Inject constructor(
 
     private fun refreshState() {
         changeState { State() }
-    }
-
-    private fun saveImageAsync(programValues: String) = async {
-        try {
-            showLoading()
-//            programChart.saveProgramAsImage(programImagePath)
-//            if (isNewProgram) {
-//                insertToDb(values = programValues)
-//            } else {
-//                updateInDb(values = programValues)
-//            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            hideLoading()
-        }
-    }
-
-    private fun insertToDb(values: String) = launch {
-//        try {
-//            showLoading()
-//            programsRepository.insertProgram(
-//                Program(
-//                    id = 0,
-//                    name = "",
-////                    name = programName,
-//                    program = values,
-//                    imagePath = programImagePath
-//                )
-//            )
-////            router.exit()
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        } finally {
-//            hideLoading()
-//        }
-    }
-
-    fun getProgramImagePath(chart: BarChart) {
-        programChart = chart
-        val file = File(MainApplication.PROGRAM_IMAGES_PATH!!)
-        if (!file.exists()) file.mkdirs()
-//        programImagePath = "${file.absolutePath}/${programName.convertToLatinScript()}.png"
     }
 
     private fun showLoading() {
