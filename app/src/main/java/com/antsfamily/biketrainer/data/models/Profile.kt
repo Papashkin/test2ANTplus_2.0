@@ -6,12 +6,13 @@ import androidx.room.PrimaryKey
 import javax.inject.Inject
 
 /**
- * [Profile] - data class with information about user (stored in BD)
+ * [Profile] - data class with information about user
  * @param name - user name;
  * @param age - user age;
  * @param gender - Male or Female;
  * @param weight - user weight;
- * @param height - user height
+ * @param height - user height;
+ * @param isSelected - Flag shows is it main profile or not;
  */
 @Entity
 class Profile @Inject constructor(
@@ -31,7 +32,10 @@ class Profile @Inject constructor(
     private var weight: Float,
 
     @ColumnInfo(name = "height")
-    private var height: Float
+    private var height: Float,
+
+    @ColumnInfo(name = "is_selected")
+    private var isSelected: Boolean
 ) {
     fun getId() = this.id
     fun getName() = this.name
@@ -39,6 +43,7 @@ class Profile @Inject constructor(
     fun getGender() = this.gender
     fun getWeight() = this.weight
     fun getHeight() = this.height
+    fun getIsSelected() = this.isSelected
 
     fun setName(newName: String) {
         this.name = newName
@@ -60,20 +65,7 @@ class Profile @Inject constructor(
         this.height = newHeight
     }
 
-    fun isFilled(): Boolean =
-        name.isNotBlank() && age > 0 && gender.isNotBlank() && weight > 0.0 && height > 0.0
-
-    fun isSomethingFilled(): Boolean =
-        this.getName().isNotEmpty() || this.getAge() != 0 || this.getWeight() != 0.0F || this.getHeight() != 0.0F || this.getGender() != ""
-
-    companion object {
-        fun empty() = Profile(
-            id = 0,
-            name = "",
-            age = 0,
-            gender = "",
-            weight = 0.0f,
-            height = 0.0f
-        )
+    fun setIsSelected(isSelected: Boolean) {
+        this.isSelected = isSelected
     }
 }

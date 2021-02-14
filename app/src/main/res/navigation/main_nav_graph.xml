@@ -15,7 +15,8 @@
                 app:destination="@id/startFragment" />
         <action
                 android:id="@+id/action_startFragment_to_createProfileFragment"
-                app:destination="@id/createProfileFragment" />
+                app:destination="@id/createProfileFragment"
+                app:popUpTo="@id/main_nav_graph" />
     </fragment>
     <fragment
             android:id="@+id/startFragment"
@@ -33,11 +34,7 @@
             android:id="@+id/profilesFragment"
             android:name="com.antsfamily.biketrainer.ui.profiles.ProfilesFragment"
             android:label="ProfilesFragment"
-            tools:layout="@layout/fragment_profiles">
-        <action
-                android:id="@+id/action_profilesFragment_to_createProfileFragment"
-                app:destination="@id/createProfileFragment" />
-    </fragment>
+            tools:layout="@layout/fragment_profiles"/>
     <fragment
             android:id="@+id/createProgramFragment"
             android:name="com.antsfamily.biketrainer.ui.createprogram.CreateProgramFragment"
@@ -90,7 +87,11 @@
             android:id="@+id/createProfileFragment"
             android:name="com.antsfamily.biketrainer.ui.createprofile.CreateProfileFragment"
             android:label="fragment_create_profile"
-            tools:layout="@layout/fragment_create_profile" />
+            tools:layout="@layout/fragment_create_profile" >
+        <action
+                android:id="@+id/action_createProfileFragment_to_startFragment"
+                app:destination="@id/startFragment" />
+    </fragment>
     <dialog
             android:id="@+id/addSegmentBottomSheetDialogFragment"
             android:name="com.antsfamily.biketrainer.ui.createprogram.dialog.AddSegmentBottomSheetDialogFragment"

@@ -72,7 +72,6 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
 
     private fun bindInteractions(binding: FragmentCreateProfileBinding) {
         with(binding) {
-            backBtn.setOnClickListener { viewModel.onBackButtonClick() }
             createBtn.setOnClickListener { createProfile() }
             usernameEt.afterTextChange { viewModel.onUsernameChange() }
             ageEt.afterTextChange { viewModel.onAgeChange() }
@@ -80,16 +79,17 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
             heightEt.afterTextChange { viewModel.onHeightChange() }
             genderActv.apply {
                 afterTextChange { viewModel.onGenderChange() }
-                onItemClickListener = object : AdapterView.OnItemClickListener {
-                    override fun onItemClick(p0: AdapterView<*>?, p1: View?, index: Int, p3: Long) {
-                        viewModel.onGenderSelected(index)
-                    }
+                onItemClickListener = AdapterView.OnItemClickListener { _, _, index, _ ->
+                    viewModel.onGenderSelected(index)
                 }
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
 
-                    override fun onItemSelected(p0: AdapterView<*>?, view: View?, index: Int, p3: Long) {
+                    override fun onItemSelected(
+                        p0: AdapterView<*>?, view: View?, index: Int, p3: Long
+                    ) {
                         viewModel.onGenderSelected(index)
                     }
+
                     override fun onNothingSelected(p0: AdapterView<*>?) {
                         viewModel.onGenderCleared()
                     }

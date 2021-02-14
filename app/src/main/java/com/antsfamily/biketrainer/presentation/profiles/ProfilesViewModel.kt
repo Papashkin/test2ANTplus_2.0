@@ -2,7 +2,6 @@ package com.antsfamily.biketrainer.presentation.profiles
 
 import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.domain.usecase.GetProfileUseCase
-import com.antsfamily.biketrainer.navigation.ProfileToCreateProfile
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,7 +26,7 @@ class ProfilesViewModel @Inject constructor(
     }
 
     fun addNewProfileClick() {
-        navigateTo(ProfileToCreateProfile)
+        // TODO: 14.02.2021
     }
 
     private fun getProfiles() = launch {
