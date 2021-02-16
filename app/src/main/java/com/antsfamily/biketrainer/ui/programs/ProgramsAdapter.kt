@@ -24,7 +24,6 @@ class ProgramsAdapter @Inject constructor() :
         }
 
     private var onItemClickListener: ((item: Program) -> Unit)? = null
-    private var onLongItemClickListener: ((item: Program) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProgramViewHolder {
         val binding =
@@ -34,10 +33,6 @@ class ProgramsAdapter @Inject constructor() :
 
     fun setOnItemClickListener(listener: (item: Program) -> Unit) {
         onItemClickListener = listener
-    }
-
-    fun setOnLongItemClickListener(listener: (item: Program) -> Unit) {
-        onLongItemClickListener = listener
     }
 
     override fun getItemCount(): Int = items.size
@@ -62,10 +57,6 @@ class ProgramsAdapter @Inject constructor() :
                 programAvgPowerTv.text = getAveragePower(data)
                 createChart(data)
                 root.setOnClickListener { onItemClickListener?.invoke(item) }
-                root.setOnLongClickListener {
-                    onLongItemClickListener?.invoke(item)
-                    true
-                }
             }
         }
 

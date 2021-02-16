@@ -51,10 +51,8 @@ class ProgramsFragment : BaseFragment(R.layout.fragment_programs) {
         with(binding) {
             backBtn.setOnClickListener { viewModel.onBackClick() }
             addProgramBtn.setOnClickListener { viewModel.onAddProgramClick() }
-            programsRv.canScrollVertically(1)
             programsRv.adapter = programsAdapter.apply {
                 setOnItemClickListener { viewModel.onProgramClick(it) }
-                setOnLongItemClickListener { viewModel.onLongProgramClick(it) }
             }
         }
     }

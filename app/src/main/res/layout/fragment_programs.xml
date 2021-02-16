@@ -65,8 +65,9 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/margin_medium"
             android:backgroundTint="?attr/colorPrimary"
-            android:src="@drawable/ic_add_white_32"
+            android:src="@drawable/ic_add_white"
             app:borderWidth="0dp"
+            app:maxImageSize="30dp"
             app:tint="?attr/colorOnPrimary"
             tools:ignore="ContentDescription" />
 
