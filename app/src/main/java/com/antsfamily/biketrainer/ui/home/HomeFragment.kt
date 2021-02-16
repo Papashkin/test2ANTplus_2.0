@@ -13,7 +13,7 @@ import com.antsfamily.biketrainer.presentation.home.HomeViewModel
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.ui.home.adapter.CreateProgramAdapter
-import com.antsfamily.biketrainer.ui.programs.ProgramsAdapter
+import com.antsfamily.biketrainer.ui.home.adapter.ProgramsAdapter
 import com.antsfamily.biketrainer.ui.util.iconId
 import com.antsfamily.biketrainer.ui.util.isShimmering
 import com.antsfamily.biketrainer.util.mapDistinct

@@ -21,7 +21,7 @@ class SplashViewModel @Inject constructor(
 
     fun onResume() {
         showLoading()
-        Handler(Looper.getMainLooper()).postDelayed(::getSelectedProfile, 500L)
+        Handler(Looper.getMainLooper()).postDelayed(::getSelectedProfile, DELAY)
     }
 
     private fun getSelectedProfile() {
@@ -56,5 +56,9 @@ class SplashViewModel @Inject constructor(
 
     private fun hideLoading() {
         changeState { it.copy(isLoading = false) }
+    }
+
+    companion object {
+        private const val DELAY = 1000L
     }
 }
