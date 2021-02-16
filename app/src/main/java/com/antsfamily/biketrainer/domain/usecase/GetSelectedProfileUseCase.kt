@@ -8,10 +8,12 @@ import javax.inject.Inject
 
 class GetSelectedProfileUseCase @Inject constructor(
     private val profileRepository: ProfilesRepository
-) : BaseUseCase<Unit, Result<Profile?, Error>>() {
+) : BaseUseCase<Unit, Result<Profile, Error>>() {
 
-    override suspend fun run(params: Unit): Result<Profile?, Error> = try {
-        Result.Success(profileRepository.getSelectedProfile())
+    override suspend fun run(params: Unit): Result<Profile, Error> = try {
+        profileRepository.getSelectedProfile()?.let {
+            Result.Success(it)
+        } ?: Result.Failure(Error("There is no selected profile"))
     } catch (e: Exception) {
         Result.Failure(Error("Epic fail"))
     }

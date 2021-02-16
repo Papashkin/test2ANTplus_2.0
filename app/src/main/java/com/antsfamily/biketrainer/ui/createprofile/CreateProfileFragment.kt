@@ -2,7 +2,6 @@ package com.antsfamily.biketrainer.ui.createprofile
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -39,9 +38,9 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
             viewModel.state.mapDistinct { it.isLoading }.observe(viewLifecycleOwner) {
                 loadingView.isVisible = it
             }
-            viewModel.state.mapDistinct { it.genders }.observe(viewLifecycleOwner) {
-                genderActv.setAdapter(getAdapter(it))
-            }
+//            viewModel.state.mapDistinct { it.genders }.observe(viewLifecycleOwner) {
+//                genderActv.setAdapter(getAdapter(it))
+//            }
             viewModel.state.mapDistinct { it.usernameError }.observe(viewLifecycleOwner) {
                 usernameTil.error = it
             }
@@ -55,7 +54,7 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
                 heightTil.error = it
             }
             viewModel.state.mapDistinct { it.genderError }.observe(viewLifecycleOwner) {
-                genderTil.error = it
+                setupGenderError(it)
             }
         }
     }
@@ -77,24 +76,28 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
             ageEt.afterTextChange { viewModel.onAgeChange() }
             weightEt.afterTextChange { viewModel.onWeightChange() }
             heightEt.afterTextChange { viewModel.onHeightChange() }
-            genderActv.apply {
-                afterTextChange { viewModel.onGenderChange() }
-                onItemClickListener = AdapterView.OnItemClickListener { _, _, index, _ ->
-                    viewModel.onGenderSelected(index)
-                }
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-                    override fun onItemSelected(
-                        p0: AdapterView<*>?, view: View?, index: Int, p3: Long
-                    ) {
-                        viewModel.onGenderSelected(index)
-                    }
-
-                    override fun onNothingSelected(p0: AdapterView<*>?) {
-                        viewModel.onGenderCleared()
-                    }
-                }
+            genderGroup.apply {
+                femaleRb.setOnClickListener { viewModel.onFemaleGenderSelected() }
+                maleRb.setOnClickListener { viewModel.onMaleGenderSelected() }
             }
+//            genderActv.apply {
+//                afterTextChange { viewModel.onGenderChange() }
+//                onItemClickListener = AdapterView.OnItemClickListener { _, _, index, _ ->
+//                    viewModel.onGenderSelected(index)
+//                }
+//                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//
+//                    override fun onItemSelected(
+//                        p0: AdapterView<*>?, view: View?, index: Int, p3: Long
+//                    ) {
+//                        viewModel.onGenderSelected(index)
+//                    }
+//
+//                    override fun onNothingSelected(p0: AdapterView<*>?) {
+//                        viewModel.onGenderCleared()
+//                    }
+//                }
+//            }
         }
     }
 
@@ -118,7 +121,13 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
         ageEt.text = null
         weightEt.text = null
         heightEt.text = null
-        genderActv.clearListSelection()
-        genderActv.setText("")
+        genderGroup.clearCheck()
+    }
+
+    private fun FragmentCreateProfileBinding.setupGenderError(error: String?) {
+        with(genderErrorTv) {
+            isVisible = !error.isNullOrBlank()
+            text = error
+        }
     }
 }

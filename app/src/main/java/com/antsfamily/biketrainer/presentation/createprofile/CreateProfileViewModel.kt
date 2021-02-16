@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.CreateProfileUseCase
-import com.antsfamily.biketrainer.navigation.CreateProfileToStart
+import com.antsfamily.biketrainer.navigation.CreateProfileToHome
 import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.orZero
@@ -32,7 +32,7 @@ class CreateProfileViewModel @Inject constructor(
     val clearFieldsEvent: LiveData<Event<Unit>>
         get() = _clearFieldsEvent
 
-    private var genderIndex: Int? = null
+    private var gender: Gender = Gender.INVALID
 
     fun onUsernameChange() {
         changeState { it.copy(usernameError = null) }
@@ -50,16 +50,14 @@ class CreateProfileViewModel @Inject constructor(
         changeState { it.copy(heightError = null) }
     }
 
-    fun onGenderChange() {
-        changeState { it.copy(genderError = null) }
+    fun onFemaleGenderSelected() {
+        gender = Gender.FEMALE
+        onGenderChange()
     }
 
-    fun onGenderSelected(index: Int) {
-        genderIndex = index
-    }
-
-    fun onGenderCleared() {
-        genderIndex = null
+    fun onMaleGenderSelected() {
+        gender = Gender.MALE
+        onGenderChange()
     }
 
     fun onCreateClick(
@@ -74,8 +72,7 @@ class CreateProfileViewModel @Inject constructor(
                 username!!,
                 age,
                 weight.orZero(),
-                height.orZero(),
-                getGenderById(genderIndex!!)
+                height.orZero()
             )
         }
     }
@@ -87,7 +84,7 @@ class CreateProfileViewModel @Inject constructor(
         val isAgeValid = age in 1..109
         val isWeightValid = weight.orZero() > BigDecimal.ZERO
         val isHeightValid = height.orZero() > BigDecimal.ZERO
-        val isGenderValid = genderIndex != null
+        val isGenderValid = gender != Gender.INVALID
         changeState {
             it.copy(
                 usernameError = if (isUsernameValid) null else "This is required",
@@ -100,37 +97,35 @@ class CreateProfileViewModel @Inject constructor(
         return isUsernameValid && isAgeValid && isWeightValid && isHeightValid && isGenderValid
     }
 
-    private fun createProfile(
-        username: String,
-        age: Int,
-        weight: BigDecimal,
-        height: BigDecimal,
-        gender: String?
-    ) {
+    private fun createProfile(username: String, age: Int, weight: BigDecimal, height: BigDecimal) {
         createProfileUseCase(
             Profile(
                 getRandomId(),
                 username,
                 age,
-                gender.orEmpty(),
+                gender.toString(),
                 weight.toFloat(),
                 height.toFloat(),
                 true
             )
-        ) { handleResult(it) }
+        ) { handleResult(it, username) }
     }
 
-    private fun handleResult(result: Result<Unit, Error>) {
+    private fun handleResult(result: Result<Unit, Error>, username: String) {
         hideLoading()
         when (result) {
             is Result.Success -> {
                 _clearFieldsEvent.postValue(Event(Unit))
-                navigateTo(CreateProfileToStart)
+                navigateTo(CreateProfileToHome(username))
             }
             is Result.Failure -> {
                 showSnackbar(result.errorData.message ?: "Something went wrong :(")
             }
         }
+    }
+
+    private fun onGenderChange() {
+        changeState { it.copy(genderError = null) }
     }
 
     private fun showLoading() {
@@ -142,6 +137,4 @@ class CreateProfileViewModel @Inject constructor(
     }
 
     private fun getRandomId(): Int = Random.nextInt(0, 1000000)
-
-    private fun getGenderById(index: Int?) = index?.let { Gender.values()[it].toString() }
 }

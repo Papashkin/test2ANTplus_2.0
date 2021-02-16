@@ -4,11 +4,11 @@ import com.antsfamily.biketrainer.data.models.ProgramType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 
 sealed class Route
-object SplashToStart : Route()
+class SplashToHome(val username: String) : Route()
 object SplashToCreateProfile : Route()
-object CreateProfileToStart: Route()
-object StartToProfile : Route()
-object StartToPrograms : Route()
+class CreateProfileToHome(val username: String): Route()
+object HomeToProfile : Route()
+object HomeToCreateProgram : Route()
 
 class ScanToWorkout(
     val devices: List<MultiDeviceSearch.MultiDeviceSearchResult>,
@@ -16,7 +16,7 @@ class ScanToWorkout(
     val profile: String
 ) : Route()
 
-object ProgramToCreateProgram : Route()
+//object ProgramToCreateProgram : Route()
 object CreateProgramToAddSegment: Route()
 object CreateProgramToAddInterval: Route()
 class CreateProgramToAddStairs(val type: ProgramType): Route()

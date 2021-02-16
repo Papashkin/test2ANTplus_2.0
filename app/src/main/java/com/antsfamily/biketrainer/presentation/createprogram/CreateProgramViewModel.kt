@@ -1,7 +1,6 @@
 package com.antsfamily.biketrainer.presentation.createprogram
 
 import com.antsfamily.biketrainer.data.models.ProgramType
-import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutIntervalParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutSegmentParams
@@ -144,7 +143,7 @@ class CreateProgramViewModel @Inject constructor(
     private fun saveProgram(name: String) {
         showLoading()
         saveProgramUseCase(
-            Program(Random().nextInt(), name, dataSet),
+            SaveProgramUseCase.Params(Random().nextInt(), name, dataSet),
             ::handleSaveProgramResult
         )
     }

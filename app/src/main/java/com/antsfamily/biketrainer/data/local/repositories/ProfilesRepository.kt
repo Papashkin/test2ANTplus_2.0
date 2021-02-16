@@ -18,7 +18,7 @@ interface ProfilesDao {
     suspend fun getSelectedProfile(): Profile?
 
     @Query("Update profile set is_selected = 0")
-    suspend fun clearSelectedProfiles(): Unit
+    suspend fun clearSelectedProfiles()
 
     @Insert
     suspend fun addProfile(profile: Profile)

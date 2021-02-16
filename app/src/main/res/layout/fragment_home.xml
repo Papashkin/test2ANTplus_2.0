@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.home.HomeFragment">
+
+    <TextView
+            android:id="@+id/home_date_time_tv"
+            style="@style/Caption.onBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="14 Jan, 2021" />
+
+    <ImageButton
+            android:id="@+id/settings_ib"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_pre_regular"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/ic_settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+    <ImageView
+            android:id="@+id/home_profile_icon_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginTop="100dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_profile_man" />
+
+    <TextView
+            android:id="@+id/home_profile_name_tv"
+            style="@style/Title2.onSurface"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintBottom_toBottomOf="@id/home_profile_icon_iv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/home_profile_icon_iv"
+            app:layout_constraintTop_toTopOf="@id/home_profile_icon_iv"
+            tools:text="LongUserName2021" />
+
+    <TextView
+            android:id="@+id/home_programs_tv"
+            style="@style/Body1.onSurface"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_huge"
+            android:text="Your programs:"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/home_profile_icon_iv" />
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/home_programs_rv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_regular"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/margin_regular"
+            android:paddingEnd="0dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintTop_toBottomOf="@id/home_programs_tv"
+            tools:itemCount="5"
+            tools:listitem="@layout/card_program_info" />
+
+    <include
+            android:id="@+id/programs_loading"
+            layout="@layout/skeleton_programs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_regular"
+            app:layout_constraintTop_toBottomOf="@id/home_programs_tv"
+            tools:visibility="gone" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/empty_programs_cl"
+            android:layout_width="match_parent"
+            android:layout_height="256dp"
+            android:layout_marginTop="@dimen/margin_regular"
+            app:layout_constraintTop_toBottomOf="@id/home_programs_tv">
+
+        <TextView
+                android:id="@+id/dont_have_program_tv"
+                style="@style/Body2.onSurface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_large"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:text="You don\'t have any programs yet."
+                app:layout_constraintBottom_toTopOf="@id/create_program_btn"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+        <Button
+                android:id="@+id/create_program_btn"
+                style="@style/Widget.Bitcasino.TextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Do you want to create program?"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/dont_have_program_tv" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

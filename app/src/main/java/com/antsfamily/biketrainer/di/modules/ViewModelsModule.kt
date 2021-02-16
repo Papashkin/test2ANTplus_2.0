@@ -11,7 +11,7 @@ import com.antsfamily.biketrainer.presentation.createprogram.CreateProgramViewMo
 import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.presentation.splash.SplashViewModel
-import com.antsfamily.biketrainer.presentation.start.StartViewModel
+import com.antsfamily.biketrainer.presentation.home.HomeViewModel
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import dagger.Binds
 import dagger.Module
@@ -55,8 +55,8 @@ abstract class ViewModelsModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(StartViewModel::class)
-    abstract fun bindStartViewModel(viewModel: StartViewModel): ViewModel
+    @ViewModelKey(HomeViewModel::class)
+    abstract fun bindStartViewModel(viewModel: HomeViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -6,7 +6,7 @@ import com.antsfamily.biketrainer.data.models.Profile
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetSelectedProfileUseCase
 import com.antsfamily.biketrainer.navigation.SplashToCreateProfile
-import com.antsfamily.biketrainer.navigation.SplashToStart
+import com.antsfamily.biketrainer.navigation.SplashToHome
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import java.lang.Error
 import javax.inject.Inject
@@ -36,15 +36,16 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun handleSuccessResult(data: Profile?) {
-        data?.let { navigateToStart() } ?: navigateToCreateProfile()
+        data?.let {
+            navigateToStart(it.getName()) } ?: navigateToCreateProfile()
     }
 
     private fun showLoading() {
         changeState { it.copy(isLoading = true) }
     }
 
-    private fun navigateToStart() {
-        navigateTo(SplashToStart)
+    private fun navigateToStart(username: String) {
+        navigateTo(SplashToHome(username))
         hideLoading()
     }
 

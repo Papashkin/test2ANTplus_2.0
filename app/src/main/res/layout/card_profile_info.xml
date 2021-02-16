@@ -11,7 +11,7 @@
             android:layout_height="@dimen/profile_item_icon_size"
             android:layout_margin="@dimen/margin_large_extra"
             android:background="@drawable/bg_circle_on_primary"
-            android:src="@drawable/ic_profile"
+            android:src="@drawable/ic_profile_man"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

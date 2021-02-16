@@ -35,6 +35,10 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
+    <style name="Header3.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
     <style name="Header4" parent="TextAppearance.MaterialComponents.Headline4">
         <item name="android:textSize">@dimen/text_size_header4</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
@@ -81,6 +85,14 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
+    <style name="Title2.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Title2.Bold.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
     <style name="Body1" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textSize">@dimen/text_size_body1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
@@ -95,6 +107,10 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
+    <style name="Body1.Bold.onSurface">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
     <style name="Body2" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">@dimen/text_size_body2</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
@@ -103,6 +119,10 @@
 
     <style name="Body2.Bold">
         <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="Body2.Primary">
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
     <style name="Body2.onSurface">
@@ -129,6 +149,10 @@
 
     <style name="Caption.onSurface">
         <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Caption.onBackground">
+        <item name="android:textColor">?attr/colorOnBackground</item>
     </style>
 
 </resources>
