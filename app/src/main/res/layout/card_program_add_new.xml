@@ -1,0 +1,28 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tool="http://schemas.android.com/tools"
+        android:layout_width="320dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginHorizontal="@dimen/margin_pre_regular"
+        android:layout_marginVertical="@dimen/margin_small_extra"
+        android:background="@drawable/bg_view_surface_rounded_medium"
+        android:clickable="true"
+        android:elevation="4dp">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_program_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_add_white"
+            app:backgroundTint="@color/color_central"
+            app:tint="?attr/colorOnPrimary"
+            app:borderWidth="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="36dp"
+            tool:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
