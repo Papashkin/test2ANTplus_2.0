@@ -53,11 +53,6 @@
                 app:destination="@id/addIntervalBottomSheetDialogFragment" />
     </fragment>
     <fragment
-            android:id="@+id/programsFragment"
-            android:name="com.antsfamily.biketrainer.ui.programs.ProgramsFragment"
-            android:label="ProgramsFragment"
-            tools:layout="@layout/fragment_programs"/>
-    <fragment
             android:id="@+id/scanFragment"
             android:name="com.antsfamily.biketrainer.ui.scanning.ScanFragment"
             android:label="ScanFragment"

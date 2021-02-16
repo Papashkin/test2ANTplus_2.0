@@ -6,12 +6,11 @@ import com.antsfamily.biketrainer.presentation.createprofile.CreateProfileViewMo
 import com.antsfamily.biketrainer.presentation.createprogram.AddIntervalBottomSheetViewModel
 import com.antsfamily.biketrainer.presentation.createprogram.AddSegmentBottomSheetViewModel
 import com.antsfamily.biketrainer.presentation.createprogram.AddStairsBottomSheetViewModel
-import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
 import com.antsfamily.biketrainer.presentation.createprogram.CreateProgramViewModel
-import com.antsfamily.biketrainer.presentation.programs.ProgramsViewModel
+import com.antsfamily.biketrainer.presentation.home.HomeViewModel
+import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.presentation.splash.SplashViewModel
-import com.antsfamily.biketrainer.presentation.home.HomeViewModel
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import dagger.Binds
 import dagger.Module
@@ -32,11 +31,6 @@ abstract class ViewModelsModule {
     @IntoMap
     @ViewModelKey(ProfilesViewModel::class)
     abstract fun bindProfilesViewModel(viewModel: ProfilesViewModel) : ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ProgramsViewModel::class)
-    abstract fun bindProgramsViewModel(viewModel: ProgramsViewModel): ViewModel
 
     @Binds
     @IntoMap

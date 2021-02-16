@@ -16,7 +16,6 @@ class ScanToWorkout(
     val profile: String
 ) : Route()
 
-//object ProgramToCreateProgram : Route()
 object CreateProgramToAddSegment: Route()
 object CreateProgramToAddInterval: Route()
 class CreateProgramToAddStairs(val type: ProgramType): Route()
