@@ -16,10 +16,9 @@ class SaveProgramUseCase @Inject constructor(
     override suspend fun run(params: Params): Result<Unit, Error> = try {
         profilesRepository.getSelectedProfile()?.let {
             val program = Program(
-                id = params.id,
-                name = params.name,
+                title = params.name,
                 data = params.data,
-                username = it.getName()
+                username = it.name
             )
             Result.Success(programsRepository.insertProgram(program))
         } ?: Result.Failure(Error("Selected profile is absent"))

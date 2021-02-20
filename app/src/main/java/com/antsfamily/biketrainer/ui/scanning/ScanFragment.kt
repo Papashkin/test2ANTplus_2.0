@@ -23,7 +23,7 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
 
         fun newInstance(profileName: String, program: Program): ScanFragment = ScanFragment().apply {
             arguments = bundleOf(
-                SELECTED_PROGRAM to program.getData(),
+                SELECTED_PROGRAM to program.data,
                 SELECTED_PROFILE to profileName
             )
         }

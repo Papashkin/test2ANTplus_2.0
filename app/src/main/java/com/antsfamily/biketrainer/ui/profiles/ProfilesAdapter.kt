@@ -3,7 +3,7 @@ package com.antsfamily.biketrainer.ui.profiles
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.antsfamily.biketrainer.data.models.Profile
+import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.databinding.CardProfileInfoBinding
 import java.util.*
 import javax.inject.Inject
@@ -54,9 +54,9 @@ class ProfilesAdapter @Inject constructor() :
     }
 
     fun editItem(position: Int) {
-        val selectedId = profiles[position].getId()
-        notifyDataSetChanged()
-        onEditClickListener?.invoke(selectedId)
+//        val selectedId = profiles[position].getId()
+//        notifyDataSetChanged()
+//        onEditClickListener?.invoke(selectedId)
     }
 
     fun setProfileList(newProfiles: List<Profile>) {
@@ -70,8 +70,8 @@ class ProfilesAdapter @Inject constructor() :
 
         fun bind(profile: Profile) {
             with(binding) {
-                nameTv.text = profile.getName()
-                this.root.setOnClickListener { onItemClickListener?.invoke(profile.getId()) }
+                nameTv.text = profile.name
+//                this.root.setOnClickListener { onItemClickListener?.invoke(profile.getId()) }
             }
         }
     }

@@ -1,6 +1,7 @@
 package com.antsfamily.biketrainer.presentation.home
 
-import com.antsfamily.biketrainer.data.models.Profile
+import com.antsfamily.biketrainer.data.models.profile.Profile
+import com.antsfamily.biketrainer.data.models.profile.ProfileWithPrograms
 import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProfileAndProgramsUseCase
@@ -24,11 +25,8 @@ class HomeViewModel @Inject constructor(
     )
 
     init {
+        getProfileWithPrograms()
         getDateTime()
-    }
-
-    fun onViewCreated(username: String) {
-        getProfileAndPrograms(username)
     }
 
     fun onSettingsClick() {
@@ -48,27 +46,25 @@ class HomeViewModel @Inject constructor(
         changeState { it.copy(dateTime = date) }
     }
 
-    private fun getProfileAndPrograms(username: String) {
-        getProfileAndProgramsUseCase(username) {
-            handleProfileAndProgramsResult(it)
-        }
+    private fun getProfileWithPrograms() {
+        getProfileAndProgramsUseCase(Unit, ::handleProfileAndProgramsResult)
     }
 
-    private fun handleProfileAndProgramsResult(result: Result<Pair<Profile, List<Program>>, Error>) {
+    private fun handleProfileAndProgramsResult(result: Result<ProfileWithPrograms, Error>) {
         when (result) {
             is Result.Success -> handleProfileAndProgramsSuccessResult(result.successData)
             is Result.Failure -> handleProfileAndProgramsFailureResult(result.errorData)
         }
     }
 
-    private fun handleProfileAndProgramsSuccessResult(result: Pair<Profile, List<Program>>) {
+    private fun handleProfileAndProgramsSuccessResult(data: ProfileWithPrograms) {
         changeState {
             it.copy(
                 isLoading = false,
-                profile = result.first,
-                programs = result.second,
-                isProgramsVisible = result.second.isNotEmpty(),
-                isEmptyProgramsVisible = result.second.isEmpty()
+                profile = data.profile,
+                programs = data.programs,
+                isProgramsVisible = data.programs.isNotEmpty(),
+                isEmptyProgramsVisible = data.programs.isEmpty()
             )
         }
     }

@@ -1,6 +1,6 @@
 package com.antsfamily.biketrainer.data.models.workouts
 
-import com.antsfamily.biketrainer.data.models.ProgramType
+import com.antsfamily.biketrainer.data.models.program.ProgramType
 import java.io.Serializable
 
 data class WorkoutStairsParams(
