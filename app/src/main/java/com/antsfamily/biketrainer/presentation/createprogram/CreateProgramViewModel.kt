@@ -1,6 +1,7 @@
 package com.antsfamily.biketrainer.presentation.createprogram
 
-import com.antsfamily.biketrainer.data.models.program.ProgramType
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutIntervalParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutSegmentParams
@@ -10,6 +11,7 @@ import com.antsfamily.biketrainer.domain.usecase.SaveProgramUseCase
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddInterval
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddSegment
 import com.antsfamily.biketrainer.navigation.CreateProgramToAddStairs
+import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.ui.createprogram.model.WorkoutItem
 import com.github.mikephil.charting.data.BarEntry
@@ -30,6 +32,10 @@ class CreateProgramViewModel @Inject constructor(
         val workoutError: String? = null
     )
 
+    private val _clearInputFieldsEvent = MutableLiveData<Event<Unit>>()
+    val clearInputFieldsEvent: LiveData<Event<Unit>>
+        get() = _clearInputFieldsEvent
+
     private var dataSet: MutableList<ProgramData> = mutableListOf()
 
     fun onBackClick() {
@@ -48,12 +54,8 @@ class CreateProgramViewModel @Inject constructor(
         navigateTo(CreateProgramToAddSegment)
     }
 
-    fun onUpstairsClick() {
-        navigateTo(CreateProgramToAddStairs(ProgramType.STEPS_UP))
-    }
-
-    fun onDownstairsClick() {
-        navigateTo(CreateProgramToAddStairs(ProgramType.STEPS_DOWN))
+    fun onStairsClick() {
+        navigateTo(CreateProgramToAddStairs)
     }
 
     fun onCreateClick(name: String) {
@@ -76,14 +78,7 @@ class CreateProgramViewModel @Inject constructor(
         }
     }
 
-    fun onStairsUpAdd(stairs: WorkoutStairsParams?) {
-        stairs?.let {
-            setStairs(it)
-            updateChart()
-        }
-    }
-
-    fun onStairsDownAdd(stairs: WorkoutStairsParams?) {
+    fun onStairsAdd(stairs: WorkoutStairsParams?) {
         stairs?.let {
             setStairs(it)
             updateChart()
@@ -102,11 +97,16 @@ class CreateProgramViewModel @Inject constructor(
     }
 
     private fun setStairs(workout: WorkoutStairsParams) {
-        val middlePower = (workout.endPower + workout.startPower) / 2
-        val durationForEachStep = workout.duration / 3
-        setSegment(WorkoutSegmentParams(workout.startPower, durationForEachStep))
-        setSegment(WorkoutSegmentParams(middlePower, durationForEachStep))
-        setSegment(WorkoutSegmentParams(workout.endPower, durationForEachStep))
+        val stepPower = (workout.endPower - workout.startPower) / workout.steps
+        val durationForEachStep = workout.duration / workout.steps
+        for (index in 0 until workout.steps) {
+            setSegment(
+                WorkoutSegmentParams(
+                    workout.startPower + stepPower.times(index),
+                    durationForEachStep
+                )
+            )
+        }
     }
 
     private fun updateChart() {
@@ -163,6 +163,7 @@ class CreateProgramViewModel @Inject constructor(
 
     private fun refreshState() {
         changeState { State() }
+        _clearInputFieldsEvent.postValue(Event(Unit))
     }
 
     private fun showLoading() {

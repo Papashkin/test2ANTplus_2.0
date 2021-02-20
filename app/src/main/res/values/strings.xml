@@ -53,8 +53,7 @@
     <!-- ====== Program types ====== -->
     <string name="program_type_segment">Segment</string>
     <string name="program_type_intervals">Intervals</string>
-    <string name="program_type_3_steps_up">3 Steps up</string>
-    <string name="program_type_3_steps_down">3 Steps down</string>
+    <string name="program_type_steps">Stairs</string>
 
     <!-- ====== Programs list ====== -->
     <string name="programs_empty_list">Whoops! \nWe didn\'t find any programs you created.</string>
@@ -100,7 +99,8 @@
     <string name="add_stairs_title">Add stairs</string>
     <string name="add_stairs_start_power">Start power, W</string>
     <string name="add_stairs_end_power">End power, W</string>
-    <string name="add_stairs_duration">Duration</string>
+    <string name="add_stairs_stair_count">Step count (3 min, 20 max)</string>
+    <string name="add_stairs_duration">Total duration</string>
     <string name="add_stairs_add">Add</string>
     <string name="workout_chart_empty_message">There is nothing to show :(</string>
 

@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.navArgs
 import com.antsfamily.biketrainer.BaseBottomSheetDialogFragment
 import com.antsfamily.biketrainer.databinding.BottomSheetFragmentAddStairsBinding
 import com.antsfamily.biketrainer.presentation.EventObserver
@@ -24,8 +23,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class AddStairsBottomSheetDialogFragment : BaseBottomSheetDialogFragment() {
 
-    private val args: AddStairsBottomSheetDialogFragmentArgs by navArgs()
-
     private lateinit var behavior: BottomSheetBehavior<View>
 
     override val viewModel: AddStairsBottomSheetViewModel by viewModels {
@@ -35,11 +32,6 @@ class AddStairsBottomSheetDialogFragment : BaseBottomSheetDialogFragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         behavior = BottomSheetBehavior(context, null)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel.onCreate(args.type)
     }
 
     override fun onCreateView(
@@ -74,16 +66,14 @@ class AddStairsBottomSheetDialogFragment : BaseBottomSheetDialogFragment() {
                 .observe(viewLifecycleOwner) { endPowerTil.error = it }
             viewModel.state.mapDistinct { it.durationError }
                 .observe(viewLifecycleOwner) { durationView.error = it }
+            viewModel.state.mapDistinct { it.stepCountError }
+                .observe(viewLifecycleOwner) { stepCountTil.error = it }
         }
     }
 
     private fun observeEvents() {
-        viewModel.setStairsDownResult.observe(viewLifecycleOwner, EventObserver {
-            setFragmentResult(REQUEST_KEY_STAIRS_DOWN, bundleOf(KEY_STAIRS_DOWN to it))
-            dismiss()
-        })
-        viewModel.setStairsUpResult.observe(viewLifecycleOwner, EventObserver {
-            setFragmentResult(REQUEST_KEY_STAIRS_UP, bundleOf(KEY_STAIRS_UP to it))
+        viewModel.setStairsResult.observe(viewLifecycleOwner, EventObserver {
+            setFragmentResult(REQUEST_KEY_STAIRS, bundleOf(KEY_STAIRS to it))
             dismiss()
         })
     }
@@ -94,23 +84,22 @@ class AddStairsBottomSheetDialogFragment : BaseBottomSheetDialogFragment() {
                 viewModel.onAddClick(
                     startPower = startPowerEt.text.toString().toIntOrNull().orZero(),
                     endPower = endPowerEt.text.toString().toIntOrNull().orZero(),
+                    stepCount = stepCountEt.text.toString().toIntOrNull().orZero(),
                     duration = durationView.getValue()
                 )
             }
             durationView.setOnDurationChangeListener { viewModel.onDurationChange() }
             startPowerEt.afterTextChange { viewModel.onStartPowerTextChange() }
             endPowerEt.afterTextChange { viewModel.onEndPowerTextChange() }
+            stepCountEt.afterTextChange { viewModel.onStepCountChange() }
         }
     }
 
     private fun getScreenHeight() = Resources.getSystem().displayMetrics.heightPixels
 
     companion object {
-        const val REQUEST_KEY_STAIRS_UP = "request_key_stairs_up"
-        const val KEY_STAIRS_UP = "key_stairs_up"
-
-        const val REQUEST_KEY_STAIRS_DOWN = "request_key_stairs_down"
-        const val KEY_STAIRS_DOWN = "key_stairs_down"
+        const val REQUEST_KEY_STAIRS = "request_key_stairs"
+        const val KEY_STAIRS = "key_stairs"
     }
 }
 
