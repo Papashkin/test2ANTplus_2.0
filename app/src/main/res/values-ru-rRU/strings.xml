@@ -106,4 +106,9 @@
     <string name="card_program_total_time">Total time</string>
     <string name="card_program_power_avg">Power avg, W</string>
     <string name="card_program_power_max">Power max, W</string>
+
+    <!-- ====== Home screen ====== -->
+    <string name="home_empty_programs_title">You don\'t have any programs yet.</string>
+    <string name="home_empty_programs_create_btn_text">Do you want to create program?</string>
+    <string name="home_your_programs">Your programs:</string>
 </resources>
