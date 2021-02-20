@@ -49,9 +49,9 @@ class ProgramsAdapter @Inject constructor() :
         }
 
         fun bind(item: Program) {
-            val data = item.getData()
+            val data = item.data
             with(binding) {
-                programNameTv.text = item.getName()
+                programNameTv.text = item.title
                 programDurationTv.text = getTotalTime(data)
                 programMaxPowerTv.text = getMaxPower(data)
                 programAvgPowerTv.text = getAveragePower(data)

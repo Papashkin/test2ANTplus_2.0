@@ -1,39 +1,19 @@
 package com.antsfamily.biketrainer.data.local.repositories
 
 import androidx.room.*
+import com.antsfamily.biketrainer.data.local.database.ProgramDao
 import com.antsfamily.biketrainer.data.models.program.Program
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Dao
-interface ProgramsDao {
-    @Query("SELECT * from program")
-    suspend fun getAll(): List<Program>
-
-    @Query("Select * from program where name = :name")
-    suspend fun getProgram(name: String): Program?
-
-    @Query("Select * from program where username = :username")
-    suspend fun getProgramsByUsername(username: String): List<Program>
-
-    @Insert(onConflict = OnConflictStrategy.ABORT)
-    suspend fun insertProgram(profile: Program)
-
-    @Update
-    suspend fun updateProgram(program: Program)
-
-    @Delete
-    suspend fun deleteProgram(profile: Program)
-}
-
 @Singleton
-class ProgramsRepository @Inject constructor(private val programsDao: ProgramsDao) {
-    suspend fun getAllPrograms(): List<Program> = programsDao.getAll()
-    suspend fun getProgram(name: String): Program? = programsDao.getProgram(name)
+class ProgramsRepository @Inject constructor(private val dao: ProgramDao) {
+    suspend fun getAllPrograms(): List<Program> = dao.getAll()
+    suspend fun getProgram(name: String): Program? = dao.getProgram(name)
     suspend fun getProgramsByUsername(username: String): List<Program> =
-        programsDao.getProgramsByUsername(username)
+        dao.getProgramsByUsername(username)
 
-    suspend fun insertProgram(program: Program) = programsDao.insertProgram(program)
-    suspend fun updateProgram(program: Program) = programsDao.updateProgram(program)
-    suspend fun removeProgram(program: Program) = programsDao.deleteProgram(program)
+    suspend fun insertProgram(program: Program) = dao.insertProgram(program)
+    suspend fun updateProgram(program: Program) = dao.updateProgram(program)
+    suspend fun removeProgram(program: Program) = dao.deleteProgram(program)
 }

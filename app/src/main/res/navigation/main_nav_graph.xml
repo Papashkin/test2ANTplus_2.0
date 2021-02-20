@@ -24,7 +24,6 @@
             android:name="com.antsfamily.biketrainer.ui.home.HomeFragment"
             android:label="HomeFragment"
             tools:layout="@layout/fragment_home">
-        <argument app:argType="string" android:name="profileName" />
         <action
                 android:id="@+id/action_startFragment_to_profilesFragment"
                 app:destination="@id/profilesFragment" />
@@ -103,6 +102,6 @@
             tools:layout="@layout/bottom_sheet_fragment_add_stairs">
         <argument
                 android:name="type"
-                app:argType="com.antsfamily.biketrainer.data.models.ProgramType" />
+                app:argType="com.antsfamily.biketrainer.data.models.program.ProgramType" />
     </dialog>
 </navigation>

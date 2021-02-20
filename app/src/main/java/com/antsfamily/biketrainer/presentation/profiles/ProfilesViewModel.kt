@@ -1,6 +1,6 @@
 package com.antsfamily.biketrainer.presentation.profiles
 
-import com.antsfamily.biketrainer.data.models.Profile
+import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.domain.usecase.GetProfileUseCase
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import kotlinx.coroutines.launch

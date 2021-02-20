@@ -2,7 +2,7 @@ package com.antsfamily.biketrainer.presentation.createprofile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.antsfamily.biketrainer.data.models.Profile
+import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.CreateProfileUseCase
 import com.antsfamily.biketrainer.navigation.CreateProfileToHome
@@ -12,7 +12,6 @@ import com.antsfamily.biketrainer.util.orZero
 import com.garmin.fit.Gender
 import java.math.BigDecimal
 import javax.inject.Inject
-import kotlin.random.Random
 
 class CreateProfileViewModel @Inject constructor(
     private val createProfileUseCase: CreateProfileUseCase
@@ -100,7 +99,6 @@ class CreateProfileViewModel @Inject constructor(
     private fun createProfile(username: String, age: Int, weight: BigDecimal, height: BigDecimal) {
         createProfileUseCase(
             Profile(
-                getRandomId(),
                 username,
                 age,
                 gender.toString(),
@@ -108,15 +106,15 @@ class CreateProfileViewModel @Inject constructor(
                 height.toFloat(),
                 true
             )
-        ) { handleResult(it, username) }
+        , ::handleResult)
     }
 
-    private fun handleResult(result: Result<Unit, Error>, username: String) {
+    private fun handleResult(result: Result<Unit, Error>) {
         hideLoading()
         when (result) {
             is Result.Success -> {
                 _clearFieldsEvent.postValue(Event(Unit))
-                navigateTo(CreateProfileToHome(username))
+                navigateTo(CreateProfileToHome)
             }
             is Result.Failure -> {
                 showSnackbar(result.errorData.message ?: "Something went wrong :(")
@@ -135,6 +133,4 @@ class CreateProfileViewModel @Inject constructor(
     private fun hideLoading() {
         changeState { it.copy(isLoading = false) }
     }
-
-    private fun getRandomId(): Int = Random.nextInt(0, 1000000)
 }

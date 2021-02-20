@@ -2,7 +2,7 @@ package com.antsfamily.biketrainer.presentation.splash
 
 import android.os.Handler
 import android.os.Looper
-import com.antsfamily.biketrainer.data.models.Profile
+import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetSelectedProfileUseCase
 import com.antsfamily.biketrainer.navigation.SplashToCreateProfile
@@ -36,16 +36,15 @@ class SplashViewModel @Inject constructor(
     }
 
     private fun handleSuccessResult(data: Profile?) {
-        data?.let {
-            navigateToStart(it.getName()) } ?: navigateToCreateProfile()
+        data?.let { navigateToStart() } ?: navigateToCreateProfile()
     }
 
     private fun showLoading() {
         changeState { it.copy(isLoading = true) }
     }
 
-    private fun navigateToStart(username: String) {
-        navigateTo(SplashToHome(username))
+    private fun navigateToStart() {
+        navigateTo(SplashToHome)
         hideLoading()
     }
 

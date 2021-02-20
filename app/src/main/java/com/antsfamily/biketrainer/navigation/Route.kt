@@ -1,12 +1,12 @@
 package com.antsfamily.biketrainer.navigation
 
-import com.antsfamily.biketrainer.data.models.ProgramType
+import com.antsfamily.biketrainer.data.models.program.ProgramType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 
 sealed class Route
-class SplashToHome(val username: String) : Route()
+object SplashToHome : Route()
 object SplashToCreateProfile : Route()
-class CreateProfileToHome(val username: String): Route()
+object CreateProfileToHome: Route()
 object HomeToProfile : Route()
 object HomeToCreateProgram : Route()
 

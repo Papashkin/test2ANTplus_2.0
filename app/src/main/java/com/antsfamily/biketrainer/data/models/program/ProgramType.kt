@@ -1,4 +1,4 @@
-package com.antsfamily.biketrainer.data.models
+package com.antsfamily.biketrainer.data.models.program
 
 enum class ProgramType {
     SEGMENT,

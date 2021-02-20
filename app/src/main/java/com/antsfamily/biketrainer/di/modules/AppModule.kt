@@ -3,9 +3,9 @@ package com.antsfamily.biketrainer.di.modules
 import android.content.Context
 import androidx.room.Room
 import com.antsfamily.biketrainer.data.local.database.AntsBikeTrainerDatabase
-import com.antsfamily.biketrainer.data.local.repositories.ProfilesDao
+import com.antsfamily.biketrainer.data.local.database.ProfileDao
+import com.antsfamily.biketrainer.data.local.database.ProgramDao
 import com.antsfamily.biketrainer.data.local.repositories.ProfilesRepository
-import com.antsfamily.biketrainer.data.local.repositories.ProgramsDao
 import com.antsfamily.biketrainer.data.local.repositories.ProgramsRepository
 import dagger.Module
 import dagger.Provides
@@ -26,11 +26,11 @@ object AppModule {
     fun provideProfileDao(database: AntsBikeTrainerDatabase) = database.profileDao()
 
     @Provides
-    fun provideProfilesRepository(dao: ProfilesDao) = ProfilesRepository(dao)
+    fun provideProfilesRepository(dao: ProfileDao) = ProfilesRepository(dao)
 
     @Provides
     fun provideProgramDao(database: AntsBikeTrainerDatabase) = database.programsDao()
 
     @Provides
-    fun provideProgramsRepository(dao: ProgramsDao) = ProgramsRepository(dao)
+    fun provideProgramsRepository(dao: ProgramDao) = ProgramsRepository(dao)
 }

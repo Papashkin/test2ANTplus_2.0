@@ -1,6 +1,6 @@
 package com.antsfamily.biketrainer.presentation.createprogram
 
-import com.antsfamily.biketrainer.data.models.ProgramType
+import com.antsfamily.biketrainer.data.models.program.ProgramType
 import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutIntervalParams
 import com.antsfamily.biketrainer.data.models.workouts.WorkoutSegmentParams
