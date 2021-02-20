@@ -14,7 +14,7 @@
             android:layout_margin="@dimen/margin_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="14 Jan, 2021" />
+            tools:text="Sunday, 14 January, 2021" />
 
     <ImageButton
             android:id="@+id/settings_ib"
@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/margin_large"
             android:layout_marginTop="@dimen/margin_huge"
-            android:text="Your programs:"
+            android:text="@string/home_your_programs"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/home_profile_icon_iv" />
@@ -80,15 +80,6 @@
             tools:itemCount="5"
             tools:listitem="@layout/card_program_info" />
 
-    <include
-            android:id="@+id/programs_loading"
-            layout="@layout/skeleton_programs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_regular"
-            app:layout_constraintTop_toBottomOf="@id/home_programs_tv"
-            tools:visibility="gone" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/empty_programs_cl"
             android:layout_width="match_parent"
@@ -103,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_large"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:text="You don\'t have any programs yet."
+                android:text="@string/home_empty_programs_title"
                 app:layout_constraintBottom_toTopOf="@id/create_program_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -115,12 +106,11 @@
                 style="@style/Widget.Bitcasino.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Do you want to create program?"
+                android:text="@string/home_empty_programs_create_btn_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/dont_have_program_tv" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

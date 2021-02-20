@@ -3,6 +3,7 @@ package com.antsfamily.biketrainer.data.local.database
 import androidx.room.*
 import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.data.models.profile.ProfileWithPrograms
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class ProfileDao {
@@ -21,7 +22,7 @@ abstract class ProfileDao {
 
     @Transaction
     @Query("SELECT * from profile where isSelected = 1")
-    abstract suspend fun getSelectedProfileWithPrograms(): ProfileWithPrograms
+    abstract fun getSelectedProfileWithProgramsFlow(): Flow<ProfileWithPrograms>
 
     @Insert
     abstract suspend fun addProfile(profile: Profile)

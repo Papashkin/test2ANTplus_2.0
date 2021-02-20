@@ -14,7 +14,6 @@ import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.ui.home.adapter.CreateProgramAdapter
 import com.antsfamily.biketrainer.ui.home.adapter.ProgramsAdapter
 import com.antsfamily.biketrainer.ui.util.iconId
-import com.antsfamily.biketrainer.ui.util.isShimmering
 import com.antsfamily.biketrainer.util.mapDistinct
 import com.garmin.fit.Gender
 import dagger.hilt.android.AndroidEntryPoint
@@ -35,26 +34,26 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         with(FragmentHomeBinding.bind(view)) {
             observeState(this)
+            observeFlow(this)
             bindInteractions(this)
         }
     }
 
     private fun observeState(binding: FragmentHomeBinding) {
         with(binding) {
-            viewModel.state.mapDistinct { it.isLoading }.observe(viewLifecycleOwner) {
-                programsLoading.programsShimmerFl.isShimmering = it
-                programsLoading.programsShimmerFl.isVisible = it
-            }
-            viewModel.state.mapDistinct { it.isProgramsVisible }
-                .observe(viewLifecycleOwner) { homeProgramsRv.isVisible = it }
-            viewModel.state.mapDistinct { it.isEmptyProgramsVisible }
-                .observe(viewLifecycleOwner) { emptyProgramsCl.isVisible = it }
-            viewModel.state.mapDistinct { it.programs }
-                .observe(viewLifecycleOwner) { programsAdapter.items = it }
-            viewModel.state.mapDistinct { it.profile }
-                .observe(viewLifecycleOwner) { setupProfile(it) }
             viewModel.state.mapDistinct { it.dateTime }
                 .observe(viewLifecycleOwner) { homeDateTimeTv.text = it }
+        }
+    }
+
+    private fun observeFlow(binding: FragmentHomeBinding) {
+        with(binding) {
+            viewModel.profileWithProgramsFlow.observe(viewLifecycleOwner) {
+                setupProfile(it.profile)
+                programsAdapter.items = it.programs
+                homeProgramsRv.isVisible = it.programs.isNotEmpty()
+                emptyProgramsCl.isVisible = it.programs.isEmpty()
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.antsfamily.biketrainer.presentation.createprogram
 
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.antsfamily.biketrainer.data.models.program.ProgramData
@@ -15,6 +16,7 @@ import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.ui.createprogram.model.WorkoutItem
 import com.github.mikephil.charting.data.BarEntry
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
@@ -140,7 +142,7 @@ class CreateProgramViewModel @Inject constructor(
         return isNameValid && isWorkoutValid
     }
 
-    private fun saveProgram(name: String) {
+    private fun saveProgram(name: String) = viewModelScope.launch {
         showLoading()
         saveProgramUseCase(
             SaveProgramUseCase.Params(Random().nextInt(), name, dataSet),

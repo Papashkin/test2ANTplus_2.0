@@ -2,11 +2,15 @@ package com.antsfamily.biketrainer.data.local.database
 
 import androidx.room.*
 import com.antsfamily.biketrainer.data.models.program.Program
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 abstract class ProgramDao {
     @Query("SELECT * from program")
     abstract suspend fun getAll(): List<Program>
+
+    @Query("SELECT * from program")
+    abstract fun getPrograms(): Flow<List<Program>>
 
     @Query("Select * from program where title = :title")
     abstract suspend fun getProgram(title: String): Program?
