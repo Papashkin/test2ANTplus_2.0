@@ -99,9 +99,5 @@
             android:id="@+id/addStairsBottomSheetDialogFragment"
             android:name="com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment"
             android:label="AddStairsBottomSheetDialogFragment"
-            tools:layout="@layout/bottom_sheet_fragment_add_stairs">
-        <argument
-                android:name="type"
-                app:argType="com.antsfamily.biketrainer.data.models.program.ProgramType" />
-    </dialog>
+            tools:layout="@layout/bottom_sheet_fragment_add_stairs" />
 </navigation>

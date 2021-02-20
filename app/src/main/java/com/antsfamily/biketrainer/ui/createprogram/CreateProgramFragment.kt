@@ -17,10 +17,8 @@ import com.antsfamily.biketrainer.ui.createprogram.dialog.AddIntervalBottomSheet
 import com.antsfamily.biketrainer.ui.createprogram.dialog.AddIntervalBottomSheetDialogFragment.Companion.REQUEST_KEY_INTERVAL
 import com.antsfamily.biketrainer.ui.createprogram.dialog.AddSegmentBottomSheetDialogFragment.Companion.KEY_SEGMENT
 import com.antsfamily.biketrainer.ui.createprogram.dialog.AddSegmentBottomSheetDialogFragment.Companion.REQUEST_KEY_SEGMENT
-import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.KEY_STAIRS_DOWN
-import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.KEY_STAIRS_UP
-import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.REQUEST_KEY_STAIRS_DOWN
-import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.REQUEST_KEY_STAIRS_UP
+import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.KEY_STAIRS
+import com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment.Companion.REQUEST_KEY_STAIRS
 import com.antsfamily.biketrainer.ui.util.afterTextChange
 import com.antsfamily.biketrainer.util.mapDistinct
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,7 +32,7 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
         super.onViewCreated(view, savedInstanceState)
         with(FragmentCreateProgramBinding.bind(view)) {
             observeState(this)
-            observeEvents()
+            observeEvents(this)
             bindInteractions(this)
         }
         setupFragmentResultListener()
@@ -57,9 +55,12 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
         }
     }
 
-    private fun observeEvents() {
+    private fun observeEvents(binding: FragmentCreateProgramBinding) {
         viewModel.showToastEvent.observe(viewLifecycleOwner, EventObserver {
             showToast(it)
+        })
+        viewModel.clearInputFieldsEvent.observe(viewLifecycleOwner, EventObserver {
+            binding.programNameEt.text = null
         })
     }
 
@@ -69,8 +70,7 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
             programNameEt.afterTextChange { viewModel.onProgramNameChange() }
             addIntervalsBtn.setOnClickListener { viewModel.onIntervalsClick() }
             addSegmentBtn.setOnClickListener { viewModel.onSegmentClick() }
-            addUpstairsBtn.setOnClickListener { viewModel.onUpstairsClick() }
-            addDownstairsBtn.setOnClickListener { viewModel.onDownstairsClick() }
+            addStairsBtn.setOnClickListener { viewModel.onStairsClick() }
             createBtn.setOnClickListener { viewModel.onCreateClick(programNameEt.text.toString()) }
         }
     }
@@ -83,10 +83,7 @@ class CreateProgramFragment : BaseFragment(R.layout.fragment_create_program) {
             REQUEST_KEY_INTERVAL, viewLifecycleOwner
         ) { _, bundle -> viewModel.onIntervalAdd(bundle[KEY_INTERVAL] as? WorkoutIntervalParams) }
         parentFragmentManager.setFragmentResultListener(
-            REQUEST_KEY_STAIRS_UP, viewLifecycleOwner
-        ) { _, bundle -> viewModel.onStairsUpAdd(bundle[KEY_STAIRS_UP] as? WorkoutStairsParams) }
-        parentFragmentManager.setFragmentResultListener(
-            REQUEST_KEY_STAIRS_DOWN, viewLifecycleOwner
-        ) { _, bundle -> viewModel.onStairsDownAdd(bundle[KEY_STAIRS_DOWN] as? WorkoutStairsParams) }
+            REQUEST_KEY_STAIRS, viewLifecycleOwner
+        ) { _, bundle -> viewModel.onStairsAdd(bundle[KEY_STAIRS] as? WorkoutStairsParams) }
     }
 }

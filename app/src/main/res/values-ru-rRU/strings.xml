@@ -53,8 +53,7 @@
     <!-- ====== Типы программ ====== -->
     <string name="program_type_segment">Сегмент</string>
     <string name="program_type_intervals">Интервал</string>
-    <string name="program_type_3_steps_up">Лесенка вверх</string>
-    <string name="program_type_3_steps_down">Лесенка вниз</string>
+    <string name="program_type_steps">Лесенка</string>
 
     <!-- ====== Список программ ====== -->
     <string name="programs_empty_list">Вы ещё не создали ни одной программы.\nПожалуйста, нажмите \"плюс\" в верхней части экрана, чтобы создать.</string>
@@ -100,7 +99,8 @@
     <string name="add_stairs_title">Add stairs</string>
     <string name="add_stairs_start_power">Start power, W</string>
     <string name="add_stairs_end_power">End power, W</string>
-    <string name="add_stairs_duration">Duration</string>
+    <string name="add_stairs_stair_count">Step count (3 min, 20 max)</string>
+    <string name="add_stairs_duration">Total duration</string>
     <string name="add_stairs_add">Add</string>
     <string name="workout_chart_empty_message">There is nothing to show :(</string>
     <string name="card_program_total_time">Total time</string>

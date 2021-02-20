@@ -18,4 +18,4 @@ class ScanToWorkout(
 
 object CreateProgramToAddSegment: Route()
 object CreateProgramToAddInterval: Route()
-class CreateProgramToAddStairs(val type: ProgramType): Route()
+object CreateProgramToAddStairs: Route()

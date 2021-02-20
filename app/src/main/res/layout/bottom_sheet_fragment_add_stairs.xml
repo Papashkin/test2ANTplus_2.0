@@ -66,6 +66,26 @@
                             android:id="@+id/end_power_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:nextFocusForward="@id/step_count_et"
+                            android:background="@drawable/bg_text_field_rounded_small"
+                            android:inputType="number" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/step_count_til"
+                        style="@style/TextInputField"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:hint="@string/add_stairs_stair_count"
+                        app:layout_constraintTop_toBottomOf="@id/end_power_til">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/step_count_et"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:imeOptions="actionDone"
                             android:background="@drawable/bg_text_field_rounded_small"
                             android:inputType="number" />
@@ -78,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_medium"
-                        app:layout_constraintTop_toBottomOf="@id/end_power_til"
+                        app:layout_constraintTop_toBottomOf="@id/step_count_til"
                         app:title="@string/add_stairs_duration" />
 
                 <com.google.android.material.button.MaterialButton
