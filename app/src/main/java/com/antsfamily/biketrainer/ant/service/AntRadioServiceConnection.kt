@@ -6,16 +6,17 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.os.RemoteException
 import android.util.Log
-import com.dsi.ant.AntService
-import com.dsi.ant.channel.*
 import com.antsfamily.biketrainer.ant.channel.ChannelBroadcastListener
 import com.antsfamily.biketrainer.ant.channel.ChannelChangedListener
 import com.antsfamily.biketrainer.ant.channel.ChannelController
 import com.antsfamily.biketrainer.ant.channel.ChannelInfo
+import com.dsi.ant.AntService
+import com.dsi.ant.channel.*
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class AntRadioServiceConnection @Inject constructor(
     @ApplicationContext private var context: Context
 ) : ServiceConnection {

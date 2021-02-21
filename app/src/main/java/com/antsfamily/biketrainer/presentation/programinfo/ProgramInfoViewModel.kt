@@ -4,6 +4,7 @@ import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProgramUseCase
+import com.antsfamily.biketrainer.navigation.ProgramInfoToScan
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.fullTimeFormat
 import javax.inject.Inject
@@ -38,7 +39,9 @@ class ProgramInfoViewModel @Inject constructor(
     }
 
     fun onRunWorkoutClick() {
-//        navigateTo()
+        state.value?.programName?.let {
+            navigateTo(ProgramInfoToScan(it))
+        }
     }
 
     private fun getProgram(name: String) {

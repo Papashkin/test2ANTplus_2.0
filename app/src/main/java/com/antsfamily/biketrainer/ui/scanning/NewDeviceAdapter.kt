@@ -1,67 +1,63 @@
 package com.antsfamily.biketrainer.ui.scanning
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.ant.device.SelectedDevice
-import kotlinx.android.synthetic.main.card_sensor_info.view.*
+import com.antsfamily.biketrainer.databinding.CardSensorInfoBinding
+import javax.inject.Inject
 
-class NewDeviceAdapter(
-    private val onItemClick: (position: Int) -> Unit
-) : RecyclerView.Adapter<NewDeviceAdapter.DeviceViewHolder>() {
-    private var devices: ArrayList<SelectedDevice> = arrayListOf()
-    private lateinit var devicesDiffUtil: DeviceCallback
+class NewDeviceAdapter @Inject constructor() :
+    RecyclerView.Adapter<NewDeviceAdapter.DeviceViewHolder>() {
+
+    var devices: List<SelectedDevice> = emptyList()
+        set(value) {
+            DiffUtil.calculateDiff(DeviceCallback(devices, value)).dispatchUpdatesTo(this)
+            field = value
+        }
+
+    private var onItemClickListener: ((device: SelectedDevice) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, type: Int): DeviceViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_sensor_info, parent, false)
-        return DeviceViewHolder(view)
+        val binding =
+            CardSensorInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return DeviceViewHolder(binding)
     }
 
     override fun getItemCount(): Int = devices.size
 
     override fun onBindViewHolder(viewHolder: DeviceViewHolder, position: Int) {
-        viewHolder.bind(this.devices[position], position)
+        viewHolder.bind(devices[position])
     }
 
-    fun setDevices(newDevices: ArrayList<SelectedDevice>) {
-        devices.clear()
-        devices.addAll(newDevices)
-        devicesDiffUtil = DeviceCallback(this.getData(), newDevices)
-        val productDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(devicesDiffUtil, false)
-        productDiffResult.dispatchUpdatesTo(this)
-        notifyItemInserted(devices.size)
+    fun setOnItemClickListener(listener: (device: SelectedDevice) -> Unit) {
+        onItemClickListener = listener
     }
 
-    fun getSelectedData(): ArrayList<MultiDeviceSearch.MultiDeviceSearchResult> = devices
-        .filter { it.isSelected }
-        .map { item -> item.device } as ArrayList<MultiDeviceSearch.MultiDeviceSearchResult>
+    inner class DeviceViewHolder(val binding: CardSensorInfoBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
-    private fun getData(): ArrayList<SelectedDevice> = devices
+        fun bind(device: SelectedDevice) {
+            with(binding) {
+                sensorInfoIv.setImageResource(device.device.antDeviceType.iconId())
 
-    inner class DeviceViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+                sensorInfoIsSelectedSwitch.apply {
+                    isChecked = device.isSelected
+                    setOnClickListener { onItemClickListener?.invoke(device) }
+                }
 
-        fun bind(device: SelectedDevice, position: Int) {
-            itemView.tvDeviceName.text = device.device.deviceDisplayName
-            itemView.tvDeviceNumber.text = device.device.antDeviceNumber.toString()
-            itemView.tvDeviceType.text = device.device.antDeviceType.toString()
-            itemView.checkBoxIsSelected.isChecked = device.isSelected
-            itemView.checkBoxIsSelected.setOnClickListener {
-                device.isSelected = !device.isSelected
-                onDeviceClick(position)
+                sensorInfoTypeTv.text =
+                    itemView.resources.getString(device.device.antDeviceType.stringId())
+
+                sensorInfoNumberTv.text = itemView.resources.getString(
+                    R.string.card_sensor_number,
+                    device.device.antDeviceNumber
+                )
+
+                root.setOnClickListener { onItemClickListener?.invoke(device) }
             }
-            itemView.setOnClickListener {
-                device.isSelected = !device.isSelected
-                onDeviceClick(position)
-            }
-        }
-
-        private fun onDeviceClick(position: Int) {
-            itemView.checkBoxIsSelected.toggle()
-            onItemClick.invoke(position)
         }
     }
 }

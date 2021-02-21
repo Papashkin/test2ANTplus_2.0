@@ -1,6 +1,5 @@
 package com.antsfamily.biketrainer.navigation
 
-import com.antsfamily.biketrainer.data.models.program.ProgramType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch
 
 sealed class Route
@@ -10,6 +9,7 @@ object CreateProfileToHome: Route()
 object HomeToProfile : Route()
 object HomeToCreateProgram : Route()
 class HomeToProgramInfo(val programName: String) : Route()
+class ProgramInfoToScan(val programName: String) : Route()
 
 class ScanToWorkout(
     val devices: List<MultiDeviceSearch.MultiDeviceSearchResult>,

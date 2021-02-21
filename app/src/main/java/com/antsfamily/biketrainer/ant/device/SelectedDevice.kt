@@ -5,9 +5,9 @@ import android.os.Parcelable
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import javax.inject.Inject
 
-class SelectedDevice @Inject constructor(
+data class SelectedDevice @Inject constructor(
     val device: MultiDeviceSearchResult,
-    var isSelected: Boolean
+    val isSelected: Boolean = false
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(
