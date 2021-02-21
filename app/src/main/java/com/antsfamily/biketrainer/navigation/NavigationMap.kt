@@ -13,6 +13,9 @@ fun Route.mapToDirection(): NavDirections = when (this) {
     is CreateProfileToHome -> CreateProfileFragmentDirections.actionCreateProfileFragmentToStartFragment()
     is HomeToProfile -> HomeFragmentDirections.actionStartFragmentToProfilesFragment()
     is HomeToCreateProgram -> HomeFragmentDirections.actionHomeFragmentToCreateProgramFragment()
+    is HomeToProgramInfo -> HomeFragmentDirections.actionHomeFragmentToProgramInfoFragment(
+        programName
+    )
     is ScanToWorkout -> ScanFragmentDirections.actionScanFragmentToWorkoutFragment(
         devices.toTypedArray(), program, profile
     )

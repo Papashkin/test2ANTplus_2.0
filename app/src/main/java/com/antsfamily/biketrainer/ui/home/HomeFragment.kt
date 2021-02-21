@@ -43,16 +43,21 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         with(binding) {
             viewModel.state.mapDistinct { it.dateTime }
                 .observe(viewLifecycleOwner) { homeDateTimeTv.text = it }
+            viewModel.state.mapDistinct { it.isProgramsLoading }
+                .observe(viewLifecycleOwner) { homeProgramsLoadingFl.isVisible = it }
+            viewModel.state.mapDistinct { it.isProgramsVisible }
+                .observe(viewLifecycleOwner) { homeProgramsRv.isVisible = it }
+            viewModel.state.mapDistinct { it.isEmptyProgramsVisible }
+                .observe(viewLifecycleOwner) { emptyProgramsCl.isVisible = it }
+            viewModel.state.mapDistinct { it.profile }
+                .observe(viewLifecycleOwner) { setupProfile(it) }
         }
     }
 
     private fun observeFlow(binding: FragmentHomeBinding) {
         with(binding) {
             viewModel.profileWithProgramsFlow.observe(viewLifecycleOwner) {
-                setupProfile(it.profile)
                 programsAdapter.items = it.programs
-                homeProgramsRv.isVisible = it.programs.isNotEmpty()
-                emptyProgramsCl.isVisible = it.programs.isEmpty()
             }
         }
     }

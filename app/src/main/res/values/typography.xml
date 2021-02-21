@@ -137,6 +137,16 @@
         <item name="android:textColor">?attr/colorError</item>
     </style>
 
+    <style name="Body3" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_size_body3</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="Body3.Bold">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
     <style name="Caption" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">@dimen/text_size_caption1</item>
         <item name="android:fontFamily">@font/roboto_regular</item>

@@ -9,6 +9,7 @@ import com.antsfamily.biketrainer.presentation.createprogram.AddStairsBottomShee
 import com.antsfamily.biketrainer.presentation.createprogram.CreateProgramViewModel
 import com.antsfamily.biketrainer.presentation.home.HomeViewModel
 import com.antsfamily.biketrainer.presentation.profiles.ProfilesViewModel
+import com.antsfamily.biketrainer.presentation.programinfo.ProgramInfoViewModel
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.presentation.splash.SplashViewModel
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
@@ -40,7 +41,7 @@ abstract class ViewModelsModule {
     @Binds
     @IntoMap
     @ViewModelKey(CreateProgramViewModel::class)
-    abstract fun bindProgramSettingsViewModel(viewModel: CreateProgramViewModel): ViewModel
+    abstract fun bindCreateProgramViewModel(viewModel: CreateProgramViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -50,7 +51,12 @@ abstract class ViewModelsModule {
     @Binds
     @IntoMap
     @ViewModelKey(HomeViewModel::class)
-    abstract fun bindStartViewModel(viewModel: HomeViewModel): ViewModel
+    abstract fun bindHomeViewModel(viewModel: HomeViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ProgramInfoViewModel::class)
+    abstract fun bindProgramInfoViewModel(viewModel: ProgramInfoViewModel): ViewModel
 
     @Binds
     @IntoMap

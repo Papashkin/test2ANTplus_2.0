@@ -114,4 +114,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <FrameLayout
+            android:id="@+id/home_programs_loading_fl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.8"
+            android:background="@color/pure_white"
+            app:layout_constraintTop_toBottomOf="@id/home_programs_tv">
+
+        <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" />
+
+    </FrameLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
