@@ -56,6 +56,7 @@ class ProgramsAdapter @Inject constructor() :
                 programMaxPowerTv.text = getMaxPower(data)
                 programAvgPowerTv.text = getAveragePower(data)
                 createChart(data)
+                programBc.setOnClickListener { onItemClickListener?.invoke(item) }
                 root.setOnClickListener { onItemClickListener?.invoke(item) }
             }
         }
