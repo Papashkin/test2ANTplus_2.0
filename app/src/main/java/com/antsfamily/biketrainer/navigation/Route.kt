@@ -9,6 +9,7 @@ object SplashToCreateProfile : Route()
 object CreateProfileToHome: Route()
 object HomeToProfile : Route()
 object HomeToCreateProgram : Route()
+class HomeToProgramInfo(val programName: String) : Route()
 
 class ScanToWorkout(
     val devices: List<MultiDeviceSearch.MultiDeviceSearchResult>,

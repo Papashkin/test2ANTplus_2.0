@@ -30,6 +30,9 @@
         <action
                 android:id="@+id/action_homeFragment_to_createProgramFragment"
                 app:destination="@id/createProgramFragment" />
+        <action
+                android:id="@+id/action_homeFragment_to_programInfoFragment"
+                app:destination="@id/programInfoFragment" />
     </fragment>
     <fragment
             android:id="@+id/profilesFragment"
@@ -100,4 +103,13 @@
             android:name="com.antsfamily.biketrainer.ui.createprogram.dialog.AddStairsBottomSheetDialogFragment"
             android:label="AddStairsBottomSheetDialogFragment"
             tools:layout="@layout/bottom_sheet_fragment_add_stairs" />
+    <fragment
+            android:id="@+id/programInfoFragment"
+            android:name="com.antsfamily.biketrainer.ui.programinfo.ProgramInfoFragment"
+            android:label="ProgramInfoFragment"
+            tools:layout="@layout/fragment_program_info">
+        <argument
+                android:name="programName"
+                app:argType="string" />
+    </fragment>
 </navigation>
