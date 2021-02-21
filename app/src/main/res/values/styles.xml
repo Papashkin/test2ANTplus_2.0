@@ -60,4 +60,25 @@
     <style name="Widget.Bitcasino.TextButton.OnSurface">
         <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
+
+    <!-- Buttons -->
+    <style name="Widget.Bitcasino.Button" parent="TextAppearance.MaterialComponents.Button">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:gravity">center</item>
+        <item name="cornerRadius">@dimen/radius_regular</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:outlineProvider">none</item>
+        <item name="android:letterSpacing">0.0</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/text_size_body1</item>
+        <item name="rippleColor">@color/pure_white</item>
+    </style>
+
+    <style name="Widget.Bitcasino.Button.Surface">
+        <item name="android:textSize">@dimen/text_size_body2</item>
+        <item name="android:textColor">@color/full_black</item>
+        <item name="backgroundTint">?attr/colorSurface</item>
+        <item name="rippleColor">?attr/colorSecondary</item>
+    </style>
 </resources>
