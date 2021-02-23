@@ -123,5 +123,8 @@
     <string name="sensor_cadence">Bike cadence sensor</string>
     <string name="sensor_speed">Bike speed sensor</string>
     <string name="card_sensor_number">Number: %1$d</string>
+
+    <!-- ====== Scan screen ====== -->
     <string name="scan_devices_searching">Devices searching</string>
+    <string name="scan_continue">Continue</string>
 </resources>
