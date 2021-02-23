@@ -1,6 +1,6 @@
 package com.antsfamily.biketrainer.presentation.home
 
-import androidx.lifecycle.asLiveData
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.data.models.profile.ProfileWithPrograms
@@ -9,14 +9,16 @@ import com.antsfamily.biketrainer.domain.usecase.SubscribeToProfileWithProgramsU
 import com.antsfamily.biketrainer.navigation.HomeToCreateProgram
 import com.antsfamily.biketrainer.navigation.HomeToProgramInfo
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(
-    subscribeToProfileWithProgramsUseCase: SubscribeToProfileWithProgramsUseCase,
+    private val subscribeToProfileWithProgramsUseCase: SubscribeToProfileWithProgramsUseCase,
 ) : StatefulViewModel<HomeViewModel.State>(State()) {
 
     data class State(
@@ -24,15 +26,12 @@ class HomeViewModel @Inject constructor(
         val isProgramsLoading: Boolean = true,
         val isProgramsVisible: Boolean = false,
         val isEmptyProgramsVisible: Boolean = false,
-        val profile: Profile? = null
+        val profile: Profile? = null,
+        val programs: List<Program> = emptyList(),
     )
 
-    val profileWithProgramsFlow = subscribeToProfileWithProgramsUseCase(Unit)
-        .onStart { showLoading() }
-        .onEach { handleProfileWithPrograms(it) }
-        .asLiveData(viewModelScope.coroutineContext)
-
     init {
+        getProfileWithPrograms()
         getDateTime()
     }
 
@@ -46,6 +45,13 @@ class HomeViewModel @Inject constructor(
 
     fun onCreateProgramClick() {
         navigateTo(HomeToCreateProgram)
+    }
+
+    private fun getProfileWithPrograms() = viewModelScope.launch {
+        subscribeToProfileWithProgramsUseCase(Unit)
+            .onStart { showLoading() }
+            .onCompletion { Log.e("ProgramsRepo", "!!!! COMPLETE !!!!") }
+            .collect { handleProfileWithPrograms(it) }
     }
 
     private fun getDateTime() {
@@ -69,6 +75,7 @@ class HomeViewModel @Inject constructor(
                 isProgramsLoading = false,
                 isProgramsVisible = profileWithPrograms.programs.isNotEmpty(),
                 isEmptyProgramsVisible = profileWithPrograms.programs.isEmpty(),
+                programs = profileWithPrograms.programs,
                 profile = profileWithPrograms.profile
             )
         }

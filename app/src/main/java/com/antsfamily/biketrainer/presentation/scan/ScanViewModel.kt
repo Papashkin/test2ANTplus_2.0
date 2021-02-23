@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.dsi.ant.AntService
 import com.dsi.ant.plugins.antplus.pcc.MultiDeviceSearch
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
@@ -48,7 +49,7 @@ class ScanViewModel @Inject constructor(
         doBindChannelService()
     }
 
-    fun onScanClick() = launch {
+    fun onScanClick() = viewModelScope.launch {
         startScanAsync().await()
     }
 
@@ -88,7 +89,7 @@ class ScanViewModel @Inject constructor(
     }
 
     //    private var search: MultiDeviceSearch? = null
-    private fun startScanAsync() = async {
+    private fun startScanAsync() = viewModelScope.async {
         try {
             showLoading()
 //            search = MultiDeviceSearch(context, deviceList, antCallback)
@@ -106,7 +107,7 @@ class ScanViewModel @Inject constructor(
         AntService.bindService(context, connection)
     }
 
-    private fun doUnbindChannelService() = launch {
+    private fun doUnbindChannelService() = viewModelScope.launch {
         try {
             Log.v(TAG, "Unbinding channel service...")
             connection?.closeBackgroundScanChannel()
