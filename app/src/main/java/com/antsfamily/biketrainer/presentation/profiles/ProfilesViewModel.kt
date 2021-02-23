@@ -1,5 +1,6 @@
 package com.antsfamily.biketrainer.presentation.profiles
 
+import androidx.lifecycle.viewModelScope
 import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.domain.usecase.GetProfileUseCase
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
@@ -29,7 +30,7 @@ class ProfilesViewModel @Inject constructor(
         // TODO: 14.02.2021
     }
 
-    private fun getProfiles() = launch {
+    private fun getProfiles() = viewModelScope.launch {
         getProfileUseCase.run(Unit)
             .handleResult(::handleProfileSuccessResult, ::handleProfileFailureResult)
     }

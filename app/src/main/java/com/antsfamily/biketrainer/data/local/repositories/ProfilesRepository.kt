@@ -5,9 +5,7 @@ import com.antsfamily.biketrainer.data.models.profile.Profile
 import com.antsfamily.biketrainer.data.models.profile.ProfileWithPrograms
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ProfilesRepository @Inject constructor(private val dao: ProfileDao) {
     suspend fun getAllProfiles(): List<Profile> = dao.getAll()
     val selectedProfileWithPrograms: Flow<ProfileWithPrograms> =

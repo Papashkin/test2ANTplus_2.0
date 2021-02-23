@@ -5,17 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.antsfamily.biketrainer.navigation.Route
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlin.coroutines.CoroutineContext
 
-abstract class BaseViewModel : ViewModel(), CoroutineScope {
-
-    private val job = SupervisorJob()
-
-    override val coroutineContext: CoroutineContext
-        get() = job + Dispatchers.Main
+abstract class BaseViewModel : ViewModel() {
 
     val loading: MutableLiveData<Boolean> = MutableLiveData(false)
     val keyboard: MutableLiveData<Boolean> = MutableLiveData(false)
@@ -48,14 +39,6 @@ abstract class BaseViewModel : ViewModel(), CoroutineScope {
     fun showSnackbar(message: String) {
         _showSnackBarEvent.postValue(Event(message))
     }
-
-//    fun showLoading() {
-//        loading.postValue(true)
-//    }
-
-//    fun hideLoading() {
-//        loading.postValue(false)
-//    }
 
     fun showKeyboard() {
         keyboard.postValue(true)

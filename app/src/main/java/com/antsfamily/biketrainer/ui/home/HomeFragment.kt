@@ -34,7 +34,6 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         with(FragmentHomeBinding.bind(view)) {
             observeState(this)
-            observeFlow(this)
             bindInteractions(this)
         }
     }
@@ -51,14 +50,8 @@ class HomeFragment : BaseFragment(R.layout.fragment_home) {
                 .observe(viewLifecycleOwner) { emptyProgramsCl.isVisible = it }
             viewModel.state.mapDistinct { it.profile }
                 .observe(viewLifecycleOwner) { setupProfile(it) }
-        }
-    }
-
-    private fun observeFlow(binding: FragmentHomeBinding) {
-        with(binding) {
-            viewModel.profileWithProgramsFlow.observe(viewLifecycleOwner) {
-                programsAdapter.items = it.programs
-            }
+            viewModel.state.mapDistinct { it.programs }
+                .observe(viewLifecycleOwner) { programsAdapter.items = it }
         }
     }
 

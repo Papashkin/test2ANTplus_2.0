@@ -3,6 +3,7 @@ package com.antsfamily.biketrainer.presentation.workout
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.antsfamily.biketrainer.ant.device.BikeCadenceDevice
 import com.antsfamily.biketrainer.ant.device.BikeSpeedDistanceDevice
 import com.antsfamily.biketrainer.ant.device.FitnessEquipmentDevice
@@ -81,7 +82,7 @@ class WorkoutViewModel @Inject constructor(
         // TODO: 23.01.2021
     }
 
-    fun onStartClick() = launch {
+    fun onStartClick() = viewModelScope.launch {
         // TODO: 15.01.2021
     }
 
@@ -102,7 +103,7 @@ class WorkoutViewModel @Inject constructor(
         }
     }
 
-    private fun setHeartRateAccess(device: MultiDeviceSearchResult) = launch {
+    private fun setHeartRateAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
         handleHeartRate = AntPlusHeartRatePcc.requestAccess(
             context,
             device.antDeviceNumber,
@@ -113,7 +114,7 @@ class WorkoutViewModel @Inject constructor(
         isHRMInWork = true
     }
 
-    private fun setCadenceAccess(device: MultiDeviceSearchResult) = launch {
+    private fun setCadenceAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
         handleCadence = AntPlusBikeCadencePcc.requestAccess(
             context,
             device.antDeviceNumber,
@@ -125,7 +126,7 @@ class WorkoutViewModel @Inject constructor(
         isCadenceInWork = true
     }
 
-    private fun setSpeedAccess(device: MultiDeviceSearchResult) = launch {
+    private fun setSpeedAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
         handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
             context,
             device.antDeviceNumber,
@@ -137,7 +138,7 @@ class WorkoutViewModel @Inject constructor(
         isSpeedInWork = true
     }
 
-    private fun setFitnessEquipmentAccess(device: MultiDeviceSearchResult) = launch {
+    private fun setFitnessEquipmentAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
         handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
             context,
             device.antDeviceNumber,
@@ -229,7 +230,7 @@ class WorkoutViewModel @Inject constructor(
         timer.schedule(task, 2_000, 3_000)
     }
 
-    private fun displayTrainingData() = launch {
+    private fun displayTrainingData() = viewModelScope.launch {
         changeState { it.copy(censorsData = workoutValues) }
     }
 
