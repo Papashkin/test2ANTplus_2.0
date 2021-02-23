@@ -1,52 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tool="http://schemas.android.com/tools"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="6dp"
-        android:id="@+id/clDeviceView"
-        android:padding="2dp">
+        android:background="@drawable/bg_rectangle_on_primary">
 
-    <CheckBox
-            android:id="@+id/checkBoxIsSelected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+    <ImageView
+            android:id="@+id/sensor_info_iv"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginHorizontal="@dimen/margin_medium"
+            android:layout_marginVertical="@dimen/margin_large"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_bike_trainer" />
 
-    <TextView
-            android:id="@+id/tvDeviceName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textSize="16sp"
-            android:layout_marginStart="10dp"
-            tool:text="Монитор сердечного ритма"
+    <com.google.android.material.switchmaterial.SwitchMaterial
+            android:id="@+id/sensor_info_is_selected_switch"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="@dimen/margin_pre_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toEndOf="@id/checkBoxIsSelected"
-    />
+            tools:checked="true" />
 
     <TextView
-            android:id="@+id/tvDeviceType"
-            android:layout_width="wrap_content"
+            android:id="@+id/sensor_info_type_tv"
+            style="@style/Body1.Bold.onSurface"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textSize="12sp"
-            tool:text="Type: HEARTRATE"
-            app:layout_constraintTop_toBottomOf="@id/tvDeviceName"
-            app:layout_constraintStart_toStartOf="@id/tvDeviceName"/>
+            android:layout_marginStart="@dimen/margin_regular"
+            android:ellipsize="end"
+            android:maxLines="1"
+            app:layout_constraintEnd_toStartOf="@id/sensor_info_is_selected_switch"
+            app:layout_constraintStart_toEndOf="@id/sensor_info_iv"
+            app:layout_constraintTop_toTopOf="@id/sensor_info_iv"
+            tools:text="Heart Rate Monitor" />
 
     <TextView
-            android:id="@+id/tvDeviceNumber"
-            android:layout_width="wrap_content"
+            android:id="@+id/sensor_info_number_tv"
+            style="@style/Body3.Bold"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="2dp"
-            android:textSize="12sp"
-            tool:text="Number: 42571"
-            app:layout_constraintTop_toBottomOf="@id/tvDeviceType"
-            app:layout_constraintStart_toStartOf="@id/tvDeviceName"/>
+            android:layout_marginTop="@dimen/margin_small_extra"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/card_sensor_number"
+            app:layout_constraintBottom_toBottomOf="@id/sensor_info_iv"
+            app:layout_constraintEnd_toStartOf="@id/sensor_info_is_selected_switch"
+            app:layout_constraintStart_toStartOf="@id/sensor_info_type_tv"
+            app:layout_constraintTop_toBottomOf="@id/sensor_info_type_tv"
+            tools:text="Number: 42571" />
+
+    <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/margin_tiny"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@color/color_cooler"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

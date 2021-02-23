@@ -2,125 +2,70 @@ package com.antsfamily.biketrainer.ui.scanning
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.ant.device.SelectedDevice
-import com.antsfamily.biketrainer.data.models.program.Program
+import com.antsfamily.biketrainer.databinding.FragmentScanBinding
 import com.antsfamily.biketrainer.presentation.scan.ScanViewModel
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.ui.BaseFragment
-import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
+import com.antsfamily.biketrainer.util.mapDistinct
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_scan.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ScanFragment : BaseFragment(R.layout.fragment_scan) {
-    companion object {
-        const val SELECTED_PROGRAM = "selected program"
-        const val SELECTED_PROFILE = "selected profile"
 
-        fun newInstance(profileName: String, program: Program): ScanFragment = ScanFragment().apply {
-            arguments = bundleOf(
-                SELECTED_PROGRAM to program.data,
-                SELECTED_PROFILE to profileName
-            )
-        }
-    }
+    private val args: ScanFragmentArgs by navArgs()
 
     override val viewModel: ScanViewModel by viewModels { withFactory(viewModelFactory) }
 
-    private var program: String? = null
-    private var profileName: String? = null
+    @Inject
+    lateinit var newDeviceAdapter: NewDeviceAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.onCreate(args.programName)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        this.arguments?.apply {
-            this.getParcelableArrayList<MultiDeviceSearchResult>("devices")
-            profileName = getString(SELECTED_PROFILE)
-            program = getString(SELECTED_PROGRAM)
-        }
-
-        toolbarScan.setNavigationIcon(R.drawable.ic_arrow_back_32)
-
-        initAdapter()
-        initListeners()
-        initObservers()
-    }
-
-    private lateinit var newDeviceAdapter: NewDeviceAdapter
-    private fun initAdapter() {
-        activity?.let {
-            newDeviceAdapter = NewDeviceAdapter(
-                onItemClick = { position ->
-                    viewModel.onDeviceClick()
-                    newDeviceAdapter.notifyItemChanged(position)
-                })
-            rvDevices.adapter = newDeviceAdapter
+        with(FragmentScanBinding.bind(view)) {
+            observeState(this)
+            observeEvents()
+            bindInteractions(this)
         }
     }
 
-    private fun initListeners() {
-        toolbarScan.setNavigationOnClickListener {
-            viewModel.onBackPressed()
-        }
+    override fun onResume() {
+        super.onResume()
+        viewModel.onResume()
+    }
 
-        btnScan.setOnClickListener {
-            viewModel.onScanClick()
-        }
+    override fun onPause() {
+        super.onPause()
+        viewModel.onPause()
+    }
 
-        fabContinue.setOnClickListener {
-            if (newDeviceAdapter.getSelectedData().isEmpty()) {
-                showToast(getString(R.string.scan_no_selected_devices))
-            } else {
-                viewModel.connectToSelectedDevices(profileName = profileName ?: "", program = program ?: "")
+    private fun observeState(binding: FragmentScanBinding) {
+        with(binding) {
+            viewModel.state.mapDistinct { it.devices }
+                .observe(viewLifecycleOwner) { newDeviceAdapter.devices = it }
+            viewModel.state.mapDistinct { it.isLoading }
+                .observe(viewLifecycleOwner) { loadingView.isVisible = it }
+        }
+    }
+
+    private fun observeEvents() {
+    }
+
+    private fun bindInteractions(binding: FragmentScanBinding) {
+        with(binding) {
+            backBtn.setOnClickListener { viewModel.onBackClick() }
+            devicesRv.adapter = newDeviceAdapter.apply {
+                setOnItemClickListener { viewModel.onDeviceClick(it) }
             }
         }
     }
-
-    private fun initObservers() {
-        viewModel.loading.observe(viewLifecycleOwner, Observer {
-            if (it) showLoading() else hideLoading()
-        })
-        viewModel.connectButtonVisibility.observe(viewLifecycleOwner, Observer {
-            if (it) showConnectionButton() else hideConnectionButton()
-        })
-        viewModel.devices.observe(viewLifecycleOwner, Observer {
-            if (it.isNotEmpty()) setNewDevices(it as ArrayList<SelectedDevice>)
-        })
-        viewModel.toast.observe(viewLifecycleOwner, Observer {
-            if (it != null) {
-                if (it is Int) showToast(it) else showToast(it as String)
-            }
-        })
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.clear()
-    }
-
-    private fun setNewDevices(devices: ArrayList<SelectedDevice>) {
-        newDeviceAdapter.setDevices(devices)
-    }
-
-    private fun showLoading() {
-        pbScan.visibility = View.VISIBLE
-        btnScan.visibility = View.GONE
-    }
-
-    private fun hideLoading() {
-        pbScan.visibility = View.GONE
-        btnScan.visibility = View.VISIBLE
-    }
-
-    private fun hideConnectionButton() {
-        fabContinue.hide()
-    }
-
-    private fun showConnectionButton() {
-        fabContinue.show()
-    }
-
 }

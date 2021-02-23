@@ -111,4 +111,18 @@
     <string name="home_empty_programs_title">You don\'t have any programs yet.</string>
     <string name="home_empty_programs_create_btn_text">Do you want to create program?</string>
     <string name="home_your_programs">Your programs:</string>
+
+    <!-- ====== Sensors ====== -->
+    <string name="sensor_heart_rate">Heart Rate Monitor</string>
+    <string name="sensor_fitness_equipment">Fitness Equipment</string>
+    <string name="sensor_controllable_device">Bike trainer</string>
+    <string name="sensor_bike_power">Bike powermeter</string>
+    <string name="sensor_speed_cadence">Bike speed/cadence sensor</string>
+    <string name="sensor_cadence">Bike cadence sensor</string>
+    <string name="sensor_speed">Bike speed sensor</string>
+    <string name="card_sensor_number">Number: %1$d</string>
+
+    <!-- ====== Scan screen ====== -->
+    <string name="scan_devices_searching">Devices searching</string>
+    <string name="scan_continue">Continue</string>
 </resources>

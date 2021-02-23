@@ -2,6 +2,7 @@ package com.antsfamily.biketrainer.di.modules
 
 import android.content.Context
 import androidx.room.Room
+import com.antsfamily.biketrainer.ant.service.AntRadioServiceConnection
 import com.antsfamily.biketrainer.data.local.database.AntsBikeTrainerDatabase
 import com.antsfamily.biketrainer.data.local.database.ProfileDao
 import com.antsfamily.biketrainer.data.local.database.ProgramDao
@@ -39,4 +40,8 @@ object AppModule {
     @Singleton
     @Provides
     fun provideProgramsRepository(dao: ProgramDao) = ProgramsRepository(dao)
+
+    @Singleton
+    @Provides
+    fun provideAntRadioServiceConnection(@ApplicationContext appContext: Context) = AntRadioServiceConnection(appContext)
 }

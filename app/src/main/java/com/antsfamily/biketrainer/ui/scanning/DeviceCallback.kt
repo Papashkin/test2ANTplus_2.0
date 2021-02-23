@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.DiffUtil
 import com.antsfamily.biketrainer.ant.device.SelectedDevice
 
 class DeviceCallback(
-    private val oldList: ArrayList<SelectedDevice>,
-    private val newList: ArrayList<SelectedDevice>
+    private val oldList: List<SelectedDevice>,
+    private val newList: List<SelectedDevice>
 ): DiffUtil.Callback() {
 
     override fun areItemsTheSame(oldListItemId: Int, newListItemId: Int): Boolean {
