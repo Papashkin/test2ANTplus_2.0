@@ -1,20 +1,11 @@
 package com.antsfamily.biketrainer.presentation
 
-import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.antsfamily.biketrainer.navigation.Route
 
 abstract class BaseViewModel : ViewModel() {
-
-    val loading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val keyboard: MutableLiveData<Boolean> = MutableLiveData(false)
-    val toast: MutableLiveData<Any?> = MutableLiveData(null)
-
-    private val _showToastEvent = MutableLiveData<Event<String>>(null)
-    val showToastEvent: LiveData<Event<String>>
-        get() = _showToastEvent
 
     private val _navigationEvent = MutableLiveData<Event<Route>>()
     val navigationEvent: LiveData<Event<Route>>
@@ -24,9 +15,21 @@ abstract class BaseViewModel : ViewModel() {
     val navigationBackEvent: LiveData<Event<Unit>>
         get() = _navigationBackEvent
 
-    private val _showSnackBarEvent = MutableLiveData<Event<String>>()
-    val showSnackBarEvent: LiveData<Event<String>>
-        get() = _showSnackBarEvent
+    private val _showSuccessSnackBarMessageEvent = MutableLiveData<Event<String>>()
+    val showSuccessSnackBarMessageEvent: LiveData<Event<String>>
+        get() = _showSuccessSnackBarMessageEvent
+
+    private val _showSuccessSnackBarEvent = MutableLiveData<Event<Int>>()
+    val showSuccessSnackBarEvent: LiveData<Event<Int>>
+        get() = _showSuccessSnackBarEvent
+
+    private val _showErrorSnackBarMessageEvent = MutableLiveData<Event<String>>()
+    val showErrorSnackBarMessageEvent: LiveData<Event<String>>
+        get() = _showErrorSnackBarMessageEvent
+
+    private val _showErrorSnackBarEvent = MutableLiveData<Event<Int>>()
+    val showErrorSnackBarEvent: LiveData<Event<Int>>
+        get() = _showErrorSnackBarEvent
 
     fun navigateTo(route: Route) {
         _navigationEvent.postValue(Event(route))
@@ -36,22 +39,19 @@ abstract class BaseViewModel : ViewModel() {
         _navigationBackEvent.postValue(Event(Unit))
     }
 
-    fun showSnackbar(message: String) {
-        _showSnackBarEvent.postValue(Event(message))
+    fun showErrorSnackbar(message: String) {
+        _showErrorSnackBarMessageEvent.postValue(Event(message))
     }
 
-    fun showKeyboard() {
-        keyboard.postValue(true)
+    fun showErrorSnackbar(messageId: Int) {
+        _showErrorSnackBarEvent.postValue(Event(messageId))
     }
 
-    fun hideKeyboard() {
-        keyboard.postValue(false)
+    fun showSuccessSnackbar(message: String) {
+        _showSuccessSnackBarMessageEvent.postValue(Event(message))
     }
 
-    fun showToast(@StringRes id: Int) {
-    }
-
-    fun showToast(message: String) {
-        _showToastEvent.postValue(Event(message))
+    fun showSuccessSnackbar(messageId: Int) {
+        _showSuccessSnackBarEvent.postValue(Event(messageId))
     }
 }

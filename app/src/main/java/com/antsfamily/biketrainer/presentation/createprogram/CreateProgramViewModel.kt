@@ -153,11 +153,11 @@ class CreateProgramViewModel @Inject constructor(
     private fun handleSaveProgramResult(result: Result<Unit, Error>) {
         when (result) {
             is Result.Success -> {
-                showToast("Program was successfully saved")
+                showSuccessSnackbar("Program was successfully saved")
                 refreshState()
             }
             is Result.Failure -> {
-                showToast("Something went wrong. Please try it again later or change the name of the program")
+                showErrorSnackbar("Something went wrong. Please try it again later or change the name of the program")
             }
         }
         hideLoading()

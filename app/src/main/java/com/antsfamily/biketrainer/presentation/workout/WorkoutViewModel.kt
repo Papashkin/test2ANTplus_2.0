@@ -192,7 +192,7 @@ class WorkoutViewModel @Inject constructor(
         cadenceCensor.apply {
             setOnCadenceReceiveListener { cadence -> getCadenceValue(cadence) }
             setOnSpeedReceiveListener { speed -> getSpeedValue(speed) }
-            setOnToastShowListener { showToast(it) }
+            setOnToastShowListener { showErrorSnackbar(it) }
             setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
         }
     }
@@ -200,7 +200,7 @@ class WorkoutViewModel @Inject constructor(
     private fun setupHeartRateCensor() {
         heartRateCensor.apply {
             setOnHeartRateReceiveListener { heartRate -> getHeartRateValue(heartRate) }
-            setOnToastShowListener { showToast(it) }
+            setOnToastShowListener { showErrorSnackbar(it) }
             setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
         }
     }
@@ -210,7 +210,7 @@ class WorkoutViewModel @Inject constructor(
             setOnCadenceReceiveListener { cadence -> if (!isCadenceInWork) getCadenceValue(cadence) }
             setOnDistanceReceiveListener { distance -> getDistanceValue(distance) }
             setOnSpeedReceiveListener { speed -> if (!isCadenceInWork) getSpeedValue(speed) }
-            setOnToastShowListener { showToast(it) }
+            setOnToastShowListener { showErrorSnackbar(it) }
             setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
         }
     }
@@ -221,7 +221,7 @@ class WorkoutViewModel @Inject constructor(
             setOnDistanceReceiveListener { if (!isSpeedInWork) getDistanceValue(it) }
             setOnPowerReceiveListener { getPowerValue(it) }
             setOnSpeedReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(it) }
-            setOnShowToastListener { showToast(it) }
+            setOnShowToastListener { showErrorSnackbar(it) }
             setOnSetDependenciesListener { name, packageName -> showDialog(name, packageName) }
         }
     }

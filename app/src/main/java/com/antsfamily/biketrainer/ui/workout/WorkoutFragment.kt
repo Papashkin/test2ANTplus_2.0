@@ -46,8 +46,11 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     }
 
     private fun observeEvents() {
-        viewModel.showSnackBarEvent.observe(viewLifecycleOwner, EventObserver {
-            showToast(it)
+        viewModel.showSuccessSnackBarEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(it)
+        })
+        viewModel.showSuccessSnackBarMessageEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(it)
         })
         viewModel.showDeviceDialogEvent.observe(viewLifecycleOwner, EventObserver {
             if (it != null) showDialog(it.first, it.second)
