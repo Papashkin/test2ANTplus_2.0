@@ -3,13 +3,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_rectangle_on_primary">
+        android:layout_height="wrap_content">
 
     <ImageView
             android:id="@+id/sensor_info_iv"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="@dimen/card_sensor_icon_size"
+            android:layout_height="@dimen/card_sensor_icon_size"
             android:layout_marginHorizontal="@dimen/margin_medium"
             android:layout_marginVertical="@dimen/margin_large"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -20,12 +19,13 @@
 
     <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/sensor_info_is_selected_switch"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_pre_regular"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:text=" "
             tools:checked="true" />
 
     <TextView

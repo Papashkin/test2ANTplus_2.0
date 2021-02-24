@@ -48,7 +48,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title_tv"
-            tools:itemCount="4"
+            tools:itemCount="6"
             tools:listitem="@layout/card_sensor_info" />
 
     <FrameLayout
@@ -58,32 +58,15 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent">
 
-        <Button
-                style="@style/Widget.Bitcasino.Button.Primary"
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/continue_btn"
+                style="@style/Widget.AntTrainer.Button.OnPrimary"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_medium"
-                android:layout_marginVertical="@dimen/margin_small_extra"
+                android:layout_marginVertical="@dimen/margin_small"
                 android:drawableEnd="@drawable/ic_arrow_forward"
-                android:gravity="center"
                 android:text="@string/scan_continue" />
 
-    </FrameLayout>
-
-    <FrameLayout
-            android:id="@+id/loading_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:alpha="0.8"
-            android:background="?attr/colorOnPrimary"
-            tools:visibility="gone">
-
-        <ProgressBar
-                android:id="@+id/loading_pb"
-                android:layout_width="@dimen/progress_bar_size"
-                android:layout_height="@dimen/progress_bar_size"
-                android:layout_gravity="center"
-                android:indeterminateTint="?attr/colorPrimary" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

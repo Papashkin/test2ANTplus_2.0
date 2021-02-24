@@ -52,8 +52,8 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
         with(binding) {
             viewModel.state.mapDistinct { it.devices }
                 .observe(viewLifecycleOwner) { newDeviceAdapter.devices = it }
-            viewModel.state.mapDistinct { it.isLoading }
-                .observe(viewLifecycleOwner) { loadingView.isVisible = it }
+            viewModel.state.mapDistinct { it.isContinueButtonVisible }
+                .observe(viewLifecycleOwner) { continueFl.isVisible = it }
         }
     }
 
@@ -66,6 +66,7 @@ class ScanFragment : BaseFragment(R.layout.fragment_scan) {
             devicesRv.adapter = newDeviceAdapter.apply {
                 setOnItemClickListener { viewModel.onDeviceClick(it) }
             }
+            continueBtn.setOnClickListener { viewModel.onContinueClick() }
         }
     }
 }

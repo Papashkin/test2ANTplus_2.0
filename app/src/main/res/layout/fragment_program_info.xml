@@ -25,7 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/margin_large"
-                android:text="Program information"
+                android:text="@string/program_information_title"
                 app:layout_constraintBottom_toBottomOf="@id/back_btn"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/back_btn"
@@ -74,7 +74,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_medium"
-                        android:text="Total duration"
+                        android:text="@string/program_information_total_duration"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/program_chart" />
@@ -98,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_pre_regular"
-                        android:text="Maximum power, W"
+                        android:text="@string/program_information_maximum_power"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/program_duration_tv" />
@@ -122,7 +122,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_pre_regular"
-                        android:text="Average power, W"
+                        android:text="@string/program_information_average_power"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/program_max_power_tv" />
@@ -141,13 +141,12 @@
 
                 <com.google.android.material.button.MaterialButton
                         android:id="@+id/edit_btn"
-                        style="@style/Widget.Bitcasino.Button.Primary"
+                        style="@style/Widget.AntTrainer.Button.Medium.OnPrimary"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginVertical="@dimen/margin_small_extra"
                         android:background="@drawable/bg_button_rounded_small"
-                        android:text="Edit"
+                        android:text="@string/program_information_edit"
                         app:layout_constraintVertical_chainStyle="packed"
                         app:layout_constraintBottom_toTopOf="@id/run_workout_btn"
                         app:layout_constraintTop_toBottomOf="@id/program_avg_power_tv"
@@ -155,27 +154,25 @@
 
                 <com.google.android.material.button.MaterialButton
                         android:id="@+id/run_workout_btn"
-                        style="@style/Widget.Bitcasino.Button.Primary"
+                        style="@style/Widget.AntTrainer.Button.Medium.OnPrimary"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginVertical="@dimen/margin_small_extra"
                         android:background="@drawable/bg_button_rounded_small"
-                        android:text="Run workout"
+                        android:text="@string/program_information_run_workout"
                         app:layout_constraintBottom_toTopOf="@id/delete_btn"
                         app:layout_constraintTop_toBottomOf="@id/edit_btn"
                         app:layout_constraintVertical_bias="1" />
 
                 <com.google.android.material.button.MaterialButton
                         android:id="@+id/delete_btn"
-                        style="@style/Widget.Bitcasino.Button.Surface"
+                        style="@style/Widget.AntTrainer.Button.Medium.Surface"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginHorizontal="@dimen/margin_large"
                         android:layout_marginTop="@dimen/margin_small_extra"
                         android:layout_marginBottom="@dimen/margin_medium"
                         android:background="@drawable/bg_button_rounded_small"
-                        android:text="Delete"
+                        android:text="@string/program_information_delete"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/run_workout_btn"
                         app:layout_constraintVertical_bias="1" />

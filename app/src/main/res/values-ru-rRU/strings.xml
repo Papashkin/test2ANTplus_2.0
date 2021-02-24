@@ -125,4 +125,13 @@
     <!-- ====== Scan screen ====== -->
     <string name="scan_devices_searching">Devices searching</string>
     <string name="scan_continue">Continue</string>
+
+    <!-- ====== Program info ====== -->
+    <string name="program_information_title">Program information</string>
+    <string name="program_information_total_duration">Total duration</string>
+    <string name="program_information_maximum_power">Maximum power, W</string>
+    <string name="program_information_average_power">Average power, W</string>
+    <string name="program_information_edit">Edit</string>
+    <string name="program_information_run_workout">Run workout</string>
+    <string name="program_information_delete">Delete</string>
 </resources>

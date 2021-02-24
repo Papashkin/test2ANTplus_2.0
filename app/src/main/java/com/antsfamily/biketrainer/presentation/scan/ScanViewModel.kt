@@ -17,7 +17,6 @@ class ScanViewModel @Inject constructor(
 ) : StatefulViewModel<ScanViewModel.State>(State()) {
 
     data class State(
-        val isLoading: Boolean = false,
         val devices: List<SelectedDevice> = emptyList(),
         val isContinueButtonVisible: Boolean = false,
     )
@@ -41,10 +40,7 @@ class ScanViewModel @Inject constructor(
     }
 
     fun onBackClick() {
-        showLoading()
-        doUnbindChannelService()
         navigateBack()
-        hideLoading()
     }
 
     fun onDeviceClick(item: SelectedDevice) {
@@ -52,8 +48,8 @@ class ScanViewModel @Inject constructor(
             state.copy(
                 devices = state.devices.map {
                     it.copy(
-                        isSelected = if (it.device.resultID == item.device.resultID) {
-                            !item.isSelected
+                        isSelected = if (it.device == item.device) {
+                            !it.isSelected
                         } else {
                             it.isSelected
                         }
@@ -61,12 +57,12 @@ class ScanViewModel @Inject constructor(
                 }
             )
         }
+        checkContinueViewVisibility()
     }
 
-    // TODO: workout implementation will be soon
-//    fun onContinueClick() {
-//        doUnbindChannelService()
-//    }
+    fun onContinueClick() {
+        // TODO: workout implementation will be soon
+    }
 
     private fun setDeviceSearcherCallbacks() = viewModelScope.launch {
         deviceSearcher.apply {
@@ -106,12 +102,12 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun showLoading() {
-        changeState { it.copy(isLoading = true) }
-    }
-
-    private fun hideLoading() {
-        changeState { it.copy(isLoading = false) }
+    private fun checkContinueViewVisibility() {
+        changeState { state ->
+            state.copy(
+                isContinueButtonVisible = state.devices.any { it.isSelected && it.isFitnessEquipment() }
+            )
+        }
     }
 
     private fun showCommonErrorSnackbar() {

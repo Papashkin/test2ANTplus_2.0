@@ -2,6 +2,7 @@ package com.antsfamily.biketrainer.ant.device
 
 import android.os.Parcel
 import android.os.Parcelable
+import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import javax.inject.Inject
 
@@ -9,6 +10,8 @@ data class SelectedDevice @Inject constructor(
     val device: MultiDeviceSearchResult,
     val isSelected: Boolean = false
 ) : Parcelable {
+
+    fun isFitnessEquipment(): Boolean = this.device.antDeviceType == DeviceType.FITNESS_EQUIPMENT
 
     constructor(parcel: Parcel) : this(
         parcel.readParcelable(MultiDeviceSearchResult::class.java.classLoader)!!,
