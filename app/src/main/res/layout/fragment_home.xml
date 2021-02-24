@@ -103,7 +103,7 @@
 
         <Button
                 android:id="@+id/create_program_btn"
-                style="@style/Widget.Bitcasino.TextButton"
+                style="@style/Widget.AntTrainer.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_empty_programs_create_btn_text"

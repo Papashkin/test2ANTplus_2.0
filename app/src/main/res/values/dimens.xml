@@ -36,5 +36,6 @@
     <dimen name="profile_item_icon_size">40dp</dimen>
     <dimen name="progress_bar_size">30dp</dimen>
     <dimen name="workout_chart_height">240dp</dimen>
+    <dimen name="card_sensor_icon_size">60dp</dimen>
 
 </resources>
