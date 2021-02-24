@@ -111,6 +111,6 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun showCommonErrorSnackbar() {
-        showSnackbar("Something went wrong. Please try it later or check ANT+ services")
+        showErrorSnackbar("Something went wrong. Please try it later or check ANT+ services")
     }
 }

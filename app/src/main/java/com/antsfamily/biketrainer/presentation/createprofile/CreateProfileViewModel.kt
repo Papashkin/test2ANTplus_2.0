@@ -76,6 +76,10 @@ class CreateProfileViewModel @Inject constructor(
         }
     }
 
+    fun navigateForward() {
+        navigateTo(CreateProfileToHome)
+    }
+
     private fun isValid(
         username: String?, age: Int, weight: BigDecimal?, height: BigDecimal?
     ): Boolean {
@@ -114,10 +118,10 @@ class CreateProfileViewModel @Inject constructor(
         when (result) {
             is Result.Success -> {
                 _clearFieldsEvent.postValue(Event(Unit))
-                navigateTo(CreateProfileToHome)
+                showSuccessSnackbar("Profile was successfully created")
             }
             is Result.Failure -> {
-                showSnackbar(result.errorData.message ?: "Something went wrong :(")
+                showErrorSnackbar(result.errorData.message ?: "Something went wrong :(")
             }
         }
     }

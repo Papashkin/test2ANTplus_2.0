@@ -3,7 +3,6 @@ package com.antsfamily.biketrainer.ui.createprofile
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import com.antsfamily.biketrainer.R
@@ -38,9 +37,6 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
             viewModel.state.mapDistinct { it.isLoading }.observe(viewLifecycleOwner) {
                 loadingView.isVisible = it
             }
-//            viewModel.state.mapDistinct { it.genders }.observe(viewLifecycleOwner) {
-//                genderActv.setAdapter(getAdapter(it))
-//            }
             viewModel.state.mapDistinct { it.usernameError }.observe(viewLifecycleOwner) {
                 usernameTil.error = it
             }
@@ -63,9 +59,11 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
         viewModel.clearFieldsEvent.observe(viewLifecycleOwner, EventObserver {
             binding.clearFields()
         })
-        viewModel.showSnackBarEvent.observe(viewLifecycleOwner, EventObserver {
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT)
-                .show()
+        viewModel.showSuccessSnackBarEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(it, dismissListener = { viewModel.navigateForward() })
+        })
+        viewModel.showSuccessSnackBarMessageEvent.observe(viewLifecycleOwner, EventObserver {
+            showSnackBar(it, dismissListener = { viewModel.navigateForward() })
         })
     }
 
@@ -80,24 +78,6 @@ class CreateProfileFragment : BaseFragment(R.layout.fragment_create_profile) {
                 femaleRb.setOnClickListener { viewModel.onFemaleGenderSelected() }
                 maleRb.setOnClickListener { viewModel.onMaleGenderSelected() }
             }
-//            genderActv.apply {
-//                afterTextChange { viewModel.onGenderChange() }
-//                onItemClickListener = AdapterView.OnItemClickListener { _, _, index, _ ->
-//                    viewModel.onGenderSelected(index)
-//                }
-//                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//
-//                    override fun onItemSelected(
-//                        p0: AdapterView<*>?, view: View?, index: Int, p3: Long
-//                    ) {
-//                        viewModel.onGenderSelected(index)
-//                    }
-//
-//                    override fun onNothingSelected(p0: AdapterView<*>?) {
-//                        viewModel.onGenderCleared()
-//                    }
-//                }
-//            }
         }
     }
 
