@@ -16,7 +16,7 @@ fun Long.timeFormat(): String {
     val minutes = TimeUnit.SECONDS.toMinutes(this) - (TimeUnit.SECONDS.toHours(this) * 60)
     val seconds = TimeUnit.SECONDS.toSeconds(this) - (TimeUnit.SECONDS.toMinutes(this) * 60)
 
-    return String.format("%2d:%02d", minutes, seconds)
+    return String.format("%02d:%02d", minutes, seconds)
 }
 
 /**
@@ -27,7 +27,7 @@ fun Long.fullTimeFormat(): String {
     val minutes = TimeUnit.SECONDS.toMinutes(this) - (TimeUnit.SECONDS.toHours(this) * 60)
     val seconds = TimeUnit.SECONDS.toSeconds(this) - (TimeUnit.SECONDS.toMinutes(this) * 60)
 
-    return String.format("%2d:%02d:%02d", hours, minutes, seconds)
+    return String.format("%02d:%02d:%02d", hours, minutes, seconds)
 }
 
 /**
