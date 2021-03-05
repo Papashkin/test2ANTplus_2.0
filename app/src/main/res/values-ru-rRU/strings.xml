@@ -134,4 +134,17 @@
     <string name="program_information_edit">Edit</string>
     <string name="program_information_run_workout">Run workout</string>
     <string name="program_information_delete">Delete</string>
+    <string name="workout_title">%1$s</string>
+    <string name="workout_round">Round %1$d/%2$d</string>
+    <string name="workout_power">Power: %1$s W</string>
+    <string name="workout_heart_rate">Heart rate: %1$s bpm</string>
+    <string name="workout_cadence">Cadence: %1$s rpm</string>
+    <string name="workout_speed">Speed: %1$s km/h</string>
+    <string name="workout_distance">Distance: %1$s km</string>
+    <string name="workout_remaining_time">%1$s:%2$s:%3$s</string>
+    <string name="workout_next_round">Next round:</string>
+    <string name="workout_next_round_value">%1$s / %2$s</string>
+    <string name="workout_start">Start</string>
+    <string name="workout_pause">Pause</string>
+    <string name="workout_stop">Stop</string>
 </resources>

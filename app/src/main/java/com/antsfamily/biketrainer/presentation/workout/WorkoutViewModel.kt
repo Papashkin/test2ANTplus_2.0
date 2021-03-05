@@ -8,9 +8,14 @@ import com.antsfamily.biketrainer.ant.device.BikeCadenceDevice
 import com.antsfamily.biketrainer.ant.device.BikeSpeedDistanceDevice
 import com.antsfamily.biketrainer.ant.device.FitnessEquipmentDevice
 import com.antsfamily.biketrainer.ant.device.HeartRateDevice
-import com.antsfamily.biketrainer.data.models.WorkoutCensorValues
+import com.antsfamily.biketrainer.data.models.WorkoutSensorValues
+import com.antsfamily.biketrainer.data.models.program.Program
+import com.antsfamily.biketrainer.domain.Result
+import com.antsfamily.biketrainer.domain.usecase.GetProgramUseCase
 import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
+import com.antsfamily.biketrainer.util.fullTimeFormat
+import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
@@ -18,17 +23,16 @@ import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
+import java.math.RoundingMode
 import java.util.*
 import javax.inject.Inject
 
 class WorkoutViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val getProgramUseCase: GetProgramUseCase,
     private val cadenceCensor: BikeCadenceDevice,
     private val heartRateCensor: HeartRateDevice,
     private val speedDistanceCensor: BikeSpeedDistanceDevice,
@@ -36,8 +40,16 @@ class WorkoutViewModel @Inject constructor(
 ) : StatefulViewModel<WorkoutViewModel.State>(State()) {
 
     data class State(
-        val censorsData: WorkoutCensorValues = WorkoutCensorValues(),
-        var chartData: Pair<BarData, ArrayList<Float>>? = null
+        val isLoading: Boolean = true,
+        val title: String? = null,
+        val steps: Pair<Int, Int>? = null,
+        val startButtonVisible: Boolean = true,
+        val pauseButtonVisible: Boolean = false,
+        val stopButtonVisible: Boolean = false,
+        val sensorsData: WorkoutSensorValues = WorkoutSensorValues(),
+        val remainingTimeString: String = 0L.fullTimeFormat(),
+        val progress: Int = 100,
+        val nextStep: Pair<Int, String>? = null
     )
 
     private var _showDeviceDialogEvent = MutableLiveData<Event<Pair<String, String>?>>()
@@ -58,9 +70,7 @@ class WorkoutViewModel @Inject constructor(
     private var isCadenceInWork = false
     private var isSpeedInWork = false
     private var isPowerInWork = false
-    private var timeDescriptors = arrayListOf<Float>()
-    private var programEntries = arrayListOf<BarEntry>()
-    private var workoutValues: WorkoutCensorValues = WorkoutCensorValues()
+    private var workoutValues: WorkoutSensorValues = WorkoutSensorValues()
 
     init {
         setupCadenceCensor()
@@ -71,27 +81,68 @@ class WorkoutViewModel @Inject constructor(
     }
 
     fun onStop() {
-        closeAccess()
-    }
-
-    fun onStopClick() {
-        timer.cancel()
+        closeAccessToSensors()
     }
 
     fun onBackClick() {
-        // TODO: 23.01.2021
+        navigateBack()
     }
 
     fun onStartClick() = viewModelScope.launch {
         // TODO: 15.01.2021
     }
 
-    fun setDevices(devices: List<MultiDeviceSearchResult>) {
+    fun onPauseClick() {
+
+    }
+
+    fun onStopClick() {
+        timer.cancel()
+    }
+
+    fun onCreate(devices: List<MultiDeviceSearchResult>, programName: String) {
+        getProgramUseCase(programName) {
+            handleProgramResult(it, devices)
+        }
+    }
+
+    private fun handleProgramResult(
+        result: Result<Program, Error>, devices: List<MultiDeviceSearchResult>
+    ) {
+        when (result) {
+            is Result.Success -> handleProgramSuccessResult(result.successData)
+            is Result.Failure -> {
+            }
+        }
+        setDevices(devices)
+    }
+
+    private fun handleProgramSuccessResult(program: Program) {
+        changeState {
+            it.copy(
+                isLoading = false,
+                title = program.title,
+                steps = Pair(0, program.data.size),
+                nextStep = Pair(
+                    program.data.firstOrNull()?.power.orZero(),
+                    program.data.firstOrNull()?.duration.orZero().fullTimeFormat()
+                ),
+                remainingTimeString = 0L.fullTimeFormat(), // program.data.sumOf { data -> data.duration }.fullTimeFormat(),
+                progress = 100,
+                startButtonVisible = true
+            )
+        }
+    }
+
+    private fun setDevices(devices: List<MultiDeviceSearchResult>) {
         devices.forEach {
             if (it.antDeviceType == DeviceType.HEARTRATE && !isHRMInWork) {
                 setHeartRateAccess(it)
             }
             if (it.antDeviceType == DeviceType.BIKE_CADENCE && !isCadenceInWork) {
+                setCadenceAccess(it)
+            }
+            if (it.antDeviceType == DeviceType.BIKE_SPDCAD && !isCadenceInWork) {
                 setCadenceAccess(it)
             }
             if (it.antDeviceType == DeviceType.BIKE_SPD && !isSpeedInWork) {
@@ -150,7 +201,7 @@ class WorkoutViewModel @Inject constructor(
         isPowerInWork = true
     }
 
-    private fun closeAccess() {
+    private fun closeAccessToSensors() {
         handleHeartRate?.close()
         handleCadence?.close()
         handleSpeedDistance?.close()
@@ -159,33 +210,6 @@ class WorkoutViewModel @Inject constructor(
 
     private fun showDialog(name: String, packageName: String) {
         _showDeviceDialogEvent.postValue(Event(Pair(name, packageName)))
-    }
-
-    fun setProgram(program: String) {
-        programEntries.clear()
-        timeDescriptors.clear()
-        programEntries = decompileProgram(program)
-        updateChart()
-    }
-
-    private fun decompileProgram(programLegend: String): ArrayList<BarEntry> {
-        val entries = arrayListOf<BarEntry>()
-        var count = 0
-        programLegend.split("|").forEach { firstDecompiler ->
-            if (firstDecompiler.isNotEmpty()) {
-                val timeAndPower = firstDecompiler.split("*")
-                timeDescriptors.add(timeAndPower.first().toFloat())
-                entries.add(BarEntry(count.toFloat(), timeAndPower.last().toFloat()))
-                count += 1
-            }
-        }
-        return entries
-    }
-
-    private fun updateChart() {
-        val program = BarDataSet(programEntries, "")
-        program.barBorderWidth = 0f
-        changeState { it.copy(chartData = Pair(BarData(program), timeDescriptors)) }
     }
 
     private fun setupCadenceCensor() {
@@ -223,6 +247,20 @@ class WorkoutViewModel @Inject constructor(
             setOnSpeedReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(it) }
             setOnShowToastListener { showErrorSnackbar(it) }
             setOnSetDependenciesListener { name, packageName -> showDialog(name, packageName) }
+            setOnDeviceStateListener { state -> checkFitnessEquipmentState(state) }
+        }
+    }
+
+    private fun checkFitnessEquipmentState(state: AntPlusFitnessEquipmentPcc.EquipmentState) {
+        when (state) {
+            AntPlusFitnessEquipmentPcc.EquipmentState.READY -> {
+                showSuccessSnackbar("Bike trainer is ready to use")
+            }
+            AntPlusFitnessEquipmentPcc.EquipmentState.IN_USE -> {
+                showErrorSnackbar("Bike trainer you selected is already in use.\nPlease select another controllable device")
+                handleEquipment?.close()
+            }
+            else -> handleEquipment?.close()
         }
     }
 
@@ -231,7 +269,7 @@ class WorkoutViewModel @Inject constructor(
     }
 
     private fun displayTrainingData() = viewModelScope.launch {
-        changeState { it.copy(censorsData = workoutValues) }
+        changeState { it.copy(sensorsData = workoutValues) }
     }
 
     private fun getHeartRateValue(rate: Int) {
@@ -239,18 +277,18 @@ class WorkoutViewModel @Inject constructor(
     }
 
     private fun getCadenceValue(cadence: BigDecimal) {
-        workoutValues.cadence = cadence
+        workoutValues.cadence = cadence.intValueExact()
     }
 
     private fun getSpeedValue(speed: BigDecimal) {
-        workoutValues.speed = speed
+        workoutValues.speed = speed.setScale(2, RoundingMode.HALF_DOWN)
     }
 
     private fun getDistanceValue(distance: BigDecimal) {
-        workoutValues.distance = distance
+        workoutValues.distance = distance.setScale(2, RoundingMode.HALF_DOWN)
     }
 
     private fun getPowerValue(power: BigDecimal) {
-        workoutValues.power = power
+        workoutValues.power = power.intValueExact()
     }
 }

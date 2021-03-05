@@ -5,6 +5,7 @@ import com.antsfamily.biketrainer.ant.device.SelectedDevice
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.BindAntChannelUseCase
 import com.antsfamily.biketrainer.domain.usecase.UnbindAntChannelUseCase
+import com.antsfamily.biketrainer.navigation.ScanToWorkout
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.DeviceSearcher
 import kotlinx.coroutines.launch
@@ -61,7 +62,11 @@ class ScanViewModel @Inject constructor(
     }
 
     fun onContinueClick() {
-        // TODO: workout implementation will be soon
+        programName?.let{ program ->
+            state.value?.devices?.filter { it.isSelected }?.map { it.device }?.let { devices ->
+                navigateTo(ScanToWorkout(devices, program))
+            }
+        }
     }
 
     private fun setDeviceSearcherCallbacks() = viewModelScope.launch {
@@ -70,7 +75,7 @@ class ScanViewModel @Inject constructor(
                 postChangeState { state -> state.copy(devices = state.devices.plus(it)) }
             }
             setOnErrorReceiveListener {
-//                showSnackbar(it)
+                showErrorSnackbar("Something went wrong :(")
             }
         }
     }

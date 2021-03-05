@@ -21,7 +21,7 @@ fun Route.mapToDirection(): NavDirections = when (this) {
         programName
     )
     is ScanToWorkout -> ScanFragmentDirections.actionScanFragmentToWorkoutFragment(
-        devices.toTypedArray(), program, profile
+        devices.toTypedArray(), program
     )
     is CreateProgramToAddSegment -> CreateProgramFragmentDirections.actionCreateProgramFragmentToAddSegmentBottomSheetDialogFragment()
     is CreateProgramToAddInterval -> CreateProgramFragmentDirections.actionCreateProgramFragmentToAddIntervalBottomSheetDialogFragment()

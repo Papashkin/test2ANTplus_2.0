@@ -24,6 +24,10 @@ class FitnessEquipmentDevice @Inject constructor() {
     private var onCadenceReceiveListener: ((cadence: BigDecimal) -> Unit)? = null
     private var onSpeedReceiveListener: ((speed: BigDecimal) -> Unit)? = null
     private var onDistanceReceiveListener: ((distance: BigDecimal) -> Unit)? = null
+    private var onDeviceStateListener: ((state: AntPlusFitnessEquipmentPcc.EquipmentState) -> Unit)? =
+        null
+
+    private var isStateSent: Boolean = false
 
 //    private var settings: Settings
 //    private var files: ArrayList<FitFiles>
@@ -123,6 +127,13 @@ class FitnessEquipmentDevice @Inject constructor() {
             Handler(Looper.getMainLooper()).post {
                 val wheelDiameter = BigDecimal("0.70") //0.70m wheel diameter
 
+                if (!isStateSent) {
+                    onDeviceStateListener?.let {
+                        it.invoke(equipmentState)
+                        isStateSent = true
+                    }
+                }
+
                 when (equipmentType) {
                     AntPlusFitnessEquipmentPcc.EquipmentType.BIKE -> {
                         if (!subscriptionsDone) {
@@ -216,13 +227,6 @@ class FitnessEquipmentDevice @Inject constructor() {
                         showToast("INVALID: $equipmentType")
                     }
                 }
-
-                when (equipmentState) {
-                    AntPlusFitnessEquipmentPcc.EquipmentState.UNRECOGNIZED -> {
-                        showToast("Failed: UNRECOGNIZED. PluginLib Upgrade Required?")
-                    }
-                    else -> showToast("INVALID: $equipmentState")
-                }
             }
         }
 
@@ -236,23 +240,32 @@ class FitnessEquipmentDevice @Inject constructor() {
         get() = _fitnessEquipmentStateReceiver
 
 
-    fun setOnShowToastListener (listener: (text: String) -> Unit) {
+    fun setOnShowToastListener(listener: (text: String) -> Unit) {
         onShowToastListener = listener
     }
-    fun setOnSetDependenciesListener (listener: (name: String, packageName: String) -> Unit) {
+
+    fun setOnSetDependenciesListener(listener: (name: String, packageName: String) -> Unit) {
         onSetDependenciesListener = listener
     }
-    fun setOnPowerReceiveListener (listener: (power: BigDecimal) -> Unit) {
+
+    fun setOnPowerReceiveListener(listener: (power: BigDecimal) -> Unit) {
         onPowerReceiveListener = listener
     }
-    fun setOnCadenceReceiveListener (listener: (cadence: BigDecimal) -> Unit) {
+
+    fun setOnCadenceReceiveListener(listener: (cadence: BigDecimal) -> Unit) {
         onCadenceReceiveListener = listener
     }
-    fun setOnSpeedReceiveListener (listener: (speed: BigDecimal) -> Unit) {
+
+    fun setOnSpeedReceiveListener(listener: (speed: BigDecimal) -> Unit) {
         onSpeedReceiveListener = listener
     }
-    fun setOnDistanceReceiveListener (listener: (distance: BigDecimal) -> Unit) {
+
+    fun setOnDistanceReceiveListener(listener: (distance: BigDecimal) -> Unit) {
         onDistanceReceiveListener = listener
+    }
+
+    fun setOnDeviceStateListener(listener: (state: AntPlusFitnessEquipmentPcc.EquipmentState) -> Unit) {
+        onDeviceStateListener = listener
     }
 
     /**

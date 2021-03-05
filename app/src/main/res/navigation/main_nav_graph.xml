@@ -77,9 +77,6 @@
         <argument
                 android:name="program"
                 app:argType="string" />
-        <argument
-                android:name="profile"
-                app:argType="string" />
     </fragment>
     <fragment
             android:id="@+id/createProfileFragment"

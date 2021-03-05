@@ -1,191 +1,238 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/pure_white">
+        android:layout_height="match_parent">
 
-    <TextView
-            android:id="@+id/textViewHR"
-            android:text="@string/text_heartrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/full_black"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/textViewCadence"/>
-
-    <TextView
-            android:id="@+id/heartRateValue"
-            tools:text="999"
-            android:text="@string/text_null_value"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textAlignment="center"
-            android:textColor="@color/grey_700"
-            android:background="@drawable/shape_value_info"
-            android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewHR"
-            app:layout_constraintStart_toStartOf="@id/textViewHR"
-            app:layout_constraintEnd_toEndOf="@id/textViewHR"/>
-
-    <TextView
-            android:id="@+id/textViewCadence"
-            android:text="@string/text_cadence"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/full_black"
-            android:textSize="16sp"
-            app:layout_constraintStart_toEndOf="@id/textViewHR"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/textViewHR"/>
-
-    <TextView
-            android:id="@+id/cadenceValue"
-            tools:text="999"
-            android:text="@string/text_null_value"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textAlignment="center"
-            android:textColor="@color/grey_700"
-            android:background="@drawable/shape_value_info"
-            android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewCadence"
-            app:layout_constraintStart_toStartOf="@id/textViewCadence"
-            app:layout_constraintEnd_toEndOf="@id/textViewCadence"/>
-
-    <TextView
-            android:id="@+id/textViewSpeed"
-            android:text="@string/text_speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/full_black"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/heartRateValue"
-            app:layout_constraintStart_toStartOf="@id/textViewHR"
-            app:layout_constraintEnd_toEndOf="@id/textViewHR"/>
-
-    <TextView
-            android:id="@+id/speedValue"
-            tools:text="999"
-            android:text="@string/text_null_value"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textAlignment="center"
-            android:textColor="@color/grey_700"
-            android:background="@drawable/shape_value_info"
-            android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewSpeed"
-            app:layout_constraintStart_toStartOf="@id/textViewSpeed"
-            app:layout_constraintEnd_toEndOf="@id/textViewSpeed"/>
-
-
-    <TextView
-            android:id="@+id/textViewPower"
-            android:text="@string/text_power"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/full_black"
-            android:textSize="16sp"
-            app:layout_constraintTop_toTopOf="@id/textViewSpeed"
-            app:layout_constraintStart_toStartOf="@id/textViewCadence"
-            app:layout_constraintEnd_toEndOf="@id/textViewCadence"/>
-
-    <TextView
-            android:id="@+id/powerValue"
-            tools:text="999"
-            android:text="@string/text_null_value"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textAlignment="center"
-            android:textColor="@color/grey_700"
-            android:background="@drawable/shape_value_info"
-            android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewPower"
-            app:layout_constraintStart_toStartOf="@id/textViewPower"
-            app:layout_constraintEnd_toEndOf="@id/textViewPower"/>
-
-
-    <TextView
-            android:id="@+id/textViewDistance"
-            android:text="@string/text_distance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/full_black"
-            android:textSize="16sp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/speedValue"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
-
-    <TextView
-            android:id="@+id/distanceValue"
-            tools:text="999"
-            android:text="@string/text_null_value"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:textSize="30sp"
-            android:textAlignment="center"
-            android:textColor="@color/grey_700"
-            android:background="@drawable/shape_value_info"
-            android:elevation="8dp"
-            app:layout_constraintTop_toBottomOf="@id/textViewDistance"
-            app:layout_constraintStart_toStartOf="@id/textViewDistance"
-            app:layout_constraintEnd_toEndOf="@id/textViewDistance"/>
-
-    <com.github.mikephil.charting.charts.BarChart
-            android:id="@+id/workGraph"
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/shape_value_info"
-            app:layout_constraintTop_toBottomOf="@id/distanceValue" />
+            android:layout_height="match_parent">
 
-    <Button
-            android:id="@+id/buttonStartWork"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:text="START"
-            android:background="@color/green_700"
-            android:textColor="@color/full_black"
-            app:layout_constraintTop_toBottomOf="@id/workGraph"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/buttonStopWork"/>
+        <ImageView
+                android:id="@+id/back_btn"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="@dimen/margin_regular"
+                android:src="@drawable/ic_arrow_back_32"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="ContentDescription" />
 
-    <Button
-            android:id="@+id/buttonStopWork"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:text="STOP"
-            android:textColor="@color/pure_white"
-            android:background="@color/red_700"
-            app:layout_constraintTop_toBottomOf="@id/workGraph"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/buttonStartWork"
-            app:layout_constraintEnd_toStartOf="@id/buttonBackToScan"/>
+        <TextView
+                android:id="@+id/title_tv"
+                style="@style/Title2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_regular"
+                android:text="@string/workout_title"
+                app:layout_constraintBottom_toBottomOf="@id/back_btn"
+                app:layout_constraintStart_toEndOf="@id/back_btn"
+                app:layout_constraintTop_toTopOf="@id/back_btn"
+                tools:text="Test_program_1" />
 
-    <Button
-            android:id="@+id/buttonBackToScan"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-            android:text="BACK"
-            android:textColor="@color/full_black"
-            android:background="@color/grey_500"
-            app:layout_constraintTop_toBottomOf="@id/workGraph"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/buttonStopWork"
-            app:layout_constraintEnd_toEndOf="parent"/>
+        <ScrollView
+                android:id="@+id/content_sv"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:fillViewport="true"
+                android:overScrollMode="never"
+                android:scrollbars="none"
+                app:layout_constraintBottom_toBottomOf="@id/action_buttons_barrier"
+                app:layout_constraintTop_toBottomOf="@id/title_tv"
+                app:layout_constraintVertical_bias="0">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                <TextView
+                        android:id="@+id/workout_steps_tv"
+                        style="@style/Title2.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_pre_regular"
+                        android:gravity="center"
+                        android:text="@string/workout_round"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:text="Round 4/10" />
+
+                <ProgressBar
+                        android:id="@+id/step_countdown_rb"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:indeterminateOnly="false"
+                        android:padding="@dimen/margin_small"
+                        android:progress="70"
+                        android:progressDrawable="@drawable/bg_progress_bar_workout"
+                        app:layout_constraintTop_toBottomOf="@id/workout_steps_tv" />
+
+                <TextView
+                        android:id="@+id/workout_power_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="70dp"
+                        android:text="@string/workout_power"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
+                        app:layout_constraintTop_toTopOf="@id/step_countdown_rb"
+                        tools:text="Power: 200 W" />
+
+                <TextView
+                        android:id="@+id/workout_heart_rate_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:text="@string/workout_heart_rate"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
+                        app:layout_constraintTop_toBottomOf="@id/workout_power_tv"
+                        tools:text="Heart rate: 160 bpm" />
+
+                <TextView
+                        android:id="@+id/workout_cadence_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:text="@string/workout_cadence"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
+                        app:layout_constraintTop_toBottomOf="@id/workout_heart_rate_tv"
+                        tools:text="Cadence: 72 rpm" />
+
+                <TextView
+                        android:id="@+id/workout_speed_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:text="@string/workout_speed"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
+                        app:layout_constraintTop_toBottomOf="@id/workout_cadence_tv"
+                        tools:text="Speed: 22.6 km/h" />
+
+                <TextView
+                        android:id="@+id/workout_distance_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:text="@string/workout_distance"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
+                        app:layout_constraintTop_toBottomOf="@id/workout_speed_tv"
+                        tools:text="Distance: 16.5 km" />
+
+                <TextView
+                        android:id="@+id/workout_remaining_time_tv"
+                        style="@style/Title2.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_medium"
+                        android:text="@string/workout_remaining_time"
+                        app:layout_constraintBottom_toBottomOf="@id/step_countdown_rb"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
+                        app:layout_constraintTop_toBottomOf="@id/workout_distance_tv"
+                        app:layout_constraintVertical_bias="0"
+                        tools:text="00:59:59" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/program_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_marginHorizontal="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/step_countdown_rb" />
+
+                <TextView
+                        android:id="@+id/workout_next_step_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_large"
+                        android:layout_marginTop="@dimen/margin_regular"
+                        android:text="@string/workout_next_round"
+                        app:layout_constraintEnd_toStartOf="@id/workout_next_step_value_tv"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/program_chart" />
+
+                <TextView
+                        android:id="@+id/workout_next_step_value_tv"
+                        style="@style/Title2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_regular"
+                        app:layout_constraintBottom_toBottomOf="@id/workout_next_step_tv"
+                        app:layout_constraintStart_toEndOf="@id/workout_next_step_tv"
+                        app:layout_constraintTop_toTopOf="@id/workout_next_step_tv"
+                        tools:text="400 W / 00:05:00" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/start_workout_btn"
+                style="@style/Widget.AntTrainer.Button.OnPrimary"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginVertical="@dimen/margin_regular"
+                android:text="@string/workout_start"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/pause_workout_btn"
+                style="@style/Widget.AntTrainer.Button.OnPrimary"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginVertical="@dimen/margin_regular"
+                android:text="@string/workout_pause"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:visibility="gone" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/stop_workout_btn"
+                style="@style/Widget.AntTrainer.Button.OnPrimary"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginVertical="@dimen/margin_regular"
+                android:text="@string/workout_stop"
+                app:layout_constraintTop_toBottomOf="@id/content_sv"
+                tools:visibility="gone" />
+
+        <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/action_buttons_barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="start_workout_btn, stop_workout_btn, pause_workout_btn" />
+
+        <FrameLayout
+                android:id="@+id/loading_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:alpha="0.8"
+                android:background="?attr/colorOnPrimary"
+                android:elevation="2dp"
+                tools:visibility="gone">
+
+            <ProgressBar
+                    android:id="@+id/loading_pb"
+                    android:layout_width="@dimen/progress_bar_size"
+                    android:layout_height="@dimen/progress_bar_size"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="?attr/colorPrimary" />
+        </FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
