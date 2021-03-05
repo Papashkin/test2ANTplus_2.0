@@ -3,7 +3,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rectangle_on_primary">
 
     <ImageView
             android:id="@+id/sensor_info_iv"
@@ -17,16 +18,17 @@
             tools:ignore="ContentDescription"
             tools:src="@drawable/ic_bike_trainer" />
 
-    <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/sensor_info_is_selected_switch"
+    <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/sensor_select_cb"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_pre_regular"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text=" "
-            tools:checked="true" />
+            android:clickable="false"
+            tools:checked="true"
+            tools:text=" " />
 
     <TextView
             android:id="@+id/sensor_info_type_tv"
@@ -36,7 +38,7 @@
             android:layout_marginStart="@dimen/margin_regular"
             android:ellipsize="end"
             android:maxLines="1"
-            app:layout_constraintEnd_toStartOf="@id/sensor_info_is_selected_switch"
+            app:layout_constraintEnd_toStartOf="@id/sensor_select_cb"
             app:layout_constraintStart_toEndOf="@id/sensor_info_iv"
             app:layout_constraintTop_toTopOf="@id/sensor_info_iv"
             tools:text="Heart Rate Monitor" />
@@ -51,16 +53,34 @@
             android:maxLines="1"
             android:text="@string/card_sensor_number"
             app:layout_constraintBottom_toBottomOf="@id/sensor_info_iv"
-            app:layout_constraintEnd_toStartOf="@id/sensor_info_is_selected_switch"
+            app:layout_constraintEnd_toStartOf="@id/sensor_select_cb"
             app:layout_constraintStart_toStartOf="@id/sensor_info_type_tv"
             app:layout_constraintTop_toBottomOf="@id/sensor_info_type_tv"
             tools:text="Number: 42571" />
 
     <View
             android:layout_width="match_parent"
-            android:layout_height="@dimen/margin_tiny"
+            android:layout_height="1dp"
             android:layout_marginTop="@dimen/margin_small"
             android:background="@color/color_cooler"
             app:layout_constraintBottom_toBottomOf="parent" />
+
+    <FrameLayout
+            android:id="@+id/loading_view"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:alpha="0.8"
+            android:background="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone">
+
+        <ProgressBar
+                android:id="@+id/loading_pb"
+                android:layout_width="@dimen/progress_bar_size"
+                android:layout_height="@dimen/progress_bar_size"
+                android:layout_gravity="center"
+                android:indeterminateTint="?attr/colorPrimary" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

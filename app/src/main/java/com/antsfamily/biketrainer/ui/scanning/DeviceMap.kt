@@ -7,13 +7,13 @@ import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 
 @DrawableRes
 fun DeviceType.iconId(): Int = when (this) {
-    DeviceType.BIKE_POWER,
     DeviceType.CONTROLLABLE_DEVICE,
     DeviceType.FITNESS_EQUIPMENT -> R.drawable.ic_bike_trainer
     DeviceType.HEARTRATE -> R.drawable.ic_heart_rate
+    DeviceType.BIKE_POWER,
     DeviceType.BIKE_SPDCAD,
-    DeviceType.BIKE_CADENCE -> R.drawable.ic_cadence
-    DeviceType.BIKE_SPD -> R.drawable.ic_speed
+    DeviceType.BIKE_CADENCE,
+    DeviceType.BIKE_SPD -> R.drawable.ic_bike_sensor
     else -> -1
 }
 
