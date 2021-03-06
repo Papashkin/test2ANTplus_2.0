@@ -155,50 +155,50 @@ class WorkoutViewModel @Inject constructor(
     }
 
     private fun setHeartRateAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-        handleHeartRate = AntPlusHeartRatePcc.requestAccess(
-            context,
-            device.antDeviceNumber,
-            0,
-            heartRateCensor.baseIPluginAccessResultReceiver,
-            heartRateCensor.baseDeviceChangeReceiver
-        )
-        isHRMInWork = true
+//        handleHeartRate = AntPlusHeartRatePcc.requestAccess(
+//            context,
+//            device.antDeviceNumber,
+//            0,
+//            heartRateCensor.baseIPluginAccessResultReceiver,
+//            heartRateCensor.baseDeviceChangeReceiver
+//        )
+//        isHRMInWork = true
     }
 
     private fun setCadenceAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-        handleCadence = AntPlusBikeCadencePcc.requestAccess(
-            context,
-            device.antDeviceNumber,
-            0,
-            true,
-            cadenceCensor.resultReceiver,
-            cadenceCensor.deviceStateChangeReceiver
-        )
-        isCadenceInWork = true
+//        handleCadence = AntPlusBikeCadencePcc.requestAccess(
+//            context,
+//            device.antDeviceNumber,
+//            0,
+//            true,
+//            cadenceCensor.resultReceiver,
+//            cadenceCensor.deviceStateChangeReceiver
+//        )
+//        isCadenceInWork = true
     }
 
     private fun setSpeedAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-        handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
-            context,
-            device.antDeviceNumber,
-            0,
-            true,
-            speedDistanceCensor.resultReceiver,
-            speedDistanceCensor.deviceStateChangeReceiver
-        )
-        isSpeedInWork = true
+//        handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
+//            context,
+//            device.antDeviceNumber,
+//            0,
+//            true,
+//            speedDistanceCensor.resultReceiver,
+//            speedDistanceCensor.deviceStateChangeReceiver
+//        )
+//        isSpeedInWork = true
     }
 
     private fun setFitnessEquipmentAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-        handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
-            context,
-            device.antDeviceNumber,
-            0,
-            fitnessEquipmentCensor.pluginAccessResultReceiver,
-            fitnessEquipmentCensor.deviceStateChangeReceiver,
-            fitnessEquipmentCensor.fitnessEquipmentStateReceiver
-        )
-        isPowerInWork = true
+//        handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
+//            context,
+//            device.antDeviceNumber,
+//            0,
+//            fitnessEquipmentCensor.pluginAccessResultReceiver,
+//            fitnessEquipmentCensor.deviceStateChangeReceiver,
+//            fitnessEquipmentCensor.fitnessEquipmentStateReceiver
+//        )
+//        isPowerInWork = true
     }
 
     private fun closeAccessToSensors() {
@@ -214,18 +214,18 @@ class WorkoutViewModel @Inject constructor(
 
     private fun setupCadenceCensor() {
         cadenceCensor.apply {
-            setOnCadenceReceiveListener { cadence -> getCadenceValue(cadence) }
-            setOnSpeedReceiveListener { speed -> getSpeedValue(speed) }
-            setOnToastShowListener { showErrorSnackbar(it) }
-            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
+//            setOnCadenceReceiveListener { cadence -> getCadenceValue(cadence) }
+//            setOnSpeedReceiveListener { speed -> getSpeedValue(speed) }
+//            setOnToastShowListener { showErrorSnackbar(it) }
+//            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
         }
     }
 
     private fun setupHeartRateCensor() {
         heartRateCensor.apply {
-            setOnHeartRateReceiveListener { heartRate -> getHeartRateValue(heartRate) }
-            setOnToastShowListener { showErrorSnackbar(it) }
-            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
+//            setOnHeartRateReceiveListener { heartRate -> getHeartRateValue(heartRate) }
+//            setOnToastShowListener { showErrorSnackbar(it) }
+//            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
         }
     }
 
@@ -234,20 +234,20 @@ class WorkoutViewModel @Inject constructor(
             setOnCadenceReceiveListener { cadence -> if (!isCadenceInWork) getCadenceValue(cadence) }
             setOnDistanceReceiveListener { distance -> getDistanceValue(distance) }
             setOnSpeedReceiveListener { speed -> if (!isCadenceInWork) getSpeedValue(speed) }
-            setOnToastShowListener { showErrorSnackbar(it) }
-            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
+//            setOnToastShowListener { showErrorSnackbar(it) }
+//            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
         }
     }
 
     private fun setupFitnessEquipmentCensor() {
         fitnessEquipmentCensor.apply {
-            setOnCadenceReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getCadenceValue(it) }
-            setOnDistanceReceiveListener { if (!isSpeedInWork) getDistanceValue(it) }
-            setOnPowerReceiveListener { getPowerValue(it) }
-            setOnSpeedReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(it) }
-            setOnShowToastListener { showErrorSnackbar(it) }
-            setOnSetDependenciesListener { name, packageName -> showDialog(name, packageName) }
-            setOnDeviceStateListener { state -> checkFitnessEquipmentState(state) }
+//            setOnCadenceReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getCadenceValue(it) }
+//            setOnDistanceReceiveListener { if (!isSpeedInWork) getDistanceValue(it) }
+//            setOnPowerReceiveListener { getPowerValue(it) }
+//            setOnSpeedReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(it) }
+//            setOnShowToastListener { showErrorSnackbar(it) }
+//            setOnSetDependenciesListener { name, packageName -> showDialog(name, packageName) }
+//            setOnDeviceStateListener { state -> checkFitnessEquipmentState(state) }
         }
     }
 

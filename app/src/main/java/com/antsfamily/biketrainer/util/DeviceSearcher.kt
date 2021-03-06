@@ -3,7 +3,6 @@ package com.antsfamily.biketrainer.util
 import android.content.Context
 import android.util.Log
 import com.antsfamily.biketrainer.R
-import com.antsfamily.biketrainer.ant.device.SelectedDevice
 import com.dsi.ant.plugins.antplus.pcc.MultiDeviceSearch
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
@@ -17,7 +16,7 @@ import javax.inject.Singleton
 class DeviceSearcher @Inject constructor(@ApplicationContext private val context: Context) {
 
     private var onErrorReceiveListener: ((id: Int) -> Unit)? = null
-    private var onDeviceReceiveListener: ((device: SelectedDevice) -> Unit)? = null
+    private var onDeviceReceiveListener: ((device: MultiDeviceSearchResult) -> Unit)? = null
 
     private val callback = object : MultiDeviceSearch.SearchCallbacks {
         override fun onSearchStopped(reason: RequestAccessResult) {
@@ -38,7 +37,7 @@ class DeviceSearcher @Inject constructor(@ApplicationContext private val context
 
         override fun onDeviceFound(device: MultiDeviceSearchResult) {
             Log.d(this@DeviceSearcher::class.java.simpleName, "Device found: $device")
-            onDeviceReceiveListener?.invoke(SelectedDevice(device = device))
+            onDeviceReceiveListener?.invoke(device)
         }
     }
 
@@ -48,7 +47,7 @@ class DeviceSearcher @Inject constructor(@ApplicationContext private val context
         onErrorReceiveListener = listener
     }
 
-    fun setOnDeviceReceiveListener(listener: (device: SelectedDevice) -> Unit) {
+    fun setOnDeviceReceiveListener(listener: (device: MultiDeviceSearchResult) -> Unit) {
         onDeviceReceiveListener = listener
     }
 
@@ -67,7 +66,6 @@ class DeviceSearcher @Inject constructor(@ApplicationContext private val context
             DeviceType.BIKE_POWER,
             DeviceType.BIKE_SPD,
             DeviceType.BIKE_SPDCAD,
-            DeviceType.CONTROLLABLE_DEVICE,
             DeviceType.FITNESS_EQUIPMENT,
             DeviceType.HEARTRATE
         )

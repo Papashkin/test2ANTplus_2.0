@@ -39,8 +39,8 @@ abstract class BaseViewModel : ViewModel() {
         _navigationBackEvent.postValue(Event(Unit))
     }
 
-    fun showErrorSnackbar(message: String) {
-        _showErrorSnackBarMessageEvent.postValue(Event(message))
+    fun showErrorSnackbar(message: String?) {
+        message?.let { _showErrorSnackBarMessageEvent.postValue(Event(it)) }
     }
 
     fun showErrorSnackbar(messageId: Int) {

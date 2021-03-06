@@ -102,7 +102,7 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     private var alertDialog: AlertDialog? = null
     private fun showDialog(name: String, packageName: String) {
         alertDialog?.dismiss()
-        alertDialog = AlertDialog.Builder(this.requireContext())
+        alertDialog = AlertDialog.Builder(requireContext())
             .setTitle("Missing Dependency")
             .setMessage("The required service was not found:\n\"$name\"\nYou need to install the ANT+ Plugins service or you may need to update your existing version if you already have it.\nDo you want to launch the Play Store to get it?")
             .setCancelable(true)
