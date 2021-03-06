@@ -1,42 +1,30 @@
 package com.antsfamily.biketrainer.presentation.workout
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.antsfamily.biketrainer.ant.device.BikeCadenceDevice
-import com.antsfamily.biketrainer.ant.device.BikeSpeedDistanceDevice
-import com.antsfamily.biketrainer.ant.device.FitnessEquipmentDevice
-import com.antsfamily.biketrainer.ant.device.HeartRateDevice
-import com.antsfamily.biketrainer.data.models.WorkoutSensorValues
+import com.antsfamily.biketrainer.ant.device.*
 import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProgramUseCase
-import com.antsfamily.biketrainer.presentation.Event
+import com.antsfamily.biketrainer.domain.usecase.WorkoutTimerFlow
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.antsfamily.biketrainer.util.orZero
-import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
-import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
-import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
-import com.dsi.ant.plugins.antplus.pcc.AntPlusHeartRatePcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
-import com.dsi.ant.plugins.antplus.pccbase.PccReleaseHandle
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
-import java.util.*
 import javax.inject.Inject
 
 class WorkoutViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val getProgramUseCase: GetProgramUseCase,
-    private val cadenceCensor: BikeCadenceDevice,
-    private val heartRateCensor: HeartRateDevice,
-    private val speedDistanceCensor: BikeSpeedDistanceDevice,
-    private val fitnessEquipmentCensor: FitnessEquipmentDevice
+    private val heartRateDevice: HeartRateDevice,
+    private val cadenceDevice: BikeCadenceDevice,
+    private val powerDevice: BikePowerDevice,
+    private val speedDistanceDevice: BikeSpeedDistanceDevice,
+    private val fitnessEquipmentDevice: FitnessEquipmentDevice,
+    private val workoutTimerFlow: WorkoutTimerFlow
 ) : StatefulViewModel<WorkoutViewModel.State>(State()) {
 
     data class State(
@@ -46,39 +34,15 @@ class WorkoutViewModel @Inject constructor(
         val startButtonVisible: Boolean = true,
         val pauseButtonVisible: Boolean = false,
         val stopButtonVisible: Boolean = false,
-        val sensorsData: WorkoutSensorValues = WorkoutSensorValues(),
         val remainingTimeString: String = 0L.fullTimeFormat(),
         val progress: Int = 100,
-        val nextStep: Pair<Int, String>? = null
+        val nextStep: Pair<Int, String>? = null,
+        val heartRate: Int? = null,
+        val cadence: Int? = null,
+        val speed: BigDecimal? = null,
+        val distance: BigDecimal? = null,
+        val power: Int? = null
     )
-
-    private var _showDeviceDialogEvent = MutableLiveData<Event<Pair<String, String>?>>()
-    val showDeviceDialogEvent: LiveData<Event<Pair<String, String>?>>
-        get() = _showDeviceDialogEvent
-
-    private val timer: Timer = Timer()
-    private val task = object : TimerTask() {
-        override fun run() {
-            displayTrainingData()
-        }
-    }
-    private var handleHeartRate: PccReleaseHandle<AntPlusHeartRatePcc>? = null
-    private var handleCadence: PccReleaseHandle<AntPlusBikeCadencePcc>? = null
-    private var handleSpeedDistance: PccReleaseHandle<AntPlusBikeSpeedDistancePcc>? = null
-    private var handleEquipment: PccReleaseHandle<AntPlusFitnessEquipmentPcc>? = null
-    private var isHRMInWork = false
-    private var isCadenceInWork = false
-    private var isSpeedInWork = false
-    private var isPowerInWork = false
-    private var workoutValues: WorkoutSensorValues = WorkoutSensorValues()
-
-    init {
-        setupCadenceCensor()
-        setupHeartRateCensor()
-        setupSpeedDistanceCensor()
-        setupFitnessEquipmentCensor()
-        setupTimer()
-    }
 
     fun onStop() {
         closeAccessToSensors()
@@ -97,7 +61,7 @@ class WorkoutViewModel @Inject constructor(
     }
 
     fun onStopClick() {
-        timer.cancel()
+
     }
 
     fun onCreate(devices: List<MultiDeviceSearchResult>, programName: String) {
@@ -135,160 +99,80 @@ class WorkoutViewModel @Inject constructor(
     }
 
     private fun setDevices(devices: List<MultiDeviceSearchResult>) {
-        devices.forEach {
-            if (it.antDeviceType == DeviceType.HEARTRATE && !isHRMInWork) {
-                setHeartRateAccess(it)
+        devices.forEach { device ->
+            when (device.antDeviceType) {
+                DeviceType.HEARTRATE -> subscribeToHeartRate()
+                DeviceType.BIKE_CADENCE -> subscribeToBikeCadence()
+                DeviceType.BIKE_SPD -> subscribeToBikeSpeed()
+                DeviceType.BIKE_SPDCAD -> subscribeToBikeSpeed()
+                DeviceType.BIKE_POWER -> subscribeToBikePower()
+                DeviceType.FITNESS_EQUIPMENT -> subscribeToFitnessEquipment()
+                else -> {
+                    // no-op
+                }
             }
-            if (it.antDeviceType == DeviceType.BIKE_CADENCE && !isCadenceInWork) {
-                setCadenceAccess(it)
-            }
-            if (it.antDeviceType == DeviceType.BIKE_SPDCAD && !isCadenceInWork) {
-                setCadenceAccess(it)
-            }
-            if (it.antDeviceType == DeviceType.BIKE_SPD && !isSpeedInWork) {
-                setSpeedAccess(it)
-            }
-            if (it.antDeviceType == DeviceType.FITNESS_EQUIPMENT && !isPowerInWork) {
-                setFitnessEquipmentAccess(it)
+        }
+        startWorkoutTimerFlow()
+    }
+
+    private fun startWorkoutTimerFlow() = viewModelScope.launch {
+        workoutTimerFlow.invoke(PERIOD).collect {
+            changeState {
+                it.copy(
+                    heartRate = getHeartRateValue(),
+                    cadence = getCadenceValue(),
+                    power = getPowerValue(),
+                    speed = getSpeedValue(),
+                    distance = getDistanceValue()
+                )
             }
         }
     }
 
-    private fun setHeartRateAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-//        handleHeartRate = AntPlusHeartRatePcc.requestAccess(
-//            context,
-//            device.antDeviceNumber,
-//            0,
-//            heartRateCensor.baseIPluginAccessResultReceiver,
-//            heartRateCensor.baseDeviceChangeReceiver
-//        )
-//        isHRMInWork = true
+    private fun subscribeToBikeCadence() = viewModelScope.launch {
+        cadenceDevice.subscribe()
     }
 
-    private fun setCadenceAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-//        handleCadence = AntPlusBikeCadencePcc.requestAccess(
-//            context,
-//            device.antDeviceNumber,
-//            0,
-//            true,
-//            cadenceCensor.resultReceiver,
-//            cadenceCensor.deviceStateChangeReceiver
-//        )
-//        isCadenceInWork = true
+    private fun subscribeToHeartRate() = viewModelScope.launch {
+        heartRateDevice.subscribe()
     }
 
-    private fun setSpeedAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-//        handleSpeedDistance = AntPlusBikeSpeedDistancePcc.requestAccess(
-//            context,
-//            device.antDeviceNumber,
-//            0,
-//            true,
-//            speedDistanceCensor.resultReceiver,
-//            speedDistanceCensor.deviceStateChangeReceiver
-//        )
-//        isSpeedInWork = true
+    private fun subscribeToBikeSpeed() = viewModelScope.launch {
+        speedDistanceDevice.subscribe()
     }
 
-    private fun setFitnessEquipmentAccess(device: MultiDeviceSearchResult) = viewModelScope.launch {
-//        handleEquipment = AntPlusFitnessEquipmentPcc.requestNewOpenAccess(
-//            context,
-//            device.antDeviceNumber,
-//            0,
-//            fitnessEquipmentCensor.pluginAccessResultReceiver,
-//            fitnessEquipmentCensor.deviceStateChangeReceiver,
-//            fitnessEquipmentCensor.fitnessEquipmentStateReceiver
-//        )
-//        isPowerInWork = true
+    private fun subscribeToBikePower() = viewModelScope.launch {
+        powerDevice.subscribe()
+    }
+
+    private fun subscribeToFitnessEquipment() = viewModelScope.launch {
+        fitnessEquipmentDevice.subscribe(::showErrorSnackbar)
     }
 
     private fun closeAccessToSensors() {
-        handleHeartRate?.close()
-        handleCadence?.close()
-        handleSpeedDistance?.close()
-        handleEquipment?.close()
+        heartRateDevice.clear()
+        cadenceDevice.clear()
+        speedDistanceDevice.clear(true)
+        powerDevice.clear()
+        fitnessEquipmentDevice.clear()
     }
 
-    private fun showDialog(name: String, packageName: String) {
-        _showDeviceDialogEvent.postValue(Event(Pair(name, packageName)))
-    }
+    private fun getHeartRateValue() = heartRateDevice.heartRate
 
-    private fun setupCadenceCensor() {
-        cadenceCensor.apply {
-//            setOnCadenceReceiveListener { cadence -> getCadenceValue(cadence) }
-//            setOnSpeedReceiveListener { speed -> getSpeedValue(speed) }
-//            setOnToastShowListener { showErrorSnackbar(it) }
-//            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
-        }
-    }
+    private fun getCadenceValue() = (cadenceDevice.cadence ?: fitnessEquipmentDevice.cadence)
+        ?.setScale(2, RoundingMode.HALF_DOWN)?.toInt()
 
-    private fun setupHeartRateCensor() {
-        heartRateCensor.apply {
-//            setOnHeartRateReceiveListener { heartRate -> getHeartRateValue(heartRate) }
-//            setOnToastShowListener { showErrorSnackbar(it) }
-//            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
-        }
-    }
+    private fun getSpeedValue() = (speedDistanceDevice.speed ?: fitnessEquipmentDevice.speed)
+        ?.setScale(2, RoundingMode.HALF_DOWN)
 
-    private fun setupSpeedDistanceCensor() {
-        speedDistanceCensor.apply {
-            setOnCadenceReceiveListener { cadence -> if (!isCadenceInWork) getCadenceValue(cadence) }
-            setOnDistanceReceiveListener { distance -> getDistanceValue(distance) }
-            setOnSpeedReceiveListener { speed -> if (!isCadenceInWork) getSpeedValue(speed) }
-//            setOnToastShowListener { showErrorSnackbar(it) }
-//            setOnDependenciesSetListener { name, packageName -> showDialog(name, packageName) }
-        }
-    }
+    private fun getDistanceValue() =
+        (speedDistanceDevice.distance ?: fitnessEquipmentDevice.distance)
+            ?.setScale(2, RoundingMode.HALF_DOWN)
 
-    private fun setupFitnessEquipmentCensor() {
-        fitnessEquipmentCensor.apply {
-//            setOnCadenceReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getCadenceValue(it) }
-//            setOnDistanceReceiveListener { if (!isSpeedInWork) getDistanceValue(it) }
-//            setOnPowerReceiveListener { getPowerValue(it) }
-//            setOnSpeedReceiveListener { if (!isCadenceInWork or !isSpeedInWork) getSpeedValue(it) }
-//            setOnShowToastListener { showErrorSnackbar(it) }
-//            setOnSetDependenciesListener { name, packageName -> showDialog(name, packageName) }
-//            setOnDeviceStateListener { state -> checkFitnessEquipmentState(state) }
-        }
-    }
+    private fun getPowerValue() = (powerDevice.power ?: fitnessEquipmentDevice.power)
+        ?.setScale(2, RoundingMode.HALF_DOWN)?.toInt()
 
-    private fun checkFitnessEquipmentState(state: AntPlusFitnessEquipmentPcc.EquipmentState) {
-        when (state) {
-            AntPlusFitnessEquipmentPcc.EquipmentState.READY -> {
-                showSuccessSnackbar("Bike trainer is ready to use")
-            }
-            AntPlusFitnessEquipmentPcc.EquipmentState.IN_USE -> {
-                showErrorSnackbar("Bike trainer you selected is already in use.\nPlease select another controllable device")
-                handleEquipment?.close()
-            }
-            else -> handleEquipment?.close()
-        }
-    }
-
-    private fun setupTimer() {
-        timer.schedule(task, 2_000, 3_000)
-    }
-
-    private fun displayTrainingData() = viewModelScope.launch {
-        changeState { it.copy(sensorsData = workoutValues) }
-    }
-
-    private fun getHeartRateValue(rate: Int) {
-        workoutValues.heartRate = rate
-    }
-
-    private fun getCadenceValue(cadence: BigDecimal) {
-        workoutValues.cadence = cadence.intValueExact()
-    }
-
-    private fun getSpeedValue(speed: BigDecimal) {
-        workoutValues.speed = speed.setScale(2, RoundingMode.HALF_DOWN)
-    }
-
-    private fun getDistanceValue(distance: BigDecimal) {
-        workoutValues.distance = distance.setScale(2, RoundingMode.HALF_DOWN)
-    }
-
-    private fun getPowerValue(power: BigDecimal) {
-        workoutValues.power = power.intValueExact()
+    companion object {
+        private const val PERIOD = 1000L
     }
 }
