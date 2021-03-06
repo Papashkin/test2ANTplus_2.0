@@ -9,10 +9,16 @@ import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BikeCadenceDevice @Inject constructor(@ApplicationContext private val context: Context) {
 
-    private var _cadence: AntPlusBikeCadencePcc? = null
+    private var _cadenceSensor: AntPlusBikeCadencePcc? = null
+
+    private var _cadence: BigDecimal? = null
+    val cadence: BigDecimal?
+        get() = _cadence
 
     fun getAccess(
         deviceNumber: Int,
@@ -26,13 +32,13 @@ class BikeCadenceDevice @Inject constructor(@ApplicationContext private val cont
             /* Handle the result, connecting to events on success or reporting failure to user. */
             { result, resultCode, _ ->
                 if (resultCode == RequestAccessResult.SUCCESS) {
-                    _cadence = result
+                    _cadenceSensor = result
                 }
                 resultReceivedCallback(resultCode)
             },
             { state ->
                 if (state == DeviceState.DEAD) {
-                    _cadence = null
+                    _cadenceSensor = null
                 }
             }
         )
@@ -41,10 +47,10 @@ class BikeCadenceDevice @Inject constructor(@ApplicationContext private val cont
     /**
      * Subscribe to all the heart rate events, connecting them to display their data.
      */
-    private fun subscribe(cadenceCallback: (cadence: BigDecimal) -> Unit) {
-        _cadence?.let {
+    fun subscribe() {
+        _cadenceSensor?.let {
             it.subscribeCalculatedCadenceEvent { _, _, cadence ->
-                Handler(Looper.getMainLooper()).post { cadenceCallback(cadence) }
+                _cadence = cadence
             }
 
             it.subscribeRawCadenceDataEvent { _, _, _, _ ->
@@ -54,7 +60,7 @@ class BikeCadenceDevice @Inject constructor(@ApplicationContext private val cont
     }
 
     fun clear() {
-        _cadence = null
+        _cadenceSensor = null
     }
 
     companion object {

@@ -1,8 +1,6 @@
 package com.antsfamily.biketrainer.ant.device
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceState
@@ -13,13 +11,27 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val context: Context) {
 
     private var _fitnessEquipment: AntPlusFitnessEquipmentPcc? = null
     private var _type: AntPlusFitnessEquipmentPcc.EquipmentType? = null
     private var subscriptionsDone = false
-    private var onPowerReceiveListener: ((power: BigDecimal) -> Unit)? = null
+
+    private var _cadence: BigDecimal? = null
+    val cadence: BigDecimal?
+        get() = _cadence
+    private var _distance: BigDecimal? = null
+    val distance: BigDecimal?
+        get() = _distance
+    private var _speed: BigDecimal? = null
+    val speed: BigDecimal?
+        get() = _speed
+    private var _power: BigDecimal? = null
+    val power: BigDecimal?
+        get() = _power
 
     fun getAccess(
         deviceNumber: Int,
@@ -44,22 +56,14 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
         )
     }
 
-    fun subscribe(
-        powerCallback: (power: BigDecimal) -> Unit,
-        cadenceCallback: (cadence: BigDecimal) -> Unit,
-        speedCallback: (speed: BigDecimal) -> Unit,
-        distanceCallback: (distance: BigDecimal) -> Unit,
-        errorCallback: (message: String) -> Unit
-    ) {
+    fun subscribe(errorCallback: (message: String) -> Unit) {
         when (_type) {
             AntPlusFitnessEquipmentPcc.EquipmentType.BIKE -> {
                 if (!subscriptionsDone) {
                     _fitnessEquipment?.bikeMethods?.let {
                         it.subscribeBikeDataEvent { _, _, instantaneousCadence, instantaneousPower ->
-                            Handler(Looper.getMainLooper()).post {
-                                powerCallback(instantaneousPower.toBigDecimal())
-                                cadenceCallback(instantaneousCadence.toBigDecimal())
-                            }
+                            _power = instantaneousPower.toBigDecimal()
+                            _cadence = instantaneousCadence.toBigDecimal()
                         }
                     }
                 }
@@ -70,7 +74,7 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
                 if (!subscriptionsDone) {
                     _fitnessEquipment?.trainerMethods?.let {
                         it.subscribeCalculatedTrainerPowerEvent { _, _, _, power ->
-                            onPowerReceiveListener?.invoke(power)
+                            _power = power
                         }
 
                         it.subscribeCalculatedTrainerSpeedEvent(object :
@@ -83,9 +87,7 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
                                 source: AntPlusFitnessEquipmentPcc.TrainerDataSource?,
                                 speed: BigDecimal?
                             ) {
-                                Handler(Looper.getMainLooper()).post {
-                                    speedCallback(speed.orZero())
-                                }
+                                _speed = speed.orZero()
                             }
                         })
 
@@ -99,13 +101,14 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
                                 source: AntPlusFitnessEquipmentPcc.TrainerDataSource?,
                                 distance: BigDecimal?
                             ) {
-                                Handler(Looper.getMainLooper()).post {
-                                    distanceCallback(distance.orZero())
-                                }
+                                _distance = distance.orZero()
                             }
                         })
 
-                        it.subscribeRawTrainerDataEvent { _, _, count, instantCadence, instantPower, accumulatedPower ->
+                        /*
+                         _, _, count, instantCadence, instantPower, accumulatedPower
+                         */
+                        it.subscribeRawTrainerDataEvent { _, _, _, _, _, _ ->
 //                                        tv_estTimestamp.text = timestamp.toString()
 //                                        textView_TrainerUpdateEventCount.text = count.toString()
 //                                        textView_TrainerInstantaneousCadence.text = if (instantCadence == -1) {
@@ -123,11 +126,12 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
 //                                        } else {
 //                                            "$accumulatedPower W"
 //                                        }
-                            Handler(Looper.getMainLooper()).post { }
                         }
 
-                        it.subscribeRawTrainerTorqueDataEvent { _, _, _, wheelTicks, wheelPeriod, torque ->
-                            Handler(Looper.getMainLooper()).post { }
+                        /*
+                        _, _, _, wheelTicks, wheelPeriod, torque
+                         */
+                        it.subscribeRawTrainerTorqueDataEvent { _, _, _, _, _, _ ->
                         }
                     }
                 }

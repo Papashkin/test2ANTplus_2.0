@@ -1,8 +1,6 @@
 package com.antsfamily.biketrainer.ant.device
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeCadencePcc
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikeSpeedDistancePcc
@@ -15,13 +13,23 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private val context: Context) {
-    private var _speedDistance: AntPlusBikeSpeedDistancePcc? = null
-    private var _cadence: AntPlusBikeCadencePcc? = null
-    private var onCadenceReceiveListener: ((cadence: BigDecimal) -> Unit)? = null
-    private var onDistanceReceiveListener: ((distance: BigDecimal) -> Unit)? = null
-    private var onSpeedReceiveListener: ((speed: BigDecimal) -> Unit)? = null
+
+    private var _speedDistanceSensor: AntPlusBikeSpeedDistancePcc? = null
+    private var _cadenceSensor: AntPlusBikeCadencePcc? = null
+
+    private var _cadence: BigDecimal? = null
+    val cadence: BigDecimal?
+        get() = _cadence
+    private var _distance: BigDecimal? = null
+    val distance: BigDecimal?
+        get() = _distance
+    private var _speed: BigDecimal? = null
+    val speed: BigDecimal?
+        get() = _speed
 
     fun getSensorAccess(
         deviceNumber: Int,
@@ -38,7 +46,7 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
             },
             { state ->
                 if (state == DeviceState.DEAD) {
-                    _speedDistance = null
+                    _speedDistanceSensor = null
                 }
             }
         )
@@ -49,7 +57,7 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
      * their data.
      */
     fun subscribe() {
-        _speedDistance?.let {
+        _speedDistanceSensor?.let {
             it.subscribeCalculatedSpeedEvent(
                 object : CalculatedSpeedReceiver(WHEEL_CIRCUMFERENCE) {
                     override fun onNewCalculatedSpeed(
@@ -57,62 +65,40 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
                         eventFlags: EnumSet<EventFlag>,
                         speed: BigDecimal
                     ) {
-                        Handler(Looper.getMainLooper()).post {
-                            onSpeedReceiveListener?.invoke(
-                                speed.setScale(1, BigDecimal.ROUND_HALF_DOWN)
-                            )
-                        }
+                        _speed = speed
                     }
                 })
 
             it.subscribeCalculatedAccumulatedDistanceEvent(
-                object : CalculatedAccumulatedDistanceReceiver(BigDecimal(2.095)) {
+                object : CalculatedAccumulatedDistanceReceiver(WHEEL_CIRCUMFERENCE) {
                     override fun onNewCalculatedAccumulatedDistance(
                         estTimestamp: Long,
                         eventFlags: EnumSet<EventFlag>,
                         distance: BigDecimal
                     ) {
-                        Handler(Looper.getMainLooper()).post {
-                            onDistanceReceiveListener?.invoke(
-                                distance.setScale(2, BigDecimal.ROUND_HALF_DOWN)
-                            )
-                        }
+                        _distance = distance
                     }
                 })
 
-            it.subscribeRawSpeedAndDistanceDataEvent { _, _, speed, distance ->
-                Handler(Looper.getMainLooper()).post {
-                    onSpeedReceiveListener?.invoke(speed)
-                    onDistanceReceiveListener?.invoke(distance.toBigDecimal())
-                }
-            }
+//            it.subscribeRawSpeedAndDistanceDataEvent { _, _, speed, distance ->
+//                Handler(Looper.getMainLooper()).post {
+//                    onSpeedReceiveListener?.invoke(speed)
+//                    onDistanceReceiveListener?.invoke(distance.toBigDecimal())
+//                }
+//            }
         }
 
-        _cadence?.let {
+        _cadenceSensor?.let {
             it.subscribeCalculatedCadenceEvent { _, _, cadence ->
-                Handler(Looper.getMainLooper()).post {
-                    onCadenceReceiveListener?.invoke(cadence)
-                }
+                _cadence = cadence
             }
         }
-    }
-
-    fun setOnCadenceReceiveListener(listener: (cadence: BigDecimal) -> Unit) {
-        onCadenceReceiveListener = listener
-    }
-
-    fun setOnDistanceReceiveListener(listener: (distance: BigDecimal) -> Unit) {
-        onDistanceReceiveListener = listener
-    }
-
-    fun setOnSpeedReceiveListener(listener: (speed: BigDecimal) -> Unit) {
-        onSpeedReceiveListener = listener
     }
 
     fun clear(isCombinedSensor: Boolean) {
-        _speedDistance = null
+        _speedDistanceSensor = null
         if (isCombinedSensor) {
-            _cadence = null
+            _cadenceSensor = null
         }
     }
 
@@ -122,9 +108,9 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
         resultReceivedCallback: (result: RequestAccessResult) -> Unit
     ) {
         if (resultCode == RequestAccessResult.SUCCESS) {
-            _speedDistance = result
+            _speedDistanceSensor = result
         }
-        if (_speedDistance?.isSpeedAndCadenceCombinedSensor == true) {
+        if (_speedDistanceSensor?.isSpeedAndCadenceCombinedSensor == true) {
             getCombinedSensor(resultReceivedCallback)
         } else {
             resultReceivedCallback.invoke(resultCode)
@@ -134,7 +120,7 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
     private fun getCombinedSensor(resultReceivedCallback: (result: RequestAccessResult) -> Unit) {
         AntPlusBikeCadencePcc.requestAccess(
             context,
-            _speedDistance?.antDeviceNumber.orZero(),
+            _speedDistanceSensor?.antDeviceNumber.orZero(),
             SEARCH_PROXIMITY_THRESHOLD,
             true,
             /* IPluginAccessResultReceiver<AntPlusBikeCadencePcc> :
@@ -142,13 +128,13 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
             { result, resultCode, _ ->
                 handleBikeCadenceAccessResult(result, resultCode, resultReceivedCallback)
                 if (resultCode == RequestAccessResult.SUCCESS) {
-                    _cadence = result
+                    _cadenceSensor = result
                 }
                 resultReceivedCallback.invoke(resultCode)
             },
             { state ->
                 if (state == DeviceState.DEAD) {
-                    _cadence = null
+                    _cadenceSensor = null
                 }
             }
         )
@@ -160,7 +146,7 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
         resultReceivedCallback: (result: RequestAccessResult) -> Unit
     ) {
         if (resultCode == RequestAccessResult.SUCCESS) {
-            _cadence = result
+            _cadenceSensor = result
         }
         resultReceivedCallback.invoke(resultCode)
     }

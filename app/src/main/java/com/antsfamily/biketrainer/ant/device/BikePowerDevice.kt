@@ -1,18 +1,22 @@
 package com.antsfamily.biketrainer.ant.device
 
 import android.content.Context
-import android.os.Handler
-import android.os.Looper
 import com.dsi.ant.plugins.antplus.pcc.AntPlusBikePowerPcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceState
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.math.BigDecimal
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BikePowerDevice @Inject constructor(@ApplicationContext private val context: Context) {
 
     private var _powerMeter: AntPlusBikePowerPcc? = null
+
+    private var _power: BigDecimal? = null
+    val power: BigDecimal?
+        get() = _power
 
     fun getAccess(
         deviceNumber: Int,
@@ -40,10 +44,10 @@ class BikePowerDevice @Inject constructor(@ApplicationContext private val contex
     /**
      * Subscribe to all the heart rate events, connecting them to display their data.
      */
-    private fun subscribe(powerCallback: (power: BigDecimal) -> Unit) {
+    fun subscribe() {
         _powerMeter?.let {
             it.subscribeCalculatedPowerEvent { _, _, _, power ->
-                Handler(Looper.getMainLooper()).post { powerCallback(power) }
+                _power = power
             }
         }
     }
