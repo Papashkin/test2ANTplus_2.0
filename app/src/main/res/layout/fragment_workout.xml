@@ -58,7 +58,46 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                        android:id="@+id/workout_steps_tv"
+                        android:id="@+id/workout_round_tv"
+                        style="@style/Title2.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:layout_marginEnd="@dimen/margin_small_extra"
+                        android:gravity="center"
+                        android:text="@string/workout_round"
+                        app:layout_constraintEnd_toStartOf="@id/workout_current_step_tv"
+                        app:layout_constraintHorizontal_chainStyle="packed"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/program_chart"
+                        tools:text="Round" />
+
+                <TextView
+                        android:id="@+id/workout_current_step_tv"
+                        style="@style/Title2.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:gravity="center"
+                        app:layout_constraintEnd_toStartOf="@id/workout_slash_tv"
+                        app:layout_constraintStart_toEndOf="@id/workout_round_tv"
+                        app:layout_constraintTop_toBottomOf="@id/program_chart"
+                        tools:text="4" />
+
+                <TextView
+                        android:id="@+id/workout_slash_tv"
+                        style="@style/Title2.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:gravity="center"
+                        android:text="@string/workout_slash"
+                        app:layout_constraintEnd_toStartOf="@id/workout_all_steps_tv"
+                        app:layout_constraintStart_toEndOf="@id/workout_current_step_tv"
+                        app:layout_constraintTop_toBottomOf="@id/program_chart" />
+
+                <TextView
+                        android:id="@+id/workout_all_steps_tv"
                         style="@style/Title2.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -66,9 +105,9 @@
                         android:gravity="center"
                         android:text="@string/workout_round"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/workout_slash_tv"
                         app:layout_constraintTop_toBottomOf="@id/program_chart"
-                        tools:text="Round 4/10" />
+                        tools:text="10" />
 
                 <ProgressBar
                         android:id="@+id/step_countdown_rb"
@@ -78,19 +117,44 @@
                         android:padding="@dimen/margin_small"
                         android:progress="70"
                         android:progressDrawable="@drawable/bg_progress_bar_workout"
-                        app:layout_constraintTop_toBottomOf="@id/workout_steps_tv" />
+                        app:layout_constraintTop_toBottomOf="@id/workout_round_tv" />
 
                 <TextView
-                        android:id="@+id/workout_power_tv"
-                        style="@style/Body1.Bold.onSurface"
+                        android:id="@+id/workout_user_power_tv"
+                        style="@style/Title2.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="70dp"
                         android:text="@string/workout_power"
-                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintEnd_toStartOf="@id/workout_power_slash_tv"
+                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
                         app:layout_constraintTop_toTopOf="@id/step_countdown_rb"
-                        tools:text="Power: 200 W" />
+                        tools:text="200 W" />
+
+                <TextView
+                        android:id="@+id/workout_power_slash_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/margin_small_extra"
+                        android:text="@string/workout_slash"
+                        app:layout_constraintBottom_toBottomOf="@id/workout_user_power_tv"
+                        app:layout_constraintEnd_toStartOf="@id/workout_target_power_tv"
+                        app:layout_constraintStart_toEndOf="@id/workout_user_power_tv"
+                        app:layout_constraintTop_toTopOf="@id/workout_user_power_tv" />
+
+                <TextView
+                        android:id="@+id/workout_target_power_tv"
+                        style="@style/Body1.Bold.onSurface"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/workout_power"
+                        app:layout_constraintBottom_toBottomOf="@id/workout_user_power_tv"
+                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:layout_constraintStart_toEndOf="@id/workout_power_slash_tv"
+                        app:layout_constraintTop_toTopOf="@id/workout_user_power_tv"
+                        tools:text="200 W" />
 
                 <TextView
                         android:id="@+id/workout_heart_rate_tv"
@@ -101,7 +165,7 @@
                         android:text="@string/workout_heart_rate"
                         app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
                         app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
-                        app:layout_constraintTop_toBottomOf="@id/workout_power_tv"
+                        app:layout_constraintTop_toBottomOf="@id/workout_user_power_tv"
                         tools:text="Heart rate: 160 bpm" />
 
                 <TextView

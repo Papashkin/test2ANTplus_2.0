@@ -52,6 +52,7 @@ class HeartRateDevice @Inject constructor(@ApplicationContext private val contex
     }
 
     fun clear() {
+        _heartRateMonitor?.releaseAccess()
         _heartRateMonitor = null
     }
 

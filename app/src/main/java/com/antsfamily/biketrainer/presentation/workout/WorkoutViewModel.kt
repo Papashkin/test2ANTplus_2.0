@@ -1,5 +1,7 @@
 package com.antsfamily.biketrainer.presentation.workout
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.biketrainer.ant.device.*
 import com.antsfamily.biketrainer.data.models.program.Program
@@ -7,8 +9,8 @@ import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProgramUseCase
 import com.antsfamily.biketrainer.domain.usecase.WorkoutTimerFlow
+import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
-import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
@@ -31,13 +33,15 @@ class WorkoutViewModel @Inject constructor(
     data class State(
         val isLoading: Boolean = true,
         val title: String? = null,
-        val steps: Pair<Int, Int>? = null,
+        val allRounds: Int? = null,
+        val currentRound: Int = 0,
         val startButtonVisible: Boolean = true,
         val pauseButtonVisible: Boolean = false,
         val stopButtonVisible: Boolean = false,
-        val remainingTimeString: String = 0L.fullTimeFormat(),
+        val remainingTime: Long = 0L,
         val progress: Int = 100,
-        val nextStep: Pair<Int, String>? = null,
+        val currentStep: ProgramData? = null,
+        val nextStep: ProgramData? = null,
         val heartRate: Int? = null,
         val cadence: Int? = null,
         val speed: BigDecimal? = null,
@@ -45,6 +49,13 @@ class WorkoutViewModel @Inject constructor(
         val power: Int? = null,
         val program: List<ProgramData> = emptyList()
     )
+
+    private val _resetChartHighlightsEvent = MutableLiveData<Event<Unit>>()
+    val resetChartHighlightsEvent: LiveData<Event<Unit>>
+        get() = _resetChartHighlightsEvent
+
+    private var isWorkoutStarted: Boolean = false
+    private var currentStepNumber: Int = 0
 
     fun onStop() {
         closeAccessToSensors()
@@ -55,7 +66,14 @@ class WorkoutViewModel @Inject constructor(
     }
 
     fun onStartClick() = viewModelScope.launch {
-        // TODO: 15.01.2021
+        isWorkoutStarted = true
+        changeState {
+            it.copy(
+                startButtonVisible = false,
+                pauseButtonVisible = true,
+                stopButtonVisible = false
+            )
+        }
     }
 
     fun onPauseClick() {
@@ -77,22 +95,22 @@ class WorkoutViewModel @Inject constructor(
     ) {
         when (result) {
             is Result.Success -> handleProgramSuccessResult(result.successData, devices)
-            is Result.Failure -> {
-            }
+            is Result.Failure -> showErrorSnackbar("Something went wrong :( \nPlease try again")
         }
     }
 
-    private fun handleProgramSuccessResult(program: Program, devices: List<MultiDeviceSearchResult>) {
+    private fun handleProgramSuccessResult(
+        program: Program,
+        devices: List<MultiDeviceSearchResult>
+    ) {
         setDevices(devices)
         changeState {
             it.copy(
                 title = program.title,
-                steps = Pair(0, program.data.size),
-                nextStep = Pair(
-                    program.data.firstOrNull()?.power.orZero(),
-                    program.data.firstOrNull()?.duration.orZero().fullTimeFormat()
-                ),
-                remainingTimeString = 0L.fullTimeFormat(), // program.data.sumOf { data -> data.duration }.fullTimeFormat(),
+                allRounds = program.data.size,
+                currentRound = currentStepNumber,
+                nextStep = program.data[currentStepNumber],
+                remainingTime = program.data[currentStepNumber].duration,
                 progress = 100,
                 startButtonVisible = true,
                 program = program.data
@@ -120,14 +138,10 @@ class WorkoutViewModel @Inject constructor(
 
     private fun startWorkoutTimerFlow() = viewModelScope.launch {
         workoutTimerFlow.invoke(PERIOD).collect {
-            changeState {
-                it.copy(
-                    heartRate = getHeartRateValue(),
-                    cadence = getCadenceValue(),
-                    power = getPowerValue(),
-                    speed = getSpeedValue(),
-                    distance = getDistanceValue()
-                )
+            showDataFromSensors()
+            if (isWorkoutStarted) {
+                setTargetPowerToDevice()
+                updateView()
             }
         }
     }
@@ -160,6 +174,72 @@ class WorkoutViewModel @Inject constructor(
         fitnessEquipmentDevice.clear()
     }
 
+    private fun showDataFromSensors() {
+        changeState {
+            it.copy(
+                heartRate = getHeartRateValue(),
+                cadence = getCadenceValue(),
+                power = getPowerValue(),
+                speed = getSpeedValue(),
+                distance = getDistanceValue()
+            )
+        }
+    }
+
+    private fun setTargetPowerToDevice() {
+
+    }
+
+    private fun updateView() {
+        val remainingTime = state.value?.remainingTime.orZero().minus(1)
+        when {
+            (remainingTime > ZERO) -> updateView(remainingTime)
+            (remainingTime == ZERO) -> {
+                currentStepNumber = currentStepNumber.inc()
+                if (currentStepNumber < state.value?.program?.size.orZero()) {
+                    val updatedRemainingTime = state.value?.program
+                        ?.getOrNull(currentStepNumber)?.duration.orZero()
+                    updateView(updatedRemainingTime)
+                } else {
+                    _resetChartHighlightsEvent.postValue(Event(Unit))
+                    isWorkoutStarted = false
+                    currentStepNumber = 0
+                    resetWorkoutFields()
+                    showSuccessSnackbar("Your workout is finished! Well done!")
+                }
+            }
+        }
+    }
+
+    private fun updateView(remainingTime: Long) {
+        changeState { state ->
+            state.copy(
+                currentRound = currentStepNumber + 1,
+                currentStep = state.program.getOrNull(currentStepNumber),
+                nextStep = state.program.getOrNull(currentStepNumber + 1),
+                progress = remainingTime.times(HUNDRED)
+                    .div(state.program.getOrNull(currentStepNumber)?.duration ?: 1).toInt(),
+                remainingTime = remainingTime
+            )
+        }
+    }
+
+    private fun resetWorkoutFields() {
+        changeState {
+            it.copy(
+                currentRound = currentStepNumber,
+                currentStep = null,
+                nextStep = it.program.getOrNull(currentStepNumber),
+                remainingTime = it.program.getOrNull(currentStepNumber)?.duration.orZero(),
+                progress = 100,
+                startButtonVisible = true,
+                pauseButtonVisible = false,
+                stopButtonVisible = false,
+                program = it.program
+            )
+        }
+    }
+
     private fun getHeartRateValue() = heartRateDevice.heartRate
 
     private fun getCadenceValue() = (cadenceDevice.cadence ?: fitnessEquipmentDevice.cadence)
@@ -176,7 +256,9 @@ class WorkoutViewModel @Inject constructor(
         ?.setScale(2, RoundingMode.HALF_DOWN)?.toInt()
 
     companion object {
+        private const val ZERO = 0L
         private const val PERIOD = 1000L
+        private const val HUNDRED = 100
         private val METERS_IN_KILOMETER = BigDecimal(1000)
     }
 }

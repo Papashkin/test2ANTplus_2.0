@@ -96,8 +96,10 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
     }
 
     fun clear(isCombinedSensor: Boolean) {
+        _speedDistanceSensor?.releaseAccess()
         _speedDistanceSensor = null
         if (isCombinedSensor) {
+            _cadenceSensor?.releaseAccess()
             _cadenceSensor = null
         }
     }

@@ -60,6 +60,7 @@ class BikeCadenceDevice @Inject constructor(@ApplicationContext private val cont
     }
 
     fun clear() {
+        _cadenceSensor?.releaseAccess()
         _cadenceSensor = null
     }
 
