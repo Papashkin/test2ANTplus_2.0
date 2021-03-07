@@ -127,6 +127,27 @@ fun BarDataSet.setDefaultSettings(formatter: ValueFormatter) = this.apply {
     isHighlightEnabled = false
 }
 
+fun BarChart.setHighlightedMode(isFull: Boolean) {
+    this.apply {
+        isHighlightPerTapEnabled = false
+        isHighlightFullBarEnabled = false
+        isHighlightPerDragEnabled = false
+        data?.dataSets?.forEach {
+            it.isHighlightEnabled = !isFull
+        }
+    }
+}
+
+fun BarChart.hideAllLabels() {
+    this.apply {
+        description.isEnabled = false
+        legend.isEnabled = false
+        xAxis.isEnabled = false
+        axisLeft.isEnabled = false
+        axisRight.isEnabled = false
+    }
+}
+
 object BarCharsStaticFields {
     const val FORMATTER_SCALE_X = 2.4f
     const val BAR_GRANULARITY = 1f

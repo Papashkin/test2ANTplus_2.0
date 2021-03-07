@@ -3,6 +3,7 @@ package com.antsfamily.biketrainer.presentation.workout
 import androidx.lifecycle.viewModelScope
 import com.antsfamily.biketrainer.ant.device.*
 import com.antsfamily.biketrainer.data.models.program.Program
+import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.domain.Result
 import com.antsfamily.biketrainer.domain.usecase.GetProgramUseCase
 import com.antsfamily.biketrainer.domain.usecase.WorkoutTimerFlow
@@ -41,7 +42,8 @@ class WorkoutViewModel @Inject constructor(
         val cadence: Int? = null,
         val speed: BigDecimal? = null,
         val distance: BigDecimal? = null,
-        val power: Int? = null
+        val power: Int? = null,
+        val program: List<ProgramData> = emptyList()
     )
 
     fun onStop() {
@@ -74,17 +76,16 @@ class WorkoutViewModel @Inject constructor(
         result: Result<Program, Error>, devices: List<MultiDeviceSearchResult>
     ) {
         when (result) {
-            is Result.Success -> handleProgramSuccessResult(result.successData)
+            is Result.Success -> handleProgramSuccessResult(result.successData, devices)
             is Result.Failure -> {
             }
         }
-        setDevices(devices)
     }
 
-    private fun handleProgramSuccessResult(program: Program) {
+    private fun handleProgramSuccessResult(program: Program, devices: List<MultiDeviceSearchResult>) {
+        setDevices(devices)
         changeState {
             it.copy(
-                isLoading = false,
                 title = program.title,
                 steps = Pair(0, program.data.size),
                 nextStep = Pair(
@@ -93,7 +94,8 @@ class WorkoutViewModel @Inject constructor(
                 ),
                 remainingTimeString = 0L.fullTimeFormat(), // program.data.sumOf { data -> data.duration }.fullTimeFormat(),
                 progress = 100,
-                startButtonVisible = true
+                startButtonVisible = true,
+                program = program.data
             )
         }
     }
@@ -112,6 +114,7 @@ class WorkoutViewModel @Inject constructor(
                 }
             }
         }
+        changeState { it.copy(isLoading = false) }
         startWorkoutTimerFlow()
     }
 
@@ -167,12 +170,13 @@ class WorkoutViewModel @Inject constructor(
 
     private fun getDistanceValue() =
         (speedDistanceDevice.distance ?: fitnessEquipmentDevice.distance)
-            ?.setScale(2, RoundingMode.HALF_DOWN)
+            ?.setScale(2, RoundingMode.HALF_DOWN)?.divide(METERS_IN_KILOMETER)
 
     private fun getPowerValue() = (powerDevice.power ?: fitnessEquipmentDevice.power)
         ?.setScale(2, RoundingMode.HALF_DOWN)?.toInt()
 
     companion object {
         private const val PERIOD = 1000L
+        private val METERS_IN_KILOMETER = BigDecimal(1000)
     }
 }

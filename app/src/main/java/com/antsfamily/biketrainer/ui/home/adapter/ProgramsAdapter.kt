@@ -7,6 +7,8 @@ import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.data.models.program.Program
 import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.databinding.CardProgramInfoBinding
+import com.antsfamily.biketrainer.ui.util.hideAllLabels
+import com.antsfamily.biketrainer.ui.util.setHighlightedMode
 import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -77,11 +79,7 @@ class ProgramsAdapter @Inject constructor() :
             with(binding.programBc) {
                 setScaleEnabled(false)
                 setTouchEnabled(true)
-                description.isEnabled = false
-                legend.isEnabled = false
-                xAxis.isEnabled = false
-                axisLeft.isEnabled = false
-                axisRight.isEnabled = false
+                hideAllLabels()
                 setDrawGridBackground(false)
                 setDrawBorders(false)
                 this.data = BarData(
@@ -90,7 +88,7 @@ class ProgramsAdapter @Inject constructor() :
                         valueFormatter = emptyFormatter
                         color = R.color.color_central
                         stackLabels = emptyArray()
-                        isHighlightEnabled = false
+                        setHighlightedMode(true)
                     }
                 ).apply { barWidth = BAR_WIDTH }
                 animateXY(X_ANIMATION, Y_ANIMATION)
