@@ -2,7 +2,6 @@ package com.antsfamily.biketrainer.util
 
 import android.content.Context
 import android.util.Log
-import com.antsfamily.biketrainer.R
 import com.dsi.ant.plugins.antplus.pcc.MultiDeviceSearch
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
 import com.dsi.ant.plugins.antplus.pcc.defines.RequestAccessResult
@@ -15,20 +14,13 @@ import javax.inject.Singleton
 @Singleton
 class DeviceSearcher @Inject constructor(@ApplicationContext private val context: Context) {
 
-    private var onErrorReceiveListener: ((id: Int) -> Unit)? = null
+    private var onSearchStopListener: ((reason: RequestAccessResult) -> Unit)? = null
     private var onDeviceReceiveListener: ((device: MultiDeviceSearchResult) -> Unit)? = null
 
     private val callback = object : MultiDeviceSearch.SearchCallbacks {
         override fun onSearchStopped(reason: RequestAccessResult) {
             Log.d(this@DeviceSearcher::class.java.simpleName, "Search stopped because of $reason")
-            val id = when (reason) {
-                RequestAccessResult.CHANNEL_NOT_AVAILABLE -> R.string.channel_not_available
-                RequestAccessResult.OTHER_FAILURE -> R.string.channel_other_failure
-                RequestAccessResult.SEARCH_TIMEOUT -> R.string.channel_search_timeout
-                RequestAccessResult.USER_CANCELLED -> R.string.channel_scan_stop
-                else -> R.string.channel_unknown
-            }
-            onErrorReceiveListener?.invoke(id)
+            onSearchStopListener?.invoke(reason)
         }
 
         override fun onSearchStarted(rssiSupport: MultiDeviceSearch.RssiSupport) {
@@ -43,8 +35,8 @@ class DeviceSearcher @Inject constructor(@ApplicationContext private val context
 
     private var searcher: MultiDeviceSearch? = null
 
-    fun setOnErrorReceiveListener(listener: (id: Int) -> Unit) {
-        onErrorReceiveListener = listener
+    fun setOnSearchStopListener(listener: (reason: RequestAccessResult) -> Unit) {
+        onSearchStopListener = listener
     }
 
     fun setOnDeviceReceiveListener(listener: (device: MultiDeviceSearchResult) -> Unit) {

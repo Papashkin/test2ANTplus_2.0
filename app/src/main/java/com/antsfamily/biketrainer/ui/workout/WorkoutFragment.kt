@@ -6,13 +6,20 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.antsfamily.biketrainer.R
+import com.antsfamily.biketrainer.data.models.program.ProgramData
 import com.antsfamily.biketrainer.databinding.FragmentWorkoutBinding
 import com.antsfamily.biketrainer.presentation.EventObserver
 import com.antsfamily.biketrainer.presentation.withFactory
 import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
+import com.antsfamily.biketrainer.ui.util.hideAllLabels
+import com.antsfamily.biketrainer.ui.util.setHighlightedMode
 import com.antsfamily.biketrainer.util.mapDistinct
 import com.antsfamily.biketrainer.util.orZero
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.formatter.ValueFormatter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -108,10 +115,44 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
                 workoutPowerTv.text =
                     getString(R.string.workout_power, it?.toString() ?: EMPTY_DATA)
             }
+            viewModel.state.mapDistinct { it.program }
+                .observe(viewLifecycleOwner) { setProgramBarChart(it) }
+        }
+    }
+
+    private fun FragmentWorkoutBinding.setProgramBarChart(data: List<ProgramData>?) {
+        val entities = data?.mapIndexed { index, _data ->
+            BarEntry(index.toFloat(), _data.power.toFloat())
+        }
+        entities?.let {
+            with(this.programChart) {
+                setScaleEnabled(false)
+                setTouchEnabled(true)
+                hideAllLabels()
+                setDrawGridBackground(false)
+                setDrawBorders(false)
+                this.data = BarData(
+                    BarDataSet(it, EMPTY_LABEL).apply {
+                        barBorderWidth = BAR_BORDER_WIDTH
+                        valueFormatter = object : ValueFormatter() {
+                            override fun getBarLabel(entry: BarEntry): String = EMPTY_LABEL
+                        }
+                        setHighlightedMode(false)
+                        color = R.color.color_central
+                        stackLabels = emptyArray()
+                    }
+                ).apply {
+                    barWidth = BAR_WIDTH
+                }
+                invalidate()
+            }
         }
     }
 
     companion object {
         private const val EMPTY_DATA = "--"
+        private const val EMPTY_LABEL = ""
+        private const val BAR_BORDER_WIDTH = 0f
+        private const val BAR_WIDTH = 0.95f
     }
 }

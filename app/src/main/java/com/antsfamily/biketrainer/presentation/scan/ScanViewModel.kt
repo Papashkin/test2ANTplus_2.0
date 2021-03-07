@@ -3,6 +3,7 @@ package com.antsfamily.biketrainer.presentation.scan
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.antsfamily.biketrainer.R
 import com.antsfamily.biketrainer.ant.device.*
 import com.antsfamily.biketrainer.data.models.DeviceItem
 import com.antsfamily.biketrainer.domain.Result
@@ -230,8 +231,18 @@ class ScanViewModel @Inject constructor(
                     )
                 }
             }
-            setOnErrorReceiveListener { showErrorSnackbar("Something went wrong :(") }
+            setOnSearchStopListener { handleSearchStopReason(it) }
         }
+    }
+
+    private fun handleSearchStopReason(reason: RequestAccessResult) {
+        val messageId = when (reason) {
+            RequestAccessResult.CHANNEL_NOT_AVAILABLE -> R.string.channel_not_available
+            RequestAccessResult.OTHER_FAILURE -> R.string.channel_other_failure
+            RequestAccessResult.SEARCH_TIMEOUT -> R.string.channel_search_timeout
+            else -> null
+        }
+        messageId?.let { showErrorSnackbar(it) }
     }
 
     private fun doBindChannelService() = viewModelScope.launch {
