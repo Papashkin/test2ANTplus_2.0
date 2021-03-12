@@ -155,6 +155,6 @@ class BikeSpeedDistanceDevice @Inject constructor(@ApplicationContext private va
 
     companion object {
         private const val SEARCH_PROXIMITY_THRESHOLD = 0
-        private val WHEEL_CIRCUMFERENCE = BigDecimal(2.095) // an average 700cx23mm road tire
+        private val WHEEL_CIRCUMFERENCE = BigDecimal(2.095) // an average 700cx23mm road tire (in meters)
     }
 }
