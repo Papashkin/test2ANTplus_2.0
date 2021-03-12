@@ -1,5 +1,6 @@
 package com.antsfamily.biketrainer.presentation.workout
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -13,6 +14,7 @@ import com.antsfamily.biketrainer.presentation.Event
 import com.antsfamily.biketrainer.presentation.StatefulViewModel
 import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceType
+import com.dsi.ant.plugins.antplus.pcc.defines.RequestStatus
 import com.dsi.ant.plugins.antplus.pccbase.MultiDeviceSearch.MultiDeviceSearchResult
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -55,6 +57,7 @@ class WorkoutViewModel @Inject constructor(
         get() = _resetChartHighlightsEvent
 
     private var isWorkoutStarted: Boolean = false
+    private var isTargetPowerSetSuccessfully: Boolean = false
     private var currentStepNumber: Int = 0
 
     fun onStop() {
@@ -187,7 +190,19 @@ class WorkoutViewModel @Inject constructor(
     }
 
     private fun setTargetPowerToDevice() {
-
+        if (!isTargetPowerSetSuccessfully) {
+            state.value?.currentStep?.let { data ->
+                fitnessEquipmentDevice.setTargetPower(
+                    data.power.toBigDecimal(),
+                    {
+                        Log.d(this::class.java.simpleName, "Set target power with result: $it")
+                        isTargetPowerSetSuccessfully = it == RequestStatus.SUCCESS
+                    }, {
+                        isTargetPowerSetSuccessfully = it
+                    }
+                )
+            }
+        }
     }
 
     private fun updateView() {
@@ -199,6 +214,7 @@ class WorkoutViewModel @Inject constructor(
                 if (currentStepNumber < state.value?.program?.size.orZero()) {
                     val updatedRemainingTime = state.value?.program
                         ?.getOrNull(currentStepNumber)?.duration.orZero()
+                    isTargetPowerSetSuccessfully = false
                     updateView(updatedRemainingTime)
                 } else {
                     _resetChartHighlightsEvent.postValue(Event(Unit))
@@ -245,8 +261,9 @@ class WorkoutViewModel @Inject constructor(
     private fun getCadenceValue() = (cadenceDevice.cadence ?: fitnessEquipmentDevice.cadence)
         ?.setScale(2, RoundingMode.HALF_DOWN)?.toInt()
 
-    private fun getSpeedValue() = (speedDistanceDevice.speed ?: fitnessEquipmentDevice.speed)
-        ?.setScale(2, RoundingMode.HALF_DOWN)
+    private fun getSpeedValue() =
+        (speedDistanceDevice.speed ?: fitnessEquipmentDevice.speed)
+            ?.setScale(2, RoundingMode.HALF_DOWN)
 
     private fun getDistanceValue() =
         (speedDistanceDevice.distance ?: fitnessEquipmentDevice.distance)

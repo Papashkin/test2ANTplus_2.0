@@ -1,6 +1,7 @@
 package com.antsfamily.biketrainer.ant.device
 
 import android.content.Context
+import com.antsfamily.biketrainer.util.orFalse
 import com.antsfamily.biketrainer.util.orZero
 import com.dsi.ant.plugins.antplus.pcc.AntPlusFitnessEquipmentPcc
 import com.dsi.ant.plugins.antplus.pcc.defines.DeviceState
@@ -109,29 +110,14 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
                          _, _, count, instantCadence, instantPower, accumulatedPower
                          */
                         it.subscribeRawTrainerDataEvent { _, _, _, _, _, _ ->
-//                                        tv_estTimestamp.text = timestamp.toString()
-//                                        textView_TrainerUpdateEventCount.text = count.toString()
-//                                        textView_TrainerInstantaneousCadence.text = if (instantCadence == -1) {
-//                                            "N/A"
-//                                        } else {
-//                                            "$instantCadence RPM"
-//                                        }
-//                                        textView_TrainerInstantaneousPower.text = if (instantPower == -1) {
-//                                            "N/A"
-//                                        } else {
-//                                            "$instantPower W"
-//                                        }
-//                                        textView_TrainerAccumulatedPower.text = if (accumulatedPower == -1) {
-//                                            "N/A"
-//                                        } else {
-//                                            "$accumulatedPower W"
-//                                        }
+                            // no-op
                         }
 
                         /*
                         _, _, _, wheelTicks, wheelPeriod, torque
                          */
                         it.subscribeRawTrainerTorqueDataEvent { _, _, _, _, _, _ ->
+                            // no-op
                         }
                     }
                 }
@@ -142,6 +128,7 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
     }
 
     fun clear() {
+        _fitnessEquipment?.trainerMethods?.requestSetTargetPower(BigDecimal.ZERO) {}
         _fitnessEquipment?.releaseAccess()
         _fitnessEquipment = null
     }
@@ -197,33 +184,29 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
      */
     fun setBasicResistance(
         basicResistance: BigDecimal,
-        statusCallback: (status: RequestStatus) -> Unit,
-        errorCallback: (message: String) -> Unit
+        requestCallback: (status: RequestStatus) -> Unit,
+        statusCallback: (isSuccess: Boolean) -> Unit
     ) {
         // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
         val submitted =
             _fitnessEquipment?.trainerMethods?.requestSetBasicResistance(basicResistance) {
-                statusCallback(it)
+                requestCallback(it)
             }
-        if (submitted == false) {
-            errorCallback("Request Could not be Made")
-        }
+        statusCallback(submitted.orFalse())
     }
 
     /**
-     * @param targetPower: BigDecimal("42.25") is the same as 42.25%
+     * @param targetPower: the target power for fitness equipment operating in target power mode.
+     *                     Units: W. Valid range: 0W - 1000W. Resolution: 0.25W
      */
     fun setTargetPower(
         targetPower: BigDecimal,
-        statusCallback: (status: RequestStatus) -> Unit,
-        errorCallback: (message: String) -> Unit
+        requestCallback: (status: RequestStatus) -> Unit,
+        statusCallback: (isSuccess: Boolean) -> Unit
     ) {
-        // TODO The capabilities should be requested before attempting to send new control settings to determine which modes are supported.
-        val submitted = _fitnessEquipment?.trainerMethods?.requestSetTargetPower(targetPower) {
-            statusCallback(it)
+        val isSuccess = _fitnessEquipment?.trainerMethods?.requestSetTargetPower(targetPower) {
+            requestCallback(it)
         }
-        if (submitted == false) {
-            errorCallback("Request Could not be Made")
-        }
+        statusCallback(isSuccess.orFalse())
     }
 }
