@@ -53,6 +53,7 @@ class BikePowerDevice @Inject constructor(@ApplicationContext private val contex
     }
 
     fun clear() {
+        _powerMeter?.releaseAccess()
         _powerMeter = null
     }
 

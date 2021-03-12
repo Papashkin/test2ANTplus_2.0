@@ -14,12 +14,13 @@ import com.antsfamily.biketrainer.presentation.workout.WorkoutViewModel
 import com.antsfamily.biketrainer.ui.BaseFragment
 import com.antsfamily.biketrainer.ui.util.hideAllLabels
 import com.antsfamily.biketrainer.ui.util.setHighlightedMode
+import com.antsfamily.biketrainer.util.fullTimeFormat
 import com.antsfamily.biketrainer.util.mapDistinct
-import com.antsfamily.biketrainer.util.orZero
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -28,6 +29,8 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     private val args: WorkoutFragmentArgs by navArgs()
 
     override val viewModel: WorkoutViewModel by viewModels { withFactory(viewModelFactory) }
+
+    private val chartHighlights = mutableListOf<Highlight>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +41,7 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
         super.onViewCreated(view, savedInstanceState)
         with(FragmentWorkoutBinding.bind(view)) {
             observeState(this)
-            observeEvents()
+            observeEvents(this)
             bindInteractions(this)
         }
     }
@@ -57,12 +60,16 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
         }
     }
 
-    private fun observeEvents() {
+    private fun observeEvents(binding: FragmentWorkoutBinding) {
         viewModel.showSuccessSnackBarEvent.observe(viewLifecycleOwner, EventObserver {
             showSnackBar(it)
         })
         viewModel.showSuccessSnackBarMessageEvent.observe(viewLifecycleOwner, EventObserver {
             showSnackBar(it)
+        })
+        viewModel.resetChartHighlightsEvent.observe(viewLifecycleOwner, EventObserver {
+            chartHighlights.clear()
+            binding.programChart.highlightValues(arrayOf())
         })
     }
 
@@ -72,18 +79,20 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
                 .observe(viewLifecycleOwner) { loadingView.isVisible = it }
             viewModel.state.mapDistinct { it.title }
                 .observe(viewLifecycleOwner) { titleTv.text = it }
-            viewModel.state.mapDistinct { it.steps }.observe(viewLifecycleOwner) {
-                workoutStepsTv.text =
-                    getString(R.string.workout_round, it?.first.orZero(), it?.second.orZero())
+            viewModel.state.mapDistinct { it.allRounds }.observe(viewLifecycleOwner) {
+                workoutAllStepsTv.text = it?.toString() ?: EMPTY_DATA
             }
-            viewModel.state.mapDistinct { it.nextStep }.observe(viewLifecycleOwner) {
-                workoutNextStepValueTv.text =
-                    getString(
-                        R.string.workout_next_round_value,
-                        it?.first?.toString() ?: EMPTY_DATA,
-                        it?.second
-                    )
+            viewModel.state.mapDistinct { it.currentRound }.observe(viewLifecycleOwner) {
+                workoutCurrentStepTv.text = it.toString()
+                highlightAppropriateBar(it)
             }
+            viewModel.state.mapDistinct { it.currentStep }.observe(viewLifecycleOwner) { data ->
+                workoutTargetPowerTv.text =
+                    data?.let { getString(R.string.workout_power, it.power.toString()) }
+                        ?: EMPTY_DATA
+            }
+            viewModel.state.mapDistinct { it.nextStep }
+                .observe(viewLifecycleOwner) { setNextStep(it) }
             viewModel.state.mapDistinct { it.startButtonVisible }
                 .observe(viewLifecycleOwner) { startWorkoutBtn.isVisible = it }
             viewModel.state.mapDistinct { it.pauseButtonVisible }
@@ -91,10 +100,9 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
             viewModel.state.mapDistinct { it.stopButtonVisible }
                 .observe(viewLifecycleOwner) { stopWorkoutBtn.isVisible = it }
             viewModel.state.mapDistinct { it.progress }
-                .observe(viewLifecycleOwner) { this.stepCountdownRb.progress = it }
-            viewModel.state.mapDistinct { it.remainingTimeString }
-                .observe(viewLifecycleOwner) { workoutRemainingTimeTv.text = it }
-
+                .observe(viewLifecycleOwner) { stepCountdownRb.progress = it }
+            viewModel.state.mapDistinct { it.remainingTime }
+                .observe(viewLifecycleOwner) { setRemainingTime(it) }
             viewModel.state.mapDistinct { it.heartRate }.observe(viewLifecycleOwner) {
                 workoutHeartRateTv.text =
                     getString(R.string.workout_heart_rate, it?.toString() ?: EMPTY_DATA)
@@ -111,13 +119,32 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
                 workoutSpeedTv.text =
                     getString(R.string.workout_speed, it?.toString() ?: EMPTY_DATA)
             }
-            viewModel.state.mapDistinct { it.power }.observe(viewLifecycleOwner) {
-                workoutPowerTv.text =
-                    getString(R.string.workout_power, it?.toString() ?: EMPTY_DATA)
+            viewModel.state.mapDistinct { it.power }.observe(viewLifecycleOwner) { power ->
+                workoutUserPowerTv.text =
+                    power?.let { getString(R.string.workout_power, it.toString()) } ?: EMPTY_DATA
             }
             viewModel.state.mapDistinct { it.program }
                 .observe(viewLifecycleOwner) { setProgramBarChart(it) }
         }
+    }
+
+    private fun FragmentWorkoutBinding.highlightAppropriateBar(columnNumber: Int) {
+        val index = columnNumber.dec()
+        if (index < 0) return
+        chartHighlights.add(Highlight(index.toFloat(), 0, 0))
+        programChart.highlightValues(chartHighlights.toTypedArray())
+    }
+
+    private fun FragmentWorkoutBinding.setRemainingTime(remainingTime: Long) {
+        workoutRemainingTimeTv.text = remainingTime.fullTimeFormat()
+    }
+
+    private fun FragmentWorkoutBinding.setNextStep(data: ProgramData?) {
+        workoutNextStepValueTv.text = getString(
+            R.string.workout_next_round_value,
+            "${data?.power ?: EMPTY_DATA} W",
+            (data?.duration?.fullTimeFormat() ?: EMPTY_DATA)
+        )
     }
 
     private fun FragmentWorkoutBinding.setProgramBarChart(data: List<ProgramData>?) {
@@ -138,7 +165,8 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
                             override fun getBarLabel(entry: BarEntry): String = EMPTY_LABEL
                         }
                         setHighlightedMode(false)
-                        color = R.color.color_central
+                        setColors(intArrayOf(R.color.color_cooler), requireContext())
+                        highLightColor = resources.getColor(R.color.color_central, null)
                         stackLabels = emptyArray()
                     }
                 ).apply {

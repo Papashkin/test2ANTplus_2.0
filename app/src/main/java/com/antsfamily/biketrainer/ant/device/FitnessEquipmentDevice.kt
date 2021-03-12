@@ -142,6 +142,7 @@ class FitnessEquipmentDevice @Inject constructor(@ApplicationContext private val
     }
 
     fun clear() {
+        _fitnessEquipment?.releaseAccess()
         _fitnessEquipment = null
     }
 
