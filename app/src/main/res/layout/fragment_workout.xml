@@ -35,7 +35,7 @@
                 android:id="@+id/content_sv"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_regular"
                 android:fillViewport="true"
                 android:overScrollMode="never"
                 android:scrollbars="none"
@@ -121,23 +121,24 @@
 
                 <TextView
                         android:id="@+id/workout_user_power_tv"
-                        style="@style/Title2.Bold.onSurface"
+                        style="@style/Title1.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="70dp"
+                        android:layout_marginTop="80dp"
                         android:text="@string/workout_power"
+                        app:drawableStartCompat="@drawable/ic_workout_power"
                         app:layout_constraintEnd_toStartOf="@id/workout_power_slash_tv"
                         app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
                         app:layout_constraintTop_toTopOf="@id/step_countdown_rb"
-                        tools:text="200 W" />
+                        tools:text="2200 W" />
 
                 <TextView
                         android:id="@+id/workout_power_slash_tv"
-                        style="@style/Body1.Bold.onSurface"
+                        style="@style/Title1.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/margin_small_extra"
+                        android:layout_marginHorizontal="@dimen/margin_tiny"
                         android:text="@string/workout_slash"
                         app:layout_constraintBottom_toBottomOf="@id/workout_user_power_tv"
                         app:layout_constraintEnd_toStartOf="@id/workout_target_power_tv"
@@ -146,39 +147,45 @@
 
                 <TextView
                         android:id="@+id/workout_target_power_tv"
-                        style="@style/Body1.Bold.onSurface"
+                        style="@style/Body2.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/margin_tiny"
                         android:text="@string/workout_power"
                         app:layout_constraintBottom_toBottomOf="@id/workout_user_power_tv"
                         app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
                         app:layout_constraintStart_toEndOf="@id/workout_power_slash_tv"
-                        app:layout_constraintTop_toTopOf="@id/workout_user_power_tv"
-                        tools:text="200 W" />
+                        tools:text="1200 W" />
 
                 <TextView
                         android:id="@+id/workout_heart_rate_tv"
                         style="@style/Body1.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:drawablePadding="@dimen/margin_tiny"
                         android:text="@string/workout_heart_rate"
-                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:drawableStartCompat="@drawable/ic_workout_heart"
+                        app:layout_constraintEnd_toStartOf="@id/workout_cadence_tv"
+                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
                         app:layout_constraintTop_toBottomOf="@id/workout_user_power_tv"
-                        tools:text="Heart rate: 160 bpm" />
+                        tools:text="160 bpm" />
 
                 <TextView
                         android:id="@+id/workout_cadence_tv"
                         style="@style/Body1.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:layout_marginStart="@dimen/margin_small_extra"
+                        android:drawablePadding="@dimen/margin_tiny"
                         android:text="@string/workout_cadence"
+                        app:drawableStartCompat="@drawable/ic_workout_cadence"
                         app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
-                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
-                        app:layout_constraintTop_toBottomOf="@id/workout_heart_rate_tv"
-                        tools:text="Cadence: 72 rpm" />
+                        app:layout_constraintStart_toEndOf="@id/workout_heart_rate_tv"
+                        app:layout_constraintTop_toTopOf="@id/workout_heart_rate_tv"
+                        tools:text="102 rpm" />
 
                 <TextView
                         android:id="@+id/workout_speed_tv"
@@ -186,27 +193,33 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_small_extra"
+                        android:layout_marginEnd="@dimen/margin_small"
+                        android:drawablePadding="@dimen/margin_tiny"
                         android:text="@string/workout_speed"
-                        app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
+                        app:drawableStartCompat="@drawable/ic_workout_speed"
+                        app:layout_constraintEnd_toStartOf="@id/workout_distance_tv"
+                        app:layout_constraintHorizontal_chainStyle="packed"
                         app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
                         app:layout_constraintTop_toBottomOf="@id/workout_cadence_tv"
-                        tools:text="Speed: 22.6 km/h" />
+                        tools:text="22.6 km/h" />
 
                 <TextView
                         android:id="@+id/workout_distance_tv"
                         style="@style/Body1.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/margin_small_extra"
+                        android:layout_marginStart="@dimen/margin_small_extra"
+                        android:drawablePadding="@dimen/margin_tiny"
                         android:text="@string/workout_distance"
+                        app:drawableStartCompat="@drawable/ic_workout_distance"
                         app:layout_constraintEnd_toEndOf="@id/step_countdown_rb"
-                        app:layout_constraintStart_toStartOf="@id/step_countdown_rb"
-                        app:layout_constraintTop_toBottomOf="@id/workout_speed_tv"
-                        tools:text="Distance: 16.5 km" />
+                        app:layout_constraintStart_toEndOf="@id/workout_speed_tv"
+                        app:layout_constraintTop_toTopOf="@id/workout_speed_tv"
+                        tools:text="916.59 km" />
 
                 <TextView
                         android:id="@+id/workout_remaining_time_tv"
-                        style="@style/Title2.Bold.onSurface"
+                        style="@style/Header6.Bold.onSurface"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_medium"
@@ -250,7 +263,7 @@
                 style="@style/Widget.AntTrainer.Button.OnPrimary"
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginVertical="@dimen/margin_regular"
+                android:layout_marginVertical="@dimen/margin_small"
                 android:text="@string/workout_start"
                 app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -259,9 +272,19 @@
                 style="@style/Widget.AntTrainer.Button.OnPrimary"
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginVertical="@dimen/margin_regular"
+                android:layout_marginTop="@dimen/margin_small"
                 android:text="@string/workout_pause"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/stop_workout_btn"
+                tools:visibility="visible" />
+
+        <com.google.android.material.button.MaterialButton
+                android:id="@+id/continue_workout_btn"
+                style="@style/Widget.AntTrainer.Button.OnPrimary"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="@dimen/margin_large"
+                android:layout_marginTop="@dimen/margin_small"
+                android:text="@string/workout_continue"
+                app:layout_constraintBottom_toTopOf="@id/stop_workout_btn"
                 tools:visibility="gone" />
 
         <com.google.android.material.button.MaterialButton
@@ -269,17 +292,17 @@
                 style="@style/Widget.AntTrainer.Button.OnPrimary"
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="@dimen/margin_large"
-                android:layout_marginVertical="@dimen/margin_regular"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:text="@string/workout_stop"
-                app:layout_constraintTop_toBottomOf="@id/content_sv"
-                tools:visibility="gone" />
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:visibility="visible" />
 
         <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/action_buttons_barrier"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="top"
-                app:constraint_referenced_ids="start_workout_btn, stop_workout_btn, pause_workout_btn" />
+                app:constraint_referenced_ids="start_workout_btn, stop_workout_btn, pause_workout_btn, continue_workout_btn" />
 
         <FrameLayout
                 android:id="@+id/loading_view"
@@ -287,7 +310,7 @@
                 android:layout_height="match_parent"
                 android:alpha="0.8"
                 android:background="?attr/colorOnPrimary"
-                android:elevation="2dp"
+                android:elevation="@dimen/elevation_small"
                 tools:visibility="gone">
 
             <ProgressBar

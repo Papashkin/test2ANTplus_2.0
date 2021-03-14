@@ -39,6 +39,7 @@ class WorkoutViewModel @Inject constructor(
         val currentRound: Int = 0,
         val startButtonVisible: Boolean = true,
         val pauseButtonVisible: Boolean = false,
+        val continueButtonVisible: Boolean = false,
         val stopButtonVisible: Boolean = false,
         val remainingTime: Long = 0L,
         val progress: Int = 100,
@@ -57,6 +58,7 @@ class WorkoutViewModel @Inject constructor(
         get() = _resetChartHighlightsEvent
 
     private var isWorkoutStarted: Boolean = false
+    private var isWorkoutPaused: Boolean = false
     private var isTargetPowerSetSuccessfully: Boolean = false
     private var currentStepNumber: Int = 0
 
@@ -73,18 +75,50 @@ class WorkoutViewModel @Inject constructor(
         changeState {
             it.copy(
                 startButtonVisible = false,
+                continueButtonVisible = false,
                 pauseButtonVisible = true,
-                stopButtonVisible = false
+                stopButtonVisible = true
             )
         }
     }
 
     fun onPauseClick() {
+        isWorkoutPaused = true
+        changeState {
+            it.copy(
+                startButtonVisible = false,
+                continueButtonVisible = true,
+                pauseButtonVisible = false,
+                stopButtonVisible = true
+            )
+        }
+    }
 
+    fun onContinueClick() {
+        isWorkoutPaused = false
+        changeState {
+            it.copy(
+                startButtonVisible = false,
+                continueButtonVisible = false,
+                pauseButtonVisible = true,
+                stopButtonVisible = true
+            )
+        }
     }
 
     fun onStopClick() {
-
+        isWorkoutStarted = false
+        currentStepNumber = 0
+        resetWorkoutChartHighlights()
+        resetWorkoutFields()
+        changeState {
+            it.copy(
+                startButtonVisible = true,
+                continueButtonVisible = false,
+                pauseButtonVisible = false,
+                stopButtonVisible = false
+            )
+        }
     }
 
     fun onCreate(devices: List<MultiDeviceSearchResult>, programName: String) {
@@ -107,8 +141,8 @@ class WorkoutViewModel @Inject constructor(
         devices: List<MultiDeviceSearchResult>
     ) {
         setDevices(devices)
-        changeState {
-            it.copy(
+        changeState { state ->
+            state.copy(
                 title = program.title,
                 allRounds = program.data.size,
                 currentRound = currentStepNumber,
@@ -142,7 +176,7 @@ class WorkoutViewModel @Inject constructor(
     private fun startWorkoutTimerFlow() = viewModelScope.launch {
         workoutTimerFlow.invoke(PERIOD).collect {
             showDataFromSensors()
-            if (isWorkoutStarted) {
+            if (isWorkoutStarted && !isWorkoutPaused) {
                 setTargetPowerToDevice()
                 updateView()
             }
@@ -217,7 +251,7 @@ class WorkoutViewModel @Inject constructor(
                     isTargetPowerSetSuccessfully = false
                     updateView(updatedRemainingTime)
                 } else {
-                    _resetChartHighlightsEvent.postValue(Event(Unit))
+                    resetWorkoutChartHighlights()
                     isWorkoutStarted = false
                     currentStepNumber = 0
                     resetWorkoutFields()
@@ -226,6 +260,7 @@ class WorkoutViewModel @Inject constructor(
             }
         }
     }
+
 
     private fun updateView(remainingTime: Long) {
         changeState { state ->
@@ -263,14 +298,18 @@ class WorkoutViewModel @Inject constructor(
 
     private fun getSpeedValue() =
         (speedDistanceDevice.speed ?: fitnessEquipmentDevice.speed)
-            ?.setScale(2, RoundingMode.HALF_DOWN)
+            ?.setScale(1, RoundingMode.HALF_DOWN)
 
     private fun getDistanceValue() =
         (speedDistanceDevice.distance ?: fitnessEquipmentDevice.distance)
-            ?.setScale(2, RoundingMode.HALF_DOWN)?.divide(METERS_IN_KILOMETER)
+            ?.setScale(1, RoundingMode.HALF_DOWN)?.divide(METERS_IN_KILOMETER)
 
     private fun getPowerValue() = (powerDevice.power ?: fitnessEquipmentDevice.power)
         ?.setScale(2, RoundingMode.HALF_DOWN)?.toInt()
+
+    private fun resetWorkoutChartHighlights() {
+        _resetChartHighlightsEvent.postValue(Event(Unit))
+    }
 
     companion object {
         private const val ZERO = 0L
