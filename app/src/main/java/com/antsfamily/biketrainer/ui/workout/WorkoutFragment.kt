@@ -2,6 +2,7 @@ package com.antsfamily.biketrainer.ui.workout
 
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
@@ -34,6 +35,7 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requireActivity().window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         viewModel.onCreate(args.devices.toList(), args.program)
     }
 
@@ -56,6 +58,7 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
             backBtn.setOnClickListener { viewModel.onBackClick() }
             startWorkoutBtn.setOnClickListener { viewModel.onStartClick() }
             pauseWorkoutBtn.setOnClickListener { viewModel.onPauseClick() }
+            continueWorkoutBtn.setOnClickListener { viewModel.onContinueClick() }
             stopWorkoutBtn.setOnClickListener { viewModel.onStopClick() }
         }
     }
@@ -99,6 +102,8 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
                 .observe(viewLifecycleOwner) { pauseWorkoutBtn.isVisible = it }
             viewModel.state.mapDistinct { it.stopButtonVisible }
                 .observe(viewLifecycleOwner) { stopWorkoutBtn.isVisible = it }
+            viewModel.state.mapDistinct { it.continueButtonVisible }
+                .observe(viewLifecycleOwner) { continueWorkoutBtn.isVisible = it }
             viewModel.state.mapDistinct { it.progress }
                 .observe(viewLifecycleOwner) { stepCountdownRb.progress = it }
             viewModel.state.mapDistinct { it.remainingTime }
@@ -140,11 +145,9 @@ class WorkoutFragment : BaseFragment(R.layout.fragment_workout) {
     }
 
     private fun FragmentWorkoutBinding.setNextStep(data: ProgramData?) {
-        workoutNextStepValueTv.text = getString(
-            R.string.workout_next_round_value,
-            "${data?.power ?: EMPTY_DATA} W",
-            (data?.duration?.fullTimeFormat() ?: EMPTY_DATA)
-        )
+        workoutNextStepValueTv.text = data?.let {
+            getString(R.string.workout_next_round_value, it.power, it.duration.fullTimeFormat())
+        } ?: EMPTY_DATA
     }
 
     private fun FragmentWorkoutBinding.setProgramBarChart(data: List<ProgramData>?) {
